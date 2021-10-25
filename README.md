@@ -1,2 +1,3 @@
-# TPie
-FFXIV Dalamud plugin for radial hotbars
+***
+**Radial hotbars for FFXIV**
+***
