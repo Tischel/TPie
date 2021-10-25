@@ -1,15 +1,10 @@
-﻿using Dalamud.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TPie.Helpers
 {
-    public class KeyboardHelper
+    internal class KeyboardHelper
     {
         #region singleton
         private KeyboardHelper()

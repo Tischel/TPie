@@ -120,7 +120,7 @@ namespace TPie
             //ItemElement? item = new ItemElement(2001886, false, 25948);
             //ring.Items.Add(item);
 
-            //ItemElement? food = new ItemElement(23187, true, 24414);
+            //ItemElement? food = new ItemElement(23187, false, 24414);
             //ring.Items.Add(food);
 
             //Rings.Add(ring);
@@ -135,7 +135,7 @@ namespace TPie
 
         private void BuildFont()
         {
-
+            FontsHelper.LoadFont();
         }
 
         private void PluginCommand(string command, string arguments)

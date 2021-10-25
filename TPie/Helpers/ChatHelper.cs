@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TPie.Helpers
 {
-    public class ChatHelper : IDisposable
+    internal class ChatHelper : IDisposable
     {
         #region Singleton
         private ChatHelper()

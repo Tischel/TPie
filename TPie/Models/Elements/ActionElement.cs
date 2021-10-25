@@ -1,5 +1,9 @@
-﻿using Lumina.Excel;
+﻿using FFXIVClientStructs.FFXIV.Client.Game;
+using ImGuiNET;
+using Lumina.Excel;
 using Newtonsoft.Json;
+using System;
+using System.Numerics;
 using TPie.Helpers;
 using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
 
@@ -32,6 +36,18 @@ namespace TPie.Models.Elements
         public override bool IsValid()
         {
             return ActionID > 0 && _data != null;
+        }
+
+        public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
+        {
+            base.Draw(position, size, scale, selected, color, alpha, drawList);
+
+            size = size * scale;
+
+            if (Plugin.Settings.ShowCooldowns)
+            {
+                DrawHelper.DrawCooldown(ActionType.Spell, ActionID, position, size, scale, drawList);
+            }
         }
     }
 }

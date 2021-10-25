@@ -7,7 +7,7 @@ using System.IO;
 
 namespace TPie.Helpers
 {
-    public class TexturesCache : IDisposable
+    internal class TexturesCache : IDisposable
     {
         private Dictionary<uint, TextureWrap> _cache = new();
 

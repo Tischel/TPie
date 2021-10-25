@@ -11,7 +11,7 @@ using static Lumina.Data.Files.TexFile;
 
 namespace TPie.Helpers
 {
-    public static class TextureLoader
+    internal static class TextureLoader
     {
         public static TextureWrap? LoadTexture(string path, bool manualLoad)
         {

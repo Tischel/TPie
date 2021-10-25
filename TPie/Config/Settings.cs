@@ -15,7 +15,7 @@ namespace TPie.Config
         public bool AppearAtCursor = true;
         public Vector2 CenterPosition = Vector2.Zero;
 
-        public int FontSize = 24;
+        public int FontSize = 20;
 
         public bool DrawRingBackground = true;
 

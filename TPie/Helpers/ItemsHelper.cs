@@ -6,12 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TPie.Helpers
 {
-    public class ItemsHelper
+    internal class ItemsHelper
     {
         private delegate void UseItem(IntPtr agent, uint itemId, uint unk1, uint unk2, short unk3);
         private delegate uint GetActionID(uint unk, uint itemId);
@@ -138,31 +136,34 @@ namespace TPie.Helpers
     {
         public readonly string Name;
         public readonly uint ID;
-        public readonly bool HQ;
+        public readonly bool IsHQ;
         public readonly uint IconID;
         public readonly uint Count;
+        public readonly bool IsKey;
 
         public UsableItem(Item item, bool hq, uint count)
         {
             Name = item.Name;
             ID = item.RowId;
-            HQ = hq;
+            IsHQ = hq;
             IconID = item.Icon;
             Count = count;
+            IsKey = false;
         }
 
         public UsableItem(EventItem item, bool hq, uint count)
         {
             Name = item.Name;
             ID = item.RowId;
-            HQ = hq;
+            IsHQ = hq;
             IconID = item.Icon;
             Count = count;
+            IsKey = true;
         }
 
         public override string ToString()
         {
-            return $"UsableItem: {ID}, {Name}, {HQ}, {IconID}, {Count}";
+            return $"UsableItem: {ID}, {Name}, {IsHQ}, {IconID}, {Count}";
         }
     }
 }

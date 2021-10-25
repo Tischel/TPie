@@ -19,12 +19,14 @@ namespace TPie.Models.Elements
 
             if (selected)
             {
-                Vector2 borderSize = new Vector2(size.X + 4, size.Y + 4);
+                Vector2 borderSize = new Vector2(size.X + 6, size.Y + 6);
                 Vector2 borderPos = position - borderSize / 2;
-                drawList.AddRectFilled(borderPos, borderPos + borderSize, color, 4);
+                drawList.AddRectFilled(borderPos, borderPos + borderSize, color, 3);
             }
 
-            DrawHelper.DrawIcon(IconID, position - size / 2, size, alpha, drawList);
+            position = position - size / 2f;
+            DrawHelper.DrawIcon(IconID, position, size, alpha, drawList);
+            drawList.AddRect(position, position + size, 0xFF000000, 2, ImDrawFlags.None, 3);
         }
 
         public abstract void ExecuteAction();
