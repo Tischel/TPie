@@ -123,8 +123,19 @@ namespace TPie
             //ItemElement? food = new ItemElement(23187, false, 24414);
             //ring.Items.Add(food);
 
+            //GearSetElement? blm = new GearSetElement(1, JobIDs.BLM);
+            //ring.Items.Add(blm);
+
+            //GearSetElement? rdm = new GearSetElement(3, JobIDs.RDM);
+            //ring.Items.Add(rdm);
+
             //Rings.Add(ring);
             //Settings.Save(Settings);
+
+            if (!FontsHelper.DefaultFontBuilt)
+            {
+                UiBuilder.RebuildFonts();
+            }
         }
 
         public void Dispose()

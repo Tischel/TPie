@@ -63,6 +63,13 @@ namespace TPie.Models.Elements
                         uint iconId = jo.Value<uint>("IconID");
                         return new ItemElement(itemId, hq, iconId);
                     }
+
+                    if (type.Contains("GearSetElement"))
+                    {
+                        uint gearSetId = jo.Value<uint>("GearSetID");
+                        uint jobId = jo.Value<uint>("JobID");
+                        return new GearSetElement(gearSetId, jobId);
+                    }
                 }
             }
             catch (Exception e)
