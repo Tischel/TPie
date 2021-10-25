@@ -60,7 +60,9 @@ namespace TPie.Helpers
         private Dictionary<uint, Item> _usableItems;
         private Dictionary<uint, EventItem> _usableEventItems;
 
-        public unsafe List<UsableItem> GetUsableItems()
+        private Dictionary<string, UsableItem> UsableItems = new Dictionary<string, UsableItem>();
+
+        public unsafe void CalculateUsableItems()
         {
             InventoryManager* manager = InventoryManager.Instance();
             InventoryType[] inventoryTypes = new InventoryType[]
@@ -72,7 +74,7 @@ namespace TPie.Helpers
                 InventoryType.KeyItems
             };
 
-            List<UsableItem> usableItems = new List<UsableItem>();
+            UsableItems.Clear();
 
             foreach (InventoryType inventoryType in inventoryTypes)
             {
@@ -87,22 +89,40 @@ namespace TPie.Helpers
                     if (item->Quantity == 0) continue;
 
                     bool hq = (item->Flags & InventoryItem.ItemFlags.HQ) != 0;
+                    string hqString = hq ? "_1" : "_0";
+                    string key = $"{item->ItemID}{hqString}";
 
                     if (_usableItems.TryGetValue(item->ItemID, out Item? itemData) && itemData != null)
                     {
-                        usableItems.Add(new UsableItem(itemData, hq, item->Quantity));
+                        UsableItems.Add(key, new UsableItem(itemData, hq, item->Quantity));
                     }
                     else if (_usableEventItems.TryGetValue(item->ItemID, out EventItem? eventItemData) && eventItemData != null)
                     {
-                        usableItems.Add(new UsableItem(eventItemData, hq, item->Quantity));
+                        UsableItems.Add(key, new UsableItem(eventItemData, hq, item->Quantity));
                     }
                 }
             }
-
-            return usableItems;
         }
 
-        private unsafe void Use(uint itemId)
+        public UsableItem? GetUsableItem(uint itemId, bool hq)
+        {
+            string hqString = hq ? "_1" : "_0";
+            string key = $"{itemId}{hqString}";
+
+            if (UsableItems.TryGetValue(key, out UsableItem? value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+
+        public List<UsableItem> GetUsableItems()
+        {
+            return UsableItems.Values.ToList();
+        }
+
+        public unsafe void Use(uint itemId)
         {
             if (_useItemPtr == IntPtr.Zero) return;
 
@@ -138,6 +158,11 @@ namespace TPie.Helpers
             HQ = hq;
             IconID = item.Icon;
             Count = count;
+        }
+
+        public override string ToString()
+        {
+            return $"UsableItem: {ID}, {Name}, {HQ}, {IconID}, {Count}";
         }
     }
 }

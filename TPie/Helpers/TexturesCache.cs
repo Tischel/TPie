@@ -3,6 +3,7 @@ using ImGuiScene;
 using Lumina.Excel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace TPie.Helpers
 {
@@ -97,6 +98,30 @@ namespace TPie.Helpers
         }
 
         public void Clear() { _cache.Clear(); }
+
+        #region plugin textures
+        public TextureWrap? RingBackground;
+        public TextureWrap? HQIcon;
+
+        public void LoadPluginTextures()
+        {
+            try
+            {
+                string ringBgPath = Path.Combine(Path.GetDirectoryName(Plugin.AssemblyLocation) ?? "", "Media", "ring_bg.png");
+                if (File.Exists(ringBgPath))
+                {
+                    RingBackground = Plugin.UiBuilder.LoadImage(ringBgPath);
+                }
+
+                string hqIconPath = Path.Combine(Path.GetDirectoryName(Plugin.AssemblyLocation) ?? "", "Media", "hq_icon.png");
+                if (File.Exists(hqIconPath))
+                {
+                    HQIcon = Plugin.UiBuilder.LoadImage(hqIconPath);
+                }
+            }
+            catch { }
+        }
+        #endregion
 
         #region Singleton
         private ICallGateSubscriber<string, string> _penumbraPathResolver;

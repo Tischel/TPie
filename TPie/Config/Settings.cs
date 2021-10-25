@@ -17,6 +17,8 @@ namespace TPie.Config
 
         public int FontSize = 24;
 
+        public bool DrawRingBackground = true;
+
         public bool AnimateIn = true;
         public float AnimateInDuration = 0.5f;
 

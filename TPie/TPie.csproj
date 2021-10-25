@@ -60,6 +60,7 @@
 	<!-- Included Content -->
 	<ItemGroup>
 		<Content Include="TPie.json" CopyToOutputDirectory="Always" />
+		<Content Include="Media\**" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 
 	<!-- Library References -->

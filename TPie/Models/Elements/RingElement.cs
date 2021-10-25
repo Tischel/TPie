@@ -6,15 +6,17 @@ using System;
 using System.Numerics;
 using TPie.Helpers;
 
-namespace TPie.Models.Items
+namespace TPie.Models.Elements
 {
-    [JsonConverter(typeof(RingItemConverter))]
-    public abstract class RingItem
+    [JsonConverter(typeof(RingElementConverter))]
+    public abstract class RingElement
     {
         public uint IconID { get; protected set; }
 
-        public virtual void Draw(Vector2 position, Vector2 size, bool selected, uint color, ImDrawListPtr drawList)
+        public virtual void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, ImDrawListPtr drawList)
         {
+            size = size * scale;
+
             if (selected)
             {
                 Vector2 borderSize = new Vector2(size.X + 4, size.Y + 4);
@@ -30,11 +32,11 @@ namespace TPie.Models.Items
         public abstract bool IsValid();
     }
 
-    public class RingItemConverter : JsonConverter
+    public class RingElementConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(RingItem));
+            return (objectType == typeof(RingElement));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
@@ -46,10 +48,10 @@ namespace TPie.Models.Items
                 string? type = jo.Value<string>("$type");
                 if (type != null)
                 {
-                    if (type.Contains("ActionItem"))
+                    if (type.Contains("ActionElement"))
                     {
                         uint actionId = jo.Value<uint>("ActionID");
-                        return new ActionItem(actionId);
+                        return new ActionElement(actionId);
                     }
                 }
             }
@@ -58,7 +60,7 @@ namespace TPie.Models.Items
                 PluginLog.Error(e.Message);
             }
 
-            return new ActionItem(0);
+            return new ActionElement(0);
         }
 
         public override bool CanWrite

@@ -3,15 +3,15 @@ using Newtonsoft.Json;
 using TPie.Helpers;
 using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
 
-namespace TPie.Models.Items
+namespace TPie.Models.Elements
 {
-    public class ActionItem : RingItem
+    public class ActionElement : RingElement
     {
         public readonly uint ActionID;
 
         [JsonIgnore] private readonly LuminaAction? _data;
 
-        public ActionItem(uint actionID)
+        public ActionElement(uint actionID)
         {
             ActionID = actionID;
 

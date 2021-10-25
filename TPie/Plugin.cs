@@ -8,13 +8,16 @@ using Dalamud.Game.ClientState.Party;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.Interface;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Reflection;
 using TPie.Config;
 using TPie.Helpers;
 using TPie.Models;
+using TPie.Models.Elements;
 using SigScanner = Dalamud.Game.SigScanner;
 
 namespace TPie
@@ -84,6 +87,7 @@ namespace TPie
 
             Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.1.0";
 
+            Framework.Update += Update;
             UiBuilder.Draw += Draw;
             UiBuilder.BuildFonts += BuildFont;
             UiBuilder.OpenConfigUi += OpenConfigUi;
@@ -102,25 +106,25 @@ namespace TPie
             KeyboardHelper.Initialize();
             ItemsHelper.Initialize();
             TexturesCache.Initialize();
+            TexturesCache.Instance?.LoadPluginTextures();
 
             Settings = Settings.Load();
 
-            //Settings.Rings.Clear();
-            //KeyBind keybind = new KeyBind(72);
-            //Ring ring = new Ring("Test", Vector4.One, keybind, 200, new Vector2(40, 40));
+            Settings.Rings.Clear();
+            KeyBind keybind = new KeyBind(72);
+            Ring ring = new Ring("Test", Vector4.One, keybind, 150, new Vector2(40, 40));
 
-            //ActionItem? teleport = new ActionItem(5);
-            //ring.Items.Add(teleport);
-            //ring.Items.Add(teleport);
-            //ring.Items.Add(teleport);
-            //ring.Items.Add(teleport);
-            //ring.Items.Add(teleport);
-            //ring.Items.Add(teleport);
-            //ring.Items.Add(teleport);
-            //ring.Items.Add(teleport);
+            ActionElement? teleport = new ActionElement(5);
+            ring.Items.Add(teleport);
 
-            //Rings.Add(ring);
-            //Settings.Save(Settings);
+            ItemElement? item = new ItemElement(2001886, false, 25948);
+            ring.Items.Add(item);
+
+            ItemElement? food = new ItemElement(23187, true, 24414);
+            ring.Items.Add(food);
+
+            Rings.Add(ring);
+            Settings.Save(Settings);
         }
 
         public void Dispose()
@@ -137,6 +141,24 @@ namespace TPie
         private void PluginCommand(string command, string arguments)
         {
 
+        }
+
+        private void Update(Framework framework)
+        {
+            if (Settings == null) return;
+
+            bool needsItems = false;
+
+            foreach (Ring ring in Rings)
+            {
+                ring.Update();
+                needsItems |= (ring.IsActive && ring.HasInventoryItems);
+            }
+
+            if (needsItems)
+            {
+                ItemsHelper.Instance?.CalculateUsableItems();
+            }
         }
 
         private void Draw()
@@ -168,6 +190,7 @@ namespace TPie
 
             CommandManager.RemoveHandler("/tpie");
 
+            Framework.Update -= Update;
             UiBuilder.Draw -= Draw;
             UiBuilder.BuildFonts -= BuildFont;
             UiBuilder.OpenConfigUi -= OpenConfigUi;

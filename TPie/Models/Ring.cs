@@ -1,11 +1,12 @@
 ﻿using Dalamud.Logging;
 using ImGuiNET;
+using ImGuiScene;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using TPie.Helpers;
-using TPie.Models.Items;
+using TPie.Models.Elements;
 
 namespace TPie.Models
 {
@@ -17,8 +18,12 @@ namespace TPie.Models
         public float Radius;
         public Vector2 ItemSize;
 
-        public List<RingItem> Items;
+        public List<RingElement> Items;
 
+        public bool IsActive { get; private set; } = false;
+        public bool HasInventoryItems { get; private set; } = false;
+
+        private List<RingElement> _validItems = null!;
         private Vector2? _center = null;
         private int _selectedIndex = -1;
         public uint _color;
@@ -32,29 +37,42 @@ namespace TPie.Models
             Radius = radius;
             ItemSize = itemSize;
 
-            Items = new List<RingItem>();
+            Items = new List<RingElement>();
 
             _color = ImGui.ColorConvertFloat4ToU32(Color);
             _lineColor = ImGui.ColorConvertFloat4ToU32(new Vector4(Color.X, Color.Y, Color.Z, 0.5f));
         }
 
+        public void Update()
+        {
+            if (!KeyBind.IsActive())
+            {
+                IsActive = false;
+                return;
+            }
+
+            _validItems = Items.Where(o => o.IsValid()).ToList();
+            IsActive = _validItems.Count > 0;
+
+            HasInventoryItems = _validItems.FirstOrDefault(item => item is ItemElement) != null;
+        }
+
         public void Draw()
         {
-            //List<RingItem> validItems = Items.Where(o => o.IsValid()).ToList();
-            var validItems = Items;
-            int count = validItems.Count;
-
-            if (!KeyBind.IsActive() || count == 0)
+            if (!IsActive)
             {
-                if (_center != null && _selectedIndex >= 0)
+                if (_center != null && _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
                 {
-                    validItems[_selectedIndex].ExecuteAction();
-                    _selectedIndex = -1;
+                    _validItems[_selectedIndex].ExecuteAction();
+
                 }
 
+                _selectedIndex = -1;
                 _center = null;
                 return;
             }
+
+            int count = _validItems.Count;
 
             Vector2 margin = new Vector2(20, 20);
             Vector2 radius = new Vector2(Radius);
@@ -63,12 +81,6 @@ namespace TPie.Models
             Vector2 pos = mousePos - radius - margin;
             if (_center == null)
             {
-                var asd = ItemsHelper.Instance.GetUsableItems();
-                foreach (UsableItem item in asd)
-                {
-                    PluginLog.Log($"{item.Name} {item.ID} {item.HQ.ToString()} {item.Count}");
-                }
-
                 _center = mousePos;
             }
 
@@ -82,7 +94,21 @@ namespace TPie.Models
                 return;
             }
 
+            ImDrawListPtr drawList = ImGui.GetWindowDrawList();
             Vector2 center = _center!.Value;
+
+            // bg
+            if (Plugin.Settings.DrawRingBackground)
+            {
+                TextureWrap? bg = TexturesCache.Instance?.RingBackground;
+                if (bg != null)
+                {
+                    Vector2 bgSize = new Vector2(Radius * 1.2f);
+                    drawList.AddImage(bg.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One);
+                }
+            }
+
+            // elements
             float r = Radius - ItemSize.Y;
             double step = (Math.PI * 2) / count;
 
@@ -93,7 +119,7 @@ namespace TPie.Models
             }
 
             Vector2[] itemPositions = new Vector2[count];
-            Vector2[] itemSizes = new Vector2[count];
+            float[] itemScales = new float[count];
 
             float minDistance = float.MaxValue;
             _selectedIndex = -1;
@@ -117,13 +143,11 @@ namespace TPie.Models
                     minDistance = selected ? distance : minDistance;
                 }
 
-                float scale = distance > 200 ? 1f : Math.Clamp(2f - (distance * 2f / 200), 1f, 2f);
-                itemSizes[index] = ItemSize * scale;
+                itemScales[index] = distance > 200 ? 1f : Math.Clamp(2f - (distance * 2f / 200), 1f, 2f);
 
                 index++;
             }
 
-            ImDrawListPtr drawList = ImGui.GetWindowDrawList();
             uint color = _selectedIndex >= 0 ? _color : _lineColor;
             drawList.AddCircleFilled(center, 10, color);
 
@@ -131,10 +155,10 @@ namespace TPie.Models
             Vector2 startPos = center + Vector2.Normalize(endPos - center) * 9.5f;
             drawList.AddLine(startPos, endPos, color, 4);
 
-            for (int i = 0; i < Items.Count; i++)
+            for (int i = 0; i < count; i++)
             {
-                Vector2 size = i == _selectedIndex ? ItemSize * 2f : itemSizes[i];
-                Items[i].Draw(itemPositions[i], size, i == _selectedIndex, _color, drawList);
+                float scale = i == _selectedIndex ? 2f : itemScales[i];
+                Items[i].Draw(itemPositions[i], ItemSize, scale, i == _selectedIndex, _color, drawList);
             }
 
             ImGui.End();
