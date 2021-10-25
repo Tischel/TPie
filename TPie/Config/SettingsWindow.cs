@@ -256,7 +256,7 @@ namespace TPie.Config
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
                         {
-
+                            Plugin.ShowRingSettingsWindow(ring);
                         }
                         ImGui.PopFont();
                         DrawHelper.SetTooltip("Edit Elements");

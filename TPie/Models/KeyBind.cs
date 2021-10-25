@@ -32,6 +32,11 @@ namespace TPie.Models
 
         public bool IsActive()
         {
+            if (ChatHelper.Instance.IsInputTextActive() || ImGui.GetIO().WantCaptureKeyboard)
+            {
+                return false;
+            }
+
             ImGuiIOPtr io = ImGui.GetIO();
             bool ctrl = Ctrl ? io.KeyCtrl : !io.KeyCtrl;
             bool alt = Alt ? io.KeyAlt : !io.KeyAlt;

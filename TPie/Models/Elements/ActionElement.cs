@@ -35,7 +35,17 @@ namespace TPie.Models.Elements
 
         public override bool IsValid()
         {
-            return ActionID > 0 && _data != null;
+            uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? 0;
+            if (jobId <= 0) return false;
+
+            return ActionID > 0 && _data != null && JobsHelper.Instance?.ClassJobCategoryContainsJob(_data.ClassJobCategory.Row, jobId) == true;
+        }
+
+        public override string Description()
+        {
+            if (_data == null) return "";
+
+            return _data.Name;
         }
 
         public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)

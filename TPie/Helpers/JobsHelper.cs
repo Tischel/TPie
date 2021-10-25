@@ -54,98 +54,158 @@ namespace TPie.Helpers
             return _playerActions.Where(row => ClassJobCategoryContainsJob(row.ClassJobCategory.Row, jobId)).ToList();
         }
 
+        public bool IsActionValid(uint jobId, uint actionId)
+        {
+            return ActionsForJobId(jobId).Any(row => row.RowId == actionId);
+        }
+
         private static int CompareActionsByName(LuminaAction a, LuminaAction b)
         {
             return a.Name.ToString().CompareTo(b.Name.ToString());
         }
 
-        private bool ClassJobCategoryContainsJob(uint key, uint jobId)
+        public bool ClassJobCategoryContainsJob(uint key, uint jobId)
         {
             switch (key)
             {
                 case 1: return true;
-                case 2: return jobId == JobIds.GLD;
-                case 3: return jobId == JobIds.PGL;
-                case 4: return jobId == JobIds.MRD;
-                case 5: return jobId == JobIds.LNC;
-                case 6: return jobId == JobIds.ARC;
-                case 7: return jobId == JobIds.CNJ;
-                case 8: return jobId == JobIds.THM;
-                case 9: return jobId == JobIds.CRP;
-                case 10: return jobId == JobIds.BSM;
-                case 11: return jobId == JobIds.ARM;
-                case 12: return jobId == JobIds.GSM;
-                case 13: return jobId == JobIds.LTW;
-                case 14: return jobId == JobIds.WVR;
-                case 15: return jobId == JobIds.ALC;
-                case 16: return jobId == JobIds.CUL;
-                case 17: return jobId == JobIds.MIN;
-                case 18: return jobId == JobIds.BTN;
-                case 19: return jobId == JobIds.FSH;
-                case 20: return jobId == JobIds.PLD;
-                case 21: return jobId == JobIds.MNK;
-                case 22: return jobId == JobIds.WAR;
-                case 23: return jobId == JobIds.DRG;
-                case 24: return jobId == JobIds.BRD;
-                case 25: return jobId == JobIds.WHM;
-                case 26: return jobId == JobIds.BLM;
-                case 27: return jobId == JobIds.ACN;
-                case 28: return jobId == JobIds.SMN;
-                case 29: return jobId == JobIds.SCH;
-                case 38: return jobId == JobIds.PLD;
-                case 41: return jobId == JobIds.MNK;
-                case 44: return jobId == JobIds.WAR;
-                case 47: return jobId == JobIds.DRG;
-                case 50: return jobId == JobIds.BRD;
-                case 53: return jobId == JobIds.WHM;
-                case 55: return jobId == JobIds.BLM;
-                case 59: return jobId == JobIds.PLD || jobId == JobIds.WAR || jobId == JobIds.DRK || jobId == JobIds.GNB;
-                case 61: return jobId == JobIds.WHM || jobId == JobIds.SCH || jobId == JobIds.AST;
-                case 63: return jobId == JobIds.BLM || jobId == JobIds.SMN || jobId == JobIds.RDM || jobId == JobIds.BLU;
-                case 64: return jobId == JobIds.WHM || jobId == JobIds.SCH || jobId == JobIds.AST;
-                case 66: return jobId == JobIds.BRD || jobId == JobIds.MCH || jobId == JobIds.DNC;
-                case 68: return jobId == JobIds.SCH || jobId == JobIds.SMN;
-                case 69: return jobId == JobIds.SMN;
-                case 73: return jobId == JobIds.WHM || jobId == JobIds.SCH || jobId == JobIds.AST;
-                case 89: return jobId == JobIds.BLM || jobId == JobIds.SMN || jobId == JobIds.RDM || jobId == JobIds.BLU;
-                case 91: return jobId == JobIds.ROG;
-                case 92: return jobId == JobIds.NIN;
-                case 93: return jobId == JobIds.NIN;
-                case 94: return jobId == JobIds.NIN;
-                case 95: return jobId == JobIds.NIN;
-                case 96: return jobId == JobIds.MCH;
-                case 98: return jobId == JobIds.DRK;
-                case 99: return jobId == JobIds.AST;
-                case 103: return jobId == JobIds.NIN;
-                case 106: return jobId == JobIds.BRD;
-                case 111: return jobId == JobIds.SAM;
-                case 112: return jobId == JobIds.RDM;
-                case 113: return jobId == JobIds.PLD || jobId == JobIds.WAR || jobId == JobIds.DRK || jobId == JobIds.GNB;
-                case 114: return jobId == JobIds.MNK || jobId == JobIds.DRG || jobId == JobIds.NIN || jobId == JobIds.SAM;
-                case 115: return jobId == JobIds.BRD || jobId == JobIds.MCH || jobId == JobIds.DNC;
-                case 116: return jobId == JobIds.BLM || jobId == JobIds.SMN || jobId == JobIds.RDM || jobId == JobIds.BLU;
-                case 117: return jobId == JobIds.WHM || jobId == JobIds.SCH || jobId == JobIds.AST;
-                case 118: return jobId == JobIds.MNK || jobId == JobIds.DRG || jobId == JobIds.NIN || jobId == JobIds.SAM;
-                case 121: return jobId == JobIds.PLD || jobId == JobIds.WAR || jobId == JobIds.DRK || jobId == JobIds.GNB;
-                case 122: return jobId == JobIds.MNK || jobId == JobIds.DRG || jobId == JobIds.NIN || jobId == JobIds.SAM;
-                case 123: return jobId == JobIds.BRD || jobId == JobIds.MCH || jobId == JobIds.DNC;
-                case 125: return jobId == JobIds.WHM || jobId == JobIds.SCH || jobId == JobIds.AST;
-                case 129: return jobId == JobIds.BLU;
-                case 133: return jobId == JobIds.WHM || jobId == JobIds.SCH || jobId == JobIds.AST;
-                case 134: return jobId == JobIds.PLD || jobId == JobIds.WAR || jobId == JobIds.DRK || jobId == JobIds.GNB;
-                case 139: return jobId == JobIds.BRD || jobId == JobIds.MCH || jobId == JobIds.DNC;
-                case 147: return jobId == JobIds.BLM || jobId == JobIds.SMN || jobId == JobIds.RDM || jobId == JobIds.BLU;
-                case 148: return jobId == JobIds.MNK || jobId == JobIds.DRG || jobId == JobIds.NIN || jobId == JobIds.SAM;
-                case 149: return jobId == JobIds.GNB;
-                case 150: return jobId == JobIds.DNC;
-                case 160: return jobId == JobIds.SCH;
+                case 2: return jobId == JobIDs.GLD;
+                case 3: return jobId == JobIDs.PGL;
+                case 4: return jobId == JobIDs.MRD;
+                case 5: return jobId == JobIDs.LNC;
+                case 6: return jobId == JobIDs.ARC;
+                case 7: return jobId == JobIDs.CNJ;
+                case 8: return jobId == JobIDs.THM;
+                case 9: return jobId == JobIDs.CRP;
+                case 10: return jobId == JobIDs.BSM;
+                case 11: return jobId == JobIDs.ARM;
+                case 12: return jobId == JobIDs.GSM;
+                case 13: return jobId == JobIDs.LTW;
+                case 14: return jobId == JobIDs.WVR;
+                case 15: return jobId == JobIDs.ALC;
+                case 16: return jobId == JobIDs.CUL;
+                case 17: return jobId == JobIDs.MIN;
+                case 18: return jobId == JobIDs.BTN;
+                case 19: return jobId == JobIDs.FSH;
+                case 20: return jobId == JobIDs.PLD;
+                case 21: return jobId == JobIDs.MNK;
+                case 22: return jobId == JobIDs.WAR;
+                case 23: return jobId == JobIDs.DRG;
+                case 24: return jobId == JobIDs.BRD;
+                case 25: return jobId == JobIDs.WHM;
+                case 26: return jobId == JobIDs.BLM;
+                case 27: return jobId == JobIDs.ACN;
+                case 28: return jobId == JobIDs.SMN;
+                case 29: return jobId == JobIDs.SCH;
+                case 38: return jobId == JobIDs.PLD;
+                case 41: return jobId == JobIDs.MNK;
+                case 44: return jobId == JobIDs.WAR;
+                case 47: return jobId == JobIDs.DRG;
+                case 50: return jobId == JobIDs.BRD;
+                case 53: return jobId == JobIDs.WHM;
+                case 55: return jobId == JobIDs.BLM;
+                case 59: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
+                case 61: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST;
+                case 63: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU;
+                case 64: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST;
+                case 66: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
+                case 68: return jobId == JobIDs.SCH || jobId == JobIDs.SMN;
+                case 69: return jobId == JobIDs.SMN;
+                case 73: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST;
+                case 89: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU;
+                case 91: return jobId == JobIDs.ROG;
+                case 92: return jobId == JobIDs.NIN;
+                case 93: return jobId == JobIDs.NIN;
+                case 94: return jobId == JobIDs.NIN;
+                case 95: return jobId == JobIDs.NIN;
+                case 96: return jobId == JobIDs.MCH;
+                case 98: return jobId == JobIDs.DRK;
+                case 99: return jobId == JobIDs.AST;
+                case 103: return jobId == JobIDs.NIN;
+                case 106: return jobId == JobIDs.BRD;
+                case 111: return jobId == JobIDs.SAM;
+                case 112: return jobId == JobIDs.RDM;
+                case 113: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
+                case 114: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM;
+                case 115: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
+                case 116: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU;
+                case 117: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST;
+                case 118: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM;
+                case 121: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
+                case 122: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM;
+                case 123: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
+                case 125: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST;
+                case 129: return jobId == JobIDs.BLU;
+                case 133: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST;
+                case 134: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
+                case 139: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
+                case 147: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU;
+                case 148: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM;
+                case 149: return jobId == JobIDs.GNB;
+                case 150: return jobId == JobIDs.DNC;
+                case 160: return jobId == JobIDs.SCH;
             }
 
             return false;
         }
+
+        public static Dictionary<uint, string> JobNames = new Dictionary<uint, string>()
+        {
+            // tanks
+            [JobIDs.GLD] = "GLD",
+            [JobIDs.MRD] = "MRD",
+            [JobIDs.PLD] = "PLD",
+            [JobIDs.WAR] = "WAR",
+            [JobIDs.DRK] = "DRK",
+            [JobIDs.GNB] = "GNB",
+
+            // melee dps
+            [JobIDs.PGL] = "PGL",
+            [JobIDs.LNC] = "LNC",
+            [JobIDs.ROG] = "ROG",
+            [JobIDs.MNK] = "MNK",
+            [JobIDs.DRG] = "DRG",
+            [JobIDs.NIN] = "NIN",
+            [JobIDs.SAM] = "SAM",
+
+            // ranged phys dps
+            [JobIDs.ARC] = "ARC",
+            [JobIDs.BRD] = "BRD",
+            [JobIDs.MCH] = "MCH",
+            [JobIDs.DNC] = "DNC",
+
+            // ranged magic dps
+            [JobIDs.THM] = "THM",
+            [JobIDs.ACN] = "ACN",
+            [JobIDs.BLM] = "BLM",
+            [JobIDs.SMN] = "SMN",
+            [JobIDs.RDM] = "RDM",
+            [JobIDs.BLU] = "BLU",
+
+            // healers
+            [JobIDs.CNJ] = "CNJ",
+            [JobIDs.WHM] = "WHM",
+            [JobIDs.SCH] = "SCH",
+            [JobIDs.AST] = "AST",
+
+            // crafters
+            [JobIDs.CRP] = "CRP",
+            [JobIDs.BSM] = "BSM",
+            [JobIDs.ARM] = "ARM",
+            [JobIDs.GSM] = "GSM",
+            [JobIDs.LTW] = "LTW",
+            [JobIDs.WVR] = "WVR",
+            [JobIDs.ALC] = "ALC",
+            [JobIDs.CUL] = "CUL",
+
+            // gatherers
+            [JobIDs.MIN] = "MIN",
+            [JobIDs.BTN] = "BTN",
+            [JobIDs.FSH] = "FSH",
+        };
     }
 
-    internal static class JobIds
+    internal static class JobIDs
     {
         public const uint GLD = 1;
         public const uint MRD = 3;

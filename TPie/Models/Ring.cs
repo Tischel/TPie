@@ -1,6 +1,7 @@
 ﻿using Dalamud.Logging;
 using ImGuiNET;
 using ImGuiScene;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace TPie.Models
         public Vector2 ItemSize;
 
         public List<RingElement> Items;
+
+        public bool Previewing { get; private set; } = false;
 
         public bool IsActive { get; private set; } = false;
         public bool HasInventoryItems { get; private set; } = false;
@@ -52,23 +55,38 @@ namespace TPie.Models
             _lineColor = ImGui.ColorConvertFloat4ToU32(new Vector4(Color.X, Color.Y, Color.Z, 0.5f));
         }
 
+        public void Preview(Vector2 position)
+        {
+            _center = position;
+            if (Previewing) return;
+
+            Previewing = true;
+            SetAnimState(AnimationState.Opened);
+        }
+
+        public void EndPreview()
+        {
+            SetAnimState(AnimationState.Closed);
+            Previewing = false;
+        }
+
         public void Update()
         {
+            _validItems = Items.Where(o => o.IsValid()).ToList();
+            HasInventoryItems = _validItems.FirstOrDefault(item => item is ItemElement) != null;
+
             if (!KeyBind.IsActive())
             {
                 IsActive = false;
                 return;
             }
 
-            _validItems = Items.Where(o => o.IsValid()).ToList();
             IsActive = _validItems.Count > 0;
-
-            HasInventoryItems = _validItems.FirstOrDefault(item => item is ItemElement) != null;
         }
 
         public void Draw()
         {
-            if (!IsActive)
+            if (!Previewing && !IsActive)
             {
                 if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
                 {
@@ -84,7 +102,7 @@ namespace TPie.Models
             Vector2 mousePos = ImGui.GetMousePos();
 
             // detect start
-            if (IsActive && (_animState == AnimationState.Closed || _animState == AnimationState.Closing))
+            if (!Previewing && IsActive && (_animState == AnimationState.Closed || _animState == AnimationState.Closing))
             {
                 if (_animState == AnimationState.Closed)
                 {
@@ -108,7 +126,7 @@ namespace TPie.Models
             Vector2 pos = center - radius - margin;
 
             // create window
-            ImGui.SetNextWindowPos(pos, ImGuiCond.Appearing);
+            ImGui.SetNextWindowPos(pos, Previewing ? ImGuiCond.Always : ImGuiCond.Appearing);
             ImGui.SetNextWindowSize(radius * 2 + margin * 2, ImGuiCond.Always);
             ImGui.SetNextWindowBgAlpha(0);
 
@@ -126,7 +144,7 @@ namespace TPie.Models
                 TextureWrap? bg = TexturesCache.Instance?.RingBackground;
                 if (bg != null)
                 {
-                    Vector2 bgSize = new Vector2(Radius * 1.4f);
+                    Vector2 bgSize = new Vector2(Radius * 1.3f);
                     uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, (float)_animProgress));
                     drawList.AddImage(bg.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One, c);
                 }
@@ -181,10 +199,10 @@ namespace TPie.Models
                 index++;
             }
 
-            uint color = _selectedIndex >= 0 ? _color : _lineColor;
+            uint color = !Previewing && _selectedIndex >= 0 ? _color : _lineColor;
             drawList.AddCircleFilled(center, 10, color);
 
-            if (_animState == AnimationState.Opened)
+            if (!Previewing && _animState == AnimationState.Opened)
             {
                 Vector2 endPos = _selectedIndex >= 0 ? itemPositions[_selectedIndex] : mousePos;
                 Vector2 startPos = center + Vector2.Normalize(endPos - center) * 9.5f;
@@ -193,9 +211,9 @@ namespace TPie.Models
 
             for (int i = 0; i < count; i++)
             {
-                bool selected = _animState == AnimationState.Opened && i == _selectedIndex;
-                float scale = Plugin.Settings.AnimateIconSizes ? (selected ? 2f : itemScales[i]) : 1f;
-                Items[i].Draw(itemPositions[i], ItemSize, scale, selected, _color, _itemsAlpha[i], drawList);
+                bool selected = !Previewing && _animState == AnimationState.Opened && i == _selectedIndex;
+                float scale = !Previewing && Plugin.Settings.AnimateIconSizes ? (selected ? 2f : itemScales[i]) : 1f;
+                _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _color, _itemsAlpha[i], drawList);
             }
 
             ImGui.End();
@@ -223,6 +241,7 @@ namespace TPie.Models
                 _animEndTime = -1;
                 _animProgress = state == AnimationState.Opened ? 1 : 0;
                 _animating = false;
+                _angleOffset = 0;
 
                 for (int i = 0; i < count; i++)
                 {

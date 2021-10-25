@@ -34,6 +34,8 @@ namespace TPie.Models.Elements
         public abstract void ExecuteAction();
 
         public abstract bool IsValid();
+
+        public abstract string Description();
     }
 
     internal class RingElementConverter : JsonConverter

@@ -42,8 +42,10 @@ namespace TPie
         public static Settings Settings { get; private set; } = null!;
         private List<Ring> Rings => Settings.Rings;
 
-        private WindowSystem _windowSystem = null!;
-        private SettingsWindow _settingsWindow = null!;
+        private static WindowSystem _windowSystem = null!;
+        private static SettingsWindow _settingsWindow = null!;
+        private static RingSettingsWindow _ringSettingsWindow = null!;
+        //private static RingPreviewWindow _ringPreviewWindow = null!;
 
         public Plugin(
             ClientState clientState,
@@ -92,6 +94,7 @@ namespace TPie
 
             ChatHelper.Initialize();
             KeyboardHelper.Initialize();
+            JobsHelper.Initialize();
             ItemsHelper.Initialize();
             TexturesCache.Initialize();
             TexturesCache.Instance?.LoadPluginTextures();
@@ -142,13 +145,23 @@ namespace TPie
         private void PluginCommand(string command, string arguments)
         {
             _settingsWindow.IsOpen = !_settingsWindow.IsOpen;
+            _ringSettingsWindow.IsOpen = !_ringSettingsWindow.IsOpen;
         }
 
         private void CreateWindows()
         {
             _settingsWindow = new SettingsWindow("TPie Settings");
+            _ringSettingsWindow = new RingSettingsWindow("Ring Settings");
+
             _windowSystem = new WindowSystem("TPie_Windows");
             _windowSystem.AddWindow(_settingsWindow);
+            _windowSystem.AddWindow(_ringSettingsWindow);
+        }
+
+        public static void ShowRingSettingsWindow(Ring ring)
+        {
+            _ringSettingsWindow.Ring = ring;
+            _ringSettingsWindow.IsOpen = true;
         }
 
         private void Update(Framework framework)
@@ -160,7 +173,7 @@ namespace TPie
             foreach (Ring ring in Rings)
             {
                 ring.Update();
-                needsItems |= (ring.IsActive && ring.HasInventoryItems);
+                needsItems |= ((ring.IsActive || ring.Previewing) && ring.HasInventoryItems);
             }
 
             if (needsItems)
@@ -174,8 +187,6 @@ namespace TPie
             if (Settings == null || ClientState.LocalPlayer == null) return;
 
             _windowSystem.Draw();
-
-            if (_settingsWindow.IsOpen) return;
 
             foreach (Ring ring in Rings)
             {
@@ -197,8 +208,11 @@ namespace TPie
 
             ChatHelper.Instance.Dispose();
             KeyboardHelper.Instance.Dispose();
+            JobsHelper.Instance.Dispose();
             ItemsHelper.Instance.Dispose();
             TexturesCache.Instance.Dispose();
+
+            _windowSystem.RemoveAllWindows();
 
             CommandManager.RemoveHandler("/tpie");
 

@@ -26,6 +26,16 @@ namespace TPie.Models.Elements
             return true;
         }
 
+        public override string Description()
+        {
+            if (JobsHelper.JobNames.TryGetValue(JobID, out string? value) && value != null)
+            {
+                return $"{value} ({GearSetID})";
+            }
+
+            return "";
+        }
+
         public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
         {
             base.Draw(position, size, scale, selected, color, alpha, drawList);

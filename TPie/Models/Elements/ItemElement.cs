@@ -29,6 +29,14 @@ namespace TPie.Models.Elements
             return ItemID > 0;
         }
 
+        public override string Description()
+        {
+            UsableItem? item = ItemsHelper.Instance?.GetUsableItem(ItemID, HQ);
+            if (item == null) return "";
+
+            return HQ ? item.Name + " (HQ)" : item.Name;
+        }
+
         public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
         {
             base.Draw(position, size, scale, selected, color, alpha, drawList);

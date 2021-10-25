@@ -1,15 +1,17 @@
-﻿using System;
+﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace TPie.Helpers
 {
-    internal class ChatHelper : IDisposable
+    internal unsafe class ChatHelper : IDisposable
     {
         #region Singleton
         private ChatHelper()
         {
             _chatModulePtr = Plugin.SigScanner.ScanText("48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 45 84 C9");
+            _inputTextActive = *(IntPtr*)((IntPtr)AtkStage.GetSingleton() + 0x28) + 0x188E;
         }
 
         public static void Initialize() { Instance = new ChatHelper(); }
@@ -39,6 +41,12 @@ namespace TPie.Helpers
         #endregion
 
         private IntPtr _chatModulePtr;
+        private IntPtr _inputTextActive = IntPtr.Zero;
+
+        public bool IsInputTextActive()
+        {
+            return _inputTextActive != IntPtr.Zero && *(bool*)_inputTextActive;
+        }
 
         public static void SendChatMessage(string message)
         {
