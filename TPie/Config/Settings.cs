@@ -19,11 +19,10 @@ namespace TPie.Config
 
         public bool DrawRingBackground = true;
 
-        public bool AnimateIn = true;
-        public float AnimateInDuration = 0.5f;
+        public RingAnimationType AnimationType = RingAnimationType.Spiral;
+        public float AnimationDuration = 0.2f;
 
-        public bool AnimateOut = true;
-        public float AnimateOutDuration = 0.5f;
+        public bool AnimateIconSizes = true;
 
         public bool ShowCooldowns = true;
         public bool ShowRemainingItemCount = true;
@@ -76,5 +75,13 @@ namespace TPie.Config
             }
         }
         #endregion
+    }
+
+    public enum RingAnimationType
+    {
+        None = 0,
+        Spiral = 1,
+        Sequential = 2,
+        Fade = 3
     }
 }

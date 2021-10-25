@@ -13,7 +13,7 @@ namespace TPie.Models.Elements
     {
         public uint IconID { get; protected set; }
 
-        public virtual void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, ImDrawListPtr drawList)
+        public virtual void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
         {
             size = size * scale;
 
@@ -24,7 +24,7 @@ namespace TPie.Models.Elements
                 drawList.AddRectFilled(borderPos, borderPos + borderSize, color, 4);
             }
 
-            DrawHelper.DrawIcon(IconID, position - size / 2, size, drawList);
+            DrawHelper.DrawIcon(IconID, position - size / 2, size, alpha, drawList);
         }
 
         public abstract void ExecuteAction();

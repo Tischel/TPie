@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using TPie.Config;
 using TPie.Helpers;
 using TPie.Models.Elements;
 
@@ -28,6 +29,14 @@ namespace TPie.Models
         private int _selectedIndex = -1;
         public uint _color;
         public uint _lineColor;
+
+        private AnimationState _animState = AnimationState.Closed;
+        private bool _animating = false;
+        private double _animEndTime = -1;
+        private double _animProgress = 0;
+        private double _angleOffset = 0;
+        private float[] _itemsDistanceScales = null!;
+        private float[] _itemsAlpha = null!;
 
         public Ring(string name, Vector4 color, KeyBind keyBind, float radius, Vector2 itemSize)
         {
@@ -61,29 +70,41 @@ namespace TPie.Models
         {
             if (!IsActive)
             {
-                if (_center != null && _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
+                if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
                 {
                     _validItems[_selectedIndex].ExecuteAction();
-
                 }
 
-                _selectedIndex = -1;
-                _center = null;
-                return;
+                if (_animState != AnimationState.Closing && _animState != AnimationState.Closed)
+                {
+                    SetAnimState(AnimationState.Closing);
+                }
             }
-
-            int count = _validItems.Count;
-
-            Vector2 margin = new Vector2(20, 20);
-            Vector2 radius = new Vector2(Radius);
 
             Vector2 mousePos = ImGui.GetMousePos();
-            Vector2 pos = mousePos - radius - margin;
-            if (_center == null)
+
+            // detect start
+            if (IsActive && (_animState == AnimationState.Closed || _animState == AnimationState.Closing))
             {
-                _center = mousePos;
+                if (_animState == AnimationState.Closed)
+                {
+                    _center = mousePos;
+                }
+
+                SetAnimState(AnimationState.Opening);
             }
 
+            // animate
+            UpdateAnimation();
+
+            if (_animState == AnimationState.Closed) return;
+
+            int count = _validItems.Count;
+            Vector2 margin = new Vector2(40, 40);
+            Vector2 radius = new Vector2(Radius);
+            Vector2 pos = mousePos - radius - margin;
+
+            // create window
             ImGui.SetNextWindowPos(pos, ImGuiCond.Appearing);
             ImGui.SetNextWindowSize(radius * 2 + margin * 2, ImGuiCond.Always);
             ImGui.SetNextWindowBgAlpha(0);
@@ -103,8 +124,9 @@ namespace TPie.Models
                 TextureWrap? bg = TexturesCache.Instance?.RingBackground;
                 if (bg != null)
                 {
-                    Vector2 bgSize = new Vector2(Radius * 1.2f);
-                    drawList.AddImage(bg.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One);
+                    Vector2 bgSize = new Vector2(Radius * 1.4f);
+                    uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, (float)_animProgress));
+                    drawList.AddImage(bg.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One, c);
                 }
             }
 
@@ -130,20 +152,29 @@ namespace TPie.Models
             {
                 if (index >= count) break;
 
-                double x = center.X + r * Math.Cos(a);
-                double y = center.Y + r * Math.Sin(a);
+                double angle = a + _angleOffset;
+                float d = r * _itemsDistanceScales[index];
+                double x = center.X + d * Math.Cos(angle);
+                double y = center.Y + d * Math.Sin(angle);
 
                 itemPositions[index] = new Vector2((float)x, (float)y);
 
-                float distance = (itemPositions[index] - mousePos).Length();
-                if (distance < minDistance)
+                if (_animState == AnimationState.Opened)
                 {
-                    bool selected = distance <= ItemSize.Y * 0.75f;
-                    _selectedIndex = selected ? index : _selectedIndex;
-                    minDistance = selected ? distance : minDistance;
-                }
+                    float distance = (itemPositions[index] - mousePos).Length();
+                    if (distance < minDistance)
+                    {
+                        bool selected = distance <= ItemSize.Y * 0.75f;
+                        _selectedIndex = selected ? index : _selectedIndex;
+                        minDistance = selected ? distance : minDistance;
+                    }
 
-                itemScales[index] = distance > 200 ? 1f : Math.Clamp(2f - (distance * 2f / 200), 1f, 2f);
+                    itemScales[index] = distance > 200 ? 1f : Math.Clamp(2f - (distance * 2f / 200), 1f, 2f);
+                }
+                else
+                {
+                    itemScales[index] = 1f;
+                }
 
                 index++;
             }
@@ -151,17 +182,153 @@ namespace TPie.Models
             uint color = _selectedIndex >= 0 ? _color : _lineColor;
             drawList.AddCircleFilled(center, 10, color);
 
-            Vector2 endPos = _selectedIndex >= 0 ? itemPositions[_selectedIndex] : mousePos;
-            Vector2 startPos = center + Vector2.Normalize(endPos - center) * 9.5f;
-            drawList.AddLine(startPos, endPos, color, 4);
+            if (_animState == AnimationState.Opened)
+            {
+                Vector2 endPos = _selectedIndex >= 0 ? itemPositions[_selectedIndex] : mousePos;
+                Vector2 startPos = center + Vector2.Normalize(endPos - center) * 9.5f;
+                drawList.AddLine(startPos, endPos, color, 4);
+            }
 
             for (int i = 0; i < count; i++)
             {
-                float scale = i == _selectedIndex ? 2f : itemScales[i];
-                Items[i].Draw(itemPositions[i], ItemSize, scale, i == _selectedIndex, _color, drawList);
+                bool selected = _animState == AnimationState.Opened && i == _selectedIndex;
+                float scale = Plugin.Settings.AnimateIconSizes ? (selected ? 2f : itemScales[i]) : 1f;
+                Items[i].Draw(itemPositions[i], ItemSize, scale, selected, _color, _itemsAlpha[i], drawList);
             }
 
             ImGui.End();
         }
+
+        #region anim
+        private void SetAnimState(AnimationState state)
+        {
+            float animDuration = Plugin.Settings.AnimationDuration;
+            if (Plugin.Settings.AnimationType == RingAnimationType.None || animDuration == 0)
+            {
+                if (state == AnimationState.Opening) { state = AnimationState.Opened; }
+                else if (state == AnimationState.Closing) { state = AnimationState.Closed; }
+            }
+
+            _animState = state;
+
+            int count = _validItems?.Count ?? 0;
+            _itemsDistanceScales = new float[count];
+            _itemsAlpha = new float[count];
+
+            // opened
+            if (state == AnimationState.Opened || state == AnimationState.Closed)
+            {
+                _animEndTime = -1;
+                _animProgress = state == AnimationState.Opened ? 1 : 0;
+                _animating = false;
+
+                for (int i = 0; i < count; i++)
+                {
+                    _itemsDistanceScales[i] = state == AnimationState.Opened ? 1f : 0f;
+                    _itemsAlpha[i] = state == AnimationState.Opened ? 1f : 0f;
+                }
+
+                if (state == AnimationState.Closed)
+                {
+                    _center = null;
+                }
+                return;
+            }
+
+
+            double p = state == AnimationState.Opening ? 1 - _animProgress : _animProgress;
+            _animEndTime = ImGui.GetTime() + (animDuration * p);
+
+            _animating = true;
+        }
+
+        private void UpdateAnimation()
+        {
+            if (!_animating) { return; }
+
+            double now = ImGui.GetTime();
+            int count = _validItems.Count;
+
+            float animDuration = Plugin.Settings.AnimationDuration;
+            if (now > _animEndTime)
+            {
+                _animProgress = _animState == AnimationState.Opening ? 1 : 0;
+            }
+            else
+            {
+                _animProgress = Math.Min(1, (_animEndTime - now) / animDuration);
+                if (_animState == AnimationState.Opening)
+                {
+                    _animProgress = 1 - _animProgress;
+                }
+            }
+
+            RingAnimationType type = Plugin.Settings.AnimationType;
+
+            // spiral
+            if (type == RingAnimationType.Spiral)
+            {
+                _angleOffset = -0.8f * (1 - _animProgress);
+
+                for (int i = 0; i < count; i++)
+                {
+                    _itemsDistanceScales[i] = (float)_animProgress;
+                    _itemsAlpha[i] = (float)_animProgress;
+                }
+            }
+
+            // sequential
+            else if (type == RingAnimationType.Sequential)
+            {
+                _angleOffset = 0;
+
+                for (int i = 0; i < count; i++)
+                {
+                    float start = i * (1f / count);
+                    float end = (i + 1) * (1f / count);
+                    float duration = end - start;
+
+                    float p = 0;
+                    if (_animProgress > start && _animProgress <= end)
+                    {
+                        p = ((float)_animProgress - start) / duration;
+                    }
+                    else
+                    {
+                        p = _animProgress < start ? 0f : 1f;
+                    }
+
+                    _itemsDistanceScales[i] = p;
+                    _itemsAlpha[i] = p;
+                }
+            }
+
+            // fade
+            else if (type == RingAnimationType.Fade)
+            {
+                _angleOffset = 0;
+
+                for (int i = 0; i < count; i++)
+                {
+                    _itemsDistanceScales[i] = 1f;
+                    _itemsAlpha[i] = (float)_animProgress;
+                }
+            }
+
+            if (now > _animEndTime)
+            {
+                AnimationState state = _animState == AnimationState.Opening ? AnimationState.Opened : AnimationState.Closed;
+                SetAnimState(state);
+            }
+        }
+
+        private enum AnimationState
+        {
+            Opening = 0,
+            Opened = 1,
+            Closing = 2,
+            Closed = 3
+        }
+        #endregion
     }
 }

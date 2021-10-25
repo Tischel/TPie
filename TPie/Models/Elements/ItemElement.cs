@@ -34,9 +34,9 @@ namespace TPie.Models.Elements
             return ItemID > 0;
         }
 
-        public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, ImDrawListPtr drawList)
+        public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
         {
-            base.Draw(position, size, scale, selected, color, drawList);
+            base.Draw(position, size, scale, selected, color, alpha, drawList);
 
             size = size * scale;
 
@@ -47,7 +47,9 @@ namespace TPie.Models.Elements
                 {
                     Vector2 iconSize = new Vector2(16 * scale);
                     Vector2 iconPos = (position - size / 2f) + new Vector2(2);
-                    drawList.AddImage(hqIcon.ImGuiHandle, iconPos, iconPos + iconSize, Vector2.Zero, Vector2.One);
+                    uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, alpha));
+
+                    drawList.AddImage(hqIcon.ImGuiHandle, iconPos, iconPos + iconSize, Vector2.Zero, Vector2.One, c);
                 }
             }
         }
