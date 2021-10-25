@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace TPie.Helpers
 {
@@ -72,6 +73,19 @@ namespace TPie.Helpers
             if (key < 0 || key >= 256) return false;
 
             return _keyStates[key];
+        }
+
+        public int GetKeyPressed()
+        {
+            for (int i = (int)Keys.Space; i < _keyStates.Length; i++)
+            {
+                if (_keyStates[i])
+                {
+                    return i;
+                }
+            }
+
+            return 0;
         }
 
         private bool[] _keyStates;

@@ -12,7 +12,7 @@ namespace TPie.Helpers
 
         private static bool _fontPushed = false;
 
-        public static void LoadFont()
+        public static unsafe void LoadFont()
         {
             DefaultFontBuilt = false;
 
@@ -21,8 +21,10 @@ namespace TPie.Helpers
             try
             {
                 DefaultFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(path, Plugin.Settings.FontSize);
-                DefaultFontBuilt = true;
-
+                if ((IntPtr)DefaultFont.NativePtr != IntPtr.Zero)
+                {
+                    DefaultFontBuilt = true;
+                }
             }
             catch (Exception e)
             {
@@ -32,12 +34,16 @@ namespace TPie.Helpers
 
         public static void PushFont(float scale)
         {
-            if (DefaultFontBuilt)
+            if (DefaultFontBuilt && Plugin.Settings.UseCustomFont)
             {
                 DefaultFont.Scale = scale;
                 ImGui.PushFont(DefaultFont);
                 _fontPushed = true;
                 return;
+            }
+            else
+            {
+                ImGui.SetWindowFontScale(scale);
             }
 
             _fontPushed = false;
@@ -50,6 +56,10 @@ namespace TPie.Helpers
                 ImGui.PopFont();
                 DefaultFont.Scale = 1;
                 _fontPushed = false;
+            }
+            else
+            {
+                ImGui.SetWindowFontScale(1);
             }
         }
     }

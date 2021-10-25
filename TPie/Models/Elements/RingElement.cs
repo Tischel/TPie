@@ -26,7 +26,9 @@ namespace TPie.Models.Elements
 
             position = position - size / 2f;
             DrawHelper.DrawIcon(IconID, position, size, alpha, drawList);
-            drawList.AddRect(position, position + size, 0xFF000000, 2, ImDrawFlags.None, 3);
+
+            uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(0, 0, 0, alpha));
+            drawList.AddRect(position, position + size, c, 2, ImDrawFlags.None, 3);
         }
 
         public abstract void ExecuteAction();
@@ -34,7 +36,7 @@ namespace TPie.Models.Elements
         public abstract bool IsValid();
     }
 
-    public class RingElementConverter : JsonConverter
+    internal class RingElementConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

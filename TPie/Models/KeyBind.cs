@@ -1,14 +1,16 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Logging;
+using ImGuiNET;
+using System.Windows.Forms;
 using TPie.Helpers;
 
 namespace TPie.Models
 {
     public class KeyBind
     {
-        public readonly int Key;
-        public readonly bool Ctrl;
-        public readonly bool Alt;
-        public readonly bool Shift;
+        public int Key;
+        public bool Ctrl;
+        public bool Alt;
+        public bool Shift;
 
         public KeyBind(int key, bool ctrl = false, bool alt = false, bool shift = false)
         {
@@ -23,7 +25,7 @@ namespace TPie.Models
             string ctrl = Ctrl ? "Ctrl + " : "";
             string alt = Alt ? "Alt + " : "";
             string shift = Shift ? "Shift + " : "";
-            string key = ((char)Key).ToString().ToUpper();
+            string key = ((Keys)Key).ToString();
 
             return ctrl + alt + shift + key;
         }
@@ -37,6 +39,29 @@ namespace TPie.Models
             bool key = KeyboardHelper.Instance?.IsKeyPressed(Key) == true;
 
             return ctrl && alt && shift && key;
+        }
+
+        public void Draw(string id)
+        {
+            ImGuiIOPtr io = ImGui.GetIO();
+            string dispKey = ToString();
+
+            ImGui.InputText($"##{id}_Keybind", ref dispKey, 200, ImGuiInputTextFlags.ReadOnly);
+            DrawHelper.SetTooltip("Escape to clear");
+
+            int keyPressed = KeyboardHelper.Instance.GetKeyPressed();
+            if (ImGui.IsItemActive() && keyPressed > 0)
+            {
+                Ctrl = io.KeyCtrl;
+                Alt = io.KeyAlt;
+                Shift = io.KeyShift;
+                Key = keyPressed;
+            }
+
+            if (KeyboardHelper.Instance.IsKeyPressed((int)Keys.Escape))
+            {
+                Key = 0;
+            }
         }
     }
 }

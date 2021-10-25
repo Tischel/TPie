@@ -8,6 +8,7 @@ using Dalamud.Game.ClientState.Party;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.Interface;
+using Dalamud.Interface.Windowing;
 using Dalamud.Logging;
 using Dalamud.Plugin;
 using System;
@@ -26,17 +27,12 @@ namespace TPie
     {
         public static ClientState ClientState { get; private set; } = null!;
         public static CommandManager CommandManager { get; private set; } = null!;
-        public static Condition Condition { get; private set; } = null!;
         public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
         public static DataManager DataManager { get; private set; } = null!;
         public static Framework Framework { get; private set; } = null!;
         public static GameGui GameGui { get; private set; } = null!;
-        public static JobGauges JobGauges { get; private set; } = null!;
-        public static ObjectTable ObjectTable { get; private set; } = null!;
         public static SigScanner SigScanner { get; private set; } = null!;
-        public static TargetManager TargetManager { get; private set; } = null!;
         public static UiBuilder UiBuilder { get; private set; } = null!;
-        public static PartyList PartyList { get; private set; } = null!;
 
         public static string AssemblyLocation { get; private set; } = "";
         public string Name => "TPie";
@@ -46,34 +42,26 @@ namespace TPie
         public static Settings Settings { get; private set; } = null!;
         private List<Ring> Rings => Settings.Rings;
 
+        private WindowSystem _windowSystem = null!;
+        private SettingsWindow _settingsWindow = null!;
 
         public Plugin(
             ClientState clientState,
             CommandManager commandManager,
-            Condition condition,
             DalamudPluginInterface pluginInterface,
             DataManager dataManager,
             Framework framework,
             GameGui gameGui,
-            JobGauges jobGauges,
-            ObjectTable objectTable,
-            PartyList partyList,
-            SigScanner sigScanner,
-            TargetManager targetManager
+            SigScanner sigScanner
         )
         {
             ClientState = clientState;
             CommandManager = commandManager;
-            Condition = condition;
             PluginInterface = pluginInterface;
             DataManager = dataManager;
             Framework = framework;
             GameGui = gameGui;
-            JobGauges = jobGauges;
-            ObjectTable = objectTable;
-            PartyList = partyList;
             SigScanner = sigScanner;
-            TargetManager = targetManager;
             UiBuilder = PluginInterface.UiBuilder;
 
             if (pluginInterface.AssemblyLocation.DirectoryName != null)
@@ -136,6 +124,8 @@ namespace TPie
             {
                 UiBuilder.RebuildFonts();
             }
+
+            CreateWindows();
         }
 
         public void Dispose()
@@ -151,12 +141,19 @@ namespace TPie
 
         private void PluginCommand(string command, string arguments)
         {
+            _settingsWindow.IsOpen = !_settingsWindow.IsOpen;
+        }
 
+        private void CreateWindows()
+        {
+            _settingsWindow = new SettingsWindow("TPie Settings");
+            _windowSystem = new WindowSystem("TPie_Windows");
+            _windowSystem.AddWindow(_settingsWindow);
         }
 
         private void Update(Framework framework)
         {
-            if (Settings == null) return;
+            if (Settings == null || ClientState.LocalPlayer == null) return;
 
             bool needsItems = false;
 
@@ -174,7 +171,11 @@ namespace TPie
 
         private void Draw()
         {
-            if (Settings == null) return;
+            if (Settings == null || ClientState.LocalPlayer == null) return;
+
+            _windowSystem.Draw();
+
+            if (_settingsWindow.IsOpen) return;
 
             foreach (Ring ring in Rings)
             {
@@ -184,7 +185,7 @@ namespace TPie
 
         private void OpenConfigUi()
         {
-
+            _settingsWindow.IsOpen = true;
         }
 
         protected virtual void Dispose(bool disposing)

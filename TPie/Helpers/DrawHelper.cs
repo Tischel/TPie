@@ -70,5 +70,13 @@ namespace TPie.Helpers
                 DrawOutlinedText($"{Math.Truncate(total - elapsed)}", position, true, scale, drawList);
             }
         }
+
+        public static void SetTooltip(string message)
+        {
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip(message);
+            }
+        }
     }
 }
