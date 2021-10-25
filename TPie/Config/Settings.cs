@@ -13,7 +13,7 @@ namespace TPie.Config
         public List<Ring> Rings = new List<Ring>();
 
         public bool AppearAtCursor = true;
-        public Vector2 CenterPosition = Vector2.Zero;
+        public Vector2 CenterPositionOffset = Vector2.Zero;
 
         public int FontSize = 20;
 

@@ -88,7 +88,9 @@ namespace TPie.Models
             {
                 if (_animState == AnimationState.Closed)
                 {
-                    _center = mousePos;
+                    _center = Plugin.Settings.AppearAtCursor ?
+                        mousePos :
+                        ImGui.GetMainViewport().Size / 2f + Plugin.Settings.CenterPositionOffset;
                 }
 
                 SetAnimState(AnimationState.Opening);
@@ -100,9 +102,10 @@ namespace TPie.Models
             if (_animState == AnimationState.Closed) return;
 
             int count = _validItems.Count;
+            Vector2 center = _center!.Value;
             Vector2 margin = new Vector2(40, 40);
             Vector2 radius = new Vector2(Radius);
-            Vector2 pos = mousePos - radius - margin;
+            Vector2 pos = center - radius - margin;
 
             // create window
             ImGui.SetNextWindowPos(pos, ImGuiCond.Appearing);
@@ -116,7 +119,6 @@ namespace TPie.Models
             }
 
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-            Vector2 center = _center!.Value;
 
             // bg
             if (Plugin.Settings.DrawRingBackground)
