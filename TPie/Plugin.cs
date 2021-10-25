@@ -110,21 +110,21 @@ namespace TPie
 
             Settings = Settings.Load();
 
-            Settings.Rings.Clear();
-            KeyBind keybind = new KeyBind(72);
-            Ring ring = new Ring("Test", Vector4.One, keybind, 150, new Vector2(40, 40));
+            //Settings.Rings.Clear();
+            //KeyBind keybind = new KeyBind(72);
+            //Ring ring = new Ring("Test", Vector4.One, keybind, 150, new Vector2(40, 40));
 
-            ActionElement? teleport = new ActionElement(5);
-            ring.Items.Add(teleport);
+            //ActionElement? teleport = new ActionElement(3574);
+            //ring.Items.Add(teleport);
 
-            ItemElement? item = new ItemElement(2001886, false, 25948);
-            ring.Items.Add(item);
+            //ItemElement? item = new ItemElement(2001886, false, 25948);
+            //ring.Items.Add(item);
 
-            ItemElement? food = new ItemElement(23187, true, 24414);
-            ring.Items.Add(food);
+            //ItemElement? food = new ItemElement(23187, true, 24414);
+            //ring.Items.Add(food);
 
-            Rings.Add(ring);
-            Settings.Save(Settings);
+            //Rings.Add(ring);
+            //Settings.Save(Settings);
         }
 
         public void Dispose()

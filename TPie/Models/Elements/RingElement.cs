@@ -53,6 +53,14 @@ namespace TPie.Models.Elements
                         uint actionId = jo.Value<uint>("ActionID");
                         return new ActionElement(actionId);
                     }
+
+                    if (type.Contains("ItemElement"))
+                    {
+                        uint itemId = jo.Value<uint>("ItemID");
+                        bool hq = jo.Value<bool>("HQ");
+                        uint iconId = jo.Value<uint>("IconID");
+                        return new ItemElement(itemId, hq, iconId);
+                    }
                 }
             }
             catch (Exception e)
