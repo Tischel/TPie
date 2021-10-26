@@ -42,6 +42,8 @@ namespace TPie.Models
         public bool HasInventoryItems { get; private set; } = false;
 
         private List<RingElement> _validItems = null!;
+        private int _previousCount = 0;
+
         private Vector2? _center = null;
         private int _selectedIndex = -1;
 
@@ -81,6 +83,12 @@ namespace TPie.Models
         {
             HasInventoryItems = Items.FirstOrDefault(item => item is ItemElement) != null;
             _validItems = Items.Where(o => o.IsValid()).ToList();
+
+            if (_previousCount != _validItems.Count)
+            {
+                SetAnimState(_animState);
+                _previousCount = _validItems.Count;
+            }
 
             if (!KeyBind.IsActive())
             {
