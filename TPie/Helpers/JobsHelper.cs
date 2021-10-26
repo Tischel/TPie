@@ -151,57 +151,60 @@ namespace TPie.Helpers
 
         public static Dictionary<uint, string> JobNames = new Dictionary<uint, string>()
         {
-            // tanks
+            [JobIDs.ACN] = "ACN",
+            [JobIDs.ALC] = "ALC",
+            [JobIDs.ARC] = "ARC",
+            [JobIDs.ARM] = "ARM",
+            [JobIDs.AST] = "AST",
+
+            [JobIDs.BLM] = "BLM",
+            [JobIDs.BLU] = "BLU",
+            [JobIDs.BRD] = "BRD",
+            [JobIDs.BSM] = "BSM",
+            [JobIDs.BTN] = "BTN",
+
+            [JobIDs.CNJ] = "CNJ",
+            [JobIDs.CRP] = "CRP",
+            [JobIDs.CUL] = "CUL",
+
+            [JobIDs.DNC] = "DNC",
+            [JobIDs.DRG] = "DRG",
+            [JobIDs.DRK] = "DRK",
+
+            [JobIDs.FSH] = "FSH",
+
             [JobIDs.GLD] = "GLD",
+            [JobIDs.GNB] = "GNB",
+            [JobIDs.GSM] = "GSM",
+
             [JobIDs.MRD] = "MRD",
             [JobIDs.PLD] = "PLD",
             [JobIDs.WAR] = "WAR",
-            [JobIDs.DRK] = "DRK",
-            [JobIDs.GNB] = "GNB",
 
-            // melee dps
-            [JobIDs.PGL] = "PGL",
             [JobIDs.LNC] = "LNC",
-            [JobIDs.ROG] = "ROG",
-            [JobIDs.MNK] = "MNK",
-            [JobIDs.DRG] = "DRG",
-            [JobIDs.NIN] = "NIN",
-            [JobIDs.SAM] = "SAM",
-
-            // ranged phys dps
-            [JobIDs.ARC] = "ARC",
-            [JobIDs.BRD] = "BRD",
-            [JobIDs.MCH] = "MCH",
-            [JobIDs.DNC] = "DNC",
-
-            // ranged magic dps
-            [JobIDs.THM] = "THM",
-            [JobIDs.ACN] = "ACN",
-            [JobIDs.BLM] = "BLM",
-            [JobIDs.SMN] = "SMN",
-            [JobIDs.RDM] = "RDM",
-            [JobIDs.BLU] = "BLU",
-
-            // healers
-            [JobIDs.CNJ] = "CNJ",
-            [JobIDs.WHM] = "WHM",
-            [JobIDs.SCH] = "SCH",
-            [JobIDs.AST] = "AST",
-
-            // crafters
-            [JobIDs.CRP] = "CRP",
-            [JobIDs.BSM] = "BSM",
-            [JobIDs.ARM] = "ARM",
-            [JobIDs.GSM] = "GSM",
             [JobIDs.LTW] = "LTW",
-            [JobIDs.WVR] = "WVR",
-            [JobIDs.ALC] = "ALC",
-            [JobIDs.CUL] = "CUL",
 
-            // gatherers
+            [JobIDs.MCH] = "MCH",
             [JobIDs.MIN] = "MIN",
-            [JobIDs.BTN] = "BTN",
-            [JobIDs.FSH] = "FSH",
+            [JobIDs.MNK] = "MNK",
+
+            [JobIDs.NIN] = "NIN",
+
+            [JobIDs.PGL] = "PGL",
+
+
+            [JobIDs.RDM] = "RDM",
+            [JobIDs.ROG] = "ROG",
+
+            [JobIDs.SAM] = "SAM",
+            [JobIDs.SCH] = "SCH",
+            [JobIDs.SMN] = "SMN",
+
+            [JobIDs.THM] = "THM",
+
+            [JobIDs.WVR] = "WVR",
+
+            [JobIDs.WHM] = "WHM",
         };
     }
 

@@ -62,7 +62,6 @@ namespace TPie.Config
                 MacroElement.Name = _inputText;
             }
 
-
             // command
             if (ImGui.InputText("Command ##Macro", ref _commandInputText, 100))
             {

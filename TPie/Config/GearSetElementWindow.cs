@@ -22,11 +22,22 @@ namespace TPie.Config
                 _editing = true;
                 _gearSetElement = value;
                 _inputText = value != null ? $"{value.GearSetID}" : "";
+
+                if (value != null && value.JobID > 0 &&
+                    JobsHelper.JobNames.TryGetValue(value.JobID, out string? jobName) && jobName != null)
+                {
+                    _jobInputText = jobName;
+                }
+                else
+                {
+                    _jobInputText = "";
+                }
             }
         }
 
         private uint[] _jobIds;
         private string[] _jobNames;
+        protected string _jobInputText = "";
 
         public GearSetElementWindow(string name) : base(name)
         {
@@ -57,6 +68,8 @@ namespace TPie.Config
 
             ImGui.PushItemWidth(180);
 
+            FocusIfNeeded();
+
             string str = _inputText;
             if (ImGui.InputText("Gear Set Number ##GearSet", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
             {
@@ -69,18 +82,16 @@ namespace TPie.Config
                 catch { }
             }
 
-            if (_needsFocus)
-            {
-                ImGui.SetKeyboardFocusHere(0);
-                _needsFocus = false;
-            }
+            ImGui.InputText("Job ##Gear Set", ref _jobInputText, 100);
 
-            ImGui.BeginChild("##GearSets_List", new Vector2(284, 236), true);
+            ImGui.BeginChild("##GearSets_List", new Vector2(284, 206), true);
             {
                 for (int i = 0; i < _jobIds.Length; i++)
                 {
                     uint jobID = _jobIds[i];
                     string jobName = _jobNames[i];
+
+                    if (_jobInputText.Length > 0 && !jobName.Contains(_jobInputText.ToUpper())) continue;
 
                     // name
                     if (ImGui.Selectable($"\t\t\t{jobName}", false, ImGuiSelectableFlags.None, new Vector2(0, 24)))
