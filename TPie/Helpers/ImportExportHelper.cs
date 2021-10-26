@@ -38,7 +38,11 @@ namespace TPie.Helpers
             return decodedString;
         }
 
-        public static string GenerateExportString(Ring[] rings)
+        public static string GenerateExportString(Ring ring)
+        {
+            return GenerateExportString(new Ring[] { ring });
+        }
+        public static string GenerateExportString(ICollection<Ring> rings)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -69,18 +73,22 @@ namespace TPie.Helpers
 
             foreach (string str in importStrings)
             {
-                string jsonString = Base64DecodeAndDecompress(str);
+                try
+                {
+                    string jsonString = Base64DecodeAndDecompress(str);
 
-                var typeString = (string?)JObject.Parse(jsonString)["$type"];
-                if (typeString == null) continue;
+                    var typeString = (string?)JObject.Parse(jsonString)["$type"];
+                    if (typeString == null) continue;
 
-                Type? type = Type.GetType(typeString);
-                if (type == null || type != typeof(Ring)) continue;
+                    Type? type = Type.GetType(typeString);
+                    if (type == null || type != typeof(Ring)) continue;
 
-                Ring? ring = JsonConvert.DeserializeObject<Ring>(jsonString);
-                if (ring == null) continue;
+                    Ring? ring = JsonConvert.DeserializeObject<Ring>(jsonString);
+                    if (ring == null) continue;
 
-                result.Add(ring);
+                    result.Add(ring);
+                }
+                catch { }
             }
 
             return result;

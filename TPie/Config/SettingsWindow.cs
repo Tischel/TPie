@@ -19,6 +19,8 @@ namespace TPie.Config
         private Vector2 _windowPos = Vector2.Zero;
         private Vector2 RingWindowPos => _windowPos + new Vector2(410, 0);
 
+        private Ring? _removingRing = null;
+
         public SettingsWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
@@ -168,18 +170,21 @@ namespace TPie.Config
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Plus.ToIconString()))
                 {
-
+                    Ring newRing = new Ring($"Ring{Rings.Count + 1}", Vector4.One, new KeyBind(0), 150f, new Vector2(40));
+                    Rings.Add(newRing);
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Adds a new empty Ring");
 
                 ImGui.SameLine();
-                ImGui.Text("\t\t\tImport All");
+                ImGui.Text("\t\t\tImport");
                 ImGui.SameLine();
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Download.ToIconString()))
                 {
-
+                    string importString = ImGui.GetClipboardText();
+                    List<Ring> newRings = ImportExportHelper.ImportRings(importString);
+                    Rings.AddRange(newRings);
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Adds new Rings by importing them from the clipboard");
@@ -190,7 +195,8 @@ namespace TPie.Config
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Upload.ToIconString()))
                 {
-
+                    string exportString = ImportExportHelper.GenerateExportString(Rings);
+                    ImGui.SetClipboardText(exportString);
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Exports all Rings to the clipboard");
@@ -265,7 +271,8 @@ namespace TPie.Config
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Upload.ToIconString()))
                         {
-
+                            string exportString = ImportExportHelper.GenerateExportString(ring);
+                            ImGui.SetClipboardText(exportString);
                         }
                         ImGui.PopFont();
                         DrawHelper.SetTooltip("Export to clipboard");
@@ -274,7 +281,7 @@ namespace TPie.Config
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
                         {
-
+                            _removingRing = ring;
                         }
                         ImGui.PopFont();
                         DrawHelper.SetTooltip("Delete");
@@ -282,6 +289,21 @@ namespace TPie.Config
                 }
 
                 ImGui.EndTable();
+            }
+
+            if (_removingRing != null)
+            {
+                var (didConfirm, didClose) = DrawHelper.DrawConfirmationModal("Delete?", $"Are you sure you want to delete \"{_removingRing.Name}\"");
+
+                if (didConfirm)
+                {
+                    Rings.Remove(_removingRing);
+                }
+
+                if (didConfirm || didClose)
+                {
+                    _removingRing = null;
+                }
             }
         }
 

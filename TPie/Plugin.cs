@@ -233,6 +233,8 @@ namespace TPie
                 return;
             }
 
+            Settings.Save(Settings);
+
             ChatHelper.Instance.Dispose();
             KeyboardHelper.Instance.Dispose();
             JobsHelper.Instance.Dispose();
