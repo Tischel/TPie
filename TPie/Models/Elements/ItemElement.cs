@@ -20,6 +20,8 @@ namespace TPie.Models.Elements
             IconID = iconId;
         }
 
+        public ItemElement() : this(0, false, "", 0) { }
+
         public override unsafe void ExecuteAction()
         {
             uint id = HQ ? ItemID + 1000000 : ItemID;

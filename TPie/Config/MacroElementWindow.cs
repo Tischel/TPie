@@ -15,7 +15,6 @@ namespace TPie.Config
             get => _macroElement;
             set
             {
-                _editing = true;
                 _macroElement = value;
 
                 _inputText = value != null ? value.Name : "";
@@ -24,29 +23,18 @@ namespace TPie.Config
             }
         }
 
+        protected override RingElement? Element
+        {
+            get => MacroElement;
+            set => MacroElement = value is MacroElement o ? o : null;
+        }
+
         protected string _commandInputText = "";
         protected string _iconInputText = "";
 
         public MacroElementWindow(string name) : base(name)
         {
 
-        }
-
-        protected override void CreateElement()
-        {
-            _macroElement = new MacroElement("New Macro", "", 66001);
-            _inputText = _macroElement!.Name;
-            _iconInputText = "66001";
-        }
-
-        protected override void DestroyElement()
-        {
-            MacroElement = null;
-        }
-
-        protected override RingElement? Element()
-        {
-            return MacroElement;
         }
 
         public override void Draw()
@@ -98,21 +86,12 @@ namespace TPie.Config
 
             ImGui.NewLine();
 
+            // icon
             if (MacroElement.IconID > 0)
             {
-                if (ImGui.Selectable("", false, ImGuiSelectableFlags.None, new Vector2(0, 80)))
-                {
-                    Callback?.Invoke(MacroElement);
-                    Callback = null;
-                    IsOpen = false;
-                    return;
-                }
-
-                // icon
                 TextureWrap? texture = TexturesCache.Instance?.GetTextureFromIconId(MacroElement.IconID);
                 if (texture != null)
                 {
-                    ImGui.SameLine();
                     ImGui.SetCursorPosX(110);
                     ImGui.Image(texture.ImGuiHandle, new Vector2(80));
                 }

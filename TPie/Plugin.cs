@@ -127,10 +127,10 @@ namespace TPie
         {
             _settingsWindow = new SettingsWindow("TPie Settings");
             _ringSettingsWindow = new RingSettingsWindow("Ring Settings");
-            _actionElementWindow = new ActionElementWindow("Add Action");
-            _itemElementWindow = new ItemElementWindow("Add Item");
-            _gearSetElementWindow = new GearSetElementWindow("Add Gear Set");
-            _macroElementWindow = new MacroElementWindow("Add Macro");
+            _actionElementWindow = new ActionElementWindow("Edit Action");
+            _itemElementWindow = new ItemElementWindow("Edit Item");
+            _gearSetElementWindow = new GearSetElementWindow("Edit Gear Set");
+            _macroElementWindow = new MacroElementWindow("Edit Macro");
 
             _windowSystem = new WindowSystem("TPie_Windows");
             _windowSystem.AddWindow(_settingsWindow);
@@ -148,48 +148,41 @@ namespace TPie
             _ringSettingsWindow.IsOpen = true;
         }
 
-        public static void ShowActionElementWindow(Vector2 position, Ring ring, ActionElement? actionElement, Action<RingElement?>? callback)
+        public static void ShowElementWindow(Vector2 position, Ring ring, RingElement element)
         {
-            _actionElementWindow.Ring = ring;
-            _actionElementWindow.Position = position;
-            _actionElementWindow.WindowName = actionElement != null ? "Edit Action" : "Add Action";
-            _actionElementWindow.ActionElement = actionElement;
-            _actionElementWindow.Callback = callback;
+            RingElementWindow? window = null;
 
-            _actionElementWindow.IsOpen = true;
-        }
+            // action
+            if (element is ActionElement actionElement)
+            {
+                window = _actionElementWindow;
+                _actionElementWindow.ActionElement = actionElement;
+            }
 
-        public static void ShowItemElementWindow(Vector2 position, Ring ring, ItemElement? itemElement, Action<RingElement?>? callback)
-        {
-            _itemElementWindow.Ring = ring;
-            _itemElementWindow.Position = position;
-            _itemElementWindow.WindowName = itemElement != null ? "Edit Item" : "Add Item";
-            _itemElementWindow.ItemElement = itemElement;
-            _itemElementWindow.Callback = callback;
+            else if (element is ItemElement itemElement)
+            {
+                window = _itemElementWindow;
+                _itemElementWindow.ItemElement = itemElement;
+            }
 
-            _itemElementWindow.IsOpen = true;
-        }
+            else if (element is GearSetElement gearSetElement)
+            {
+                window = _gearSetElementWindow;
+                _gearSetElementWindow.GearSetElement = gearSetElement;
+            }
 
-        public static void ShowGearSetElementWindow(Vector2 position, Ring ring, GearSetElement? gearSetElement, Action<RingElement?>? callback)
-        {
-            _gearSetElementWindow.Ring = ring;
-            _gearSetElementWindow.Position = position;
-            _gearSetElementWindow.WindowName = gearSetElement != null ? "Edit Gear Set" : "Add Gear Set";
-            _gearSetElementWindow.GearSetElement = gearSetElement;
-            _gearSetElementWindow.Callback = callback;
+            else if (element is MacroElement macroElement)
+            {
+                window = _macroElementWindow;
+                _macroElementWindow.MacroElement = macroElement;
+            }
 
-            _gearSetElementWindow.IsOpen = true;
-        }
-
-        public static void ShowMacroElementWindow(Vector2 position, Ring ring, MacroElement? macroElement, Action<RingElement?>? callback)
-        {
-            _macroElementWindow.Ring = ring;
-            _macroElementWindow.Position = position;
-            _macroElementWindow.WindowName = macroElement != null ? "Edit Macro" : "Add Macro";
-            _macroElementWindow.MacroElement = macroElement;
-            _macroElementWindow.Callback = callback;
-
-            _macroElementWindow.IsOpen = true;
+            if (window != null)
+            {
+                window.Ring = ring;
+                window.Position = position;
+                window.IsOpen = true;
+            }
         }
 
         private void Update(Framework framework)

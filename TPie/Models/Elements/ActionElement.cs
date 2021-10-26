@@ -44,6 +44,8 @@ namespace TPie.Models.Elements
             ActionID = actionId;
         }
 
+        public ActionElement() : this(0) { }
+
         public override void ExecuteAction()
         {
             if (Data != null)

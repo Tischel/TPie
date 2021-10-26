@@ -1,8 +1,6 @@
-﻿using Dalamud.Interface.Windowing;
-using ImGuiNET;
+﻿using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -20,7 +18,6 @@ namespace TPie.Config
             get => _actionElement;
             set
             {
-                _editing = true;
                 _actionElement = value;
                 _inputText = "";
                 _searchResult.Clear();
@@ -33,29 +30,18 @@ namespace TPie.Config
             }
         }
 
+        protected override RingElement? Element
+        {
+            get => ActionElement;
+            set => ActionElement = value is ActionElement o ? o : null;
+        }
+
         private List<LuminaAction> _searchResult = new List<LuminaAction>();
         private ExcelSheet<LuminaAction>? _sheet;
 
         public ActionElementWindow(string name) : base(name)
         {
             _sheet = Plugin.DataManager.GetExcelSheet<LuminaAction>();
-        }
-
-        protected override RingElement? Element()
-        {
-            return ActionElement;
-        }
-
-        protected override void CreateElement()
-        {
-            _actionElement = new ActionElement(0);
-            _inputText = "";
-            _searchResult.Clear();
-        }
-
-        protected override void DestroyElement()
-        {
-            ActionElement = null;
         }
 
         public override void Draw()
@@ -78,9 +64,6 @@ namespace TPie.Config
                     if (ImGui.Selectable($"\t\t\t{data.Name} (ID: {data.RowId})", false, ImGuiSelectableFlags.None, new Vector2(0, 24)))
                     {
                         ActionElement.ActionID = data.RowId;
-                        Callback?.Invoke(ActionElement);
-                        Callback = null;
-                        IsOpen = false;
                         return;
                     }
 

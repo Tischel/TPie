@@ -28,6 +28,8 @@ namespace TPie.Models.Elements
             JobID = jobId;
         }
 
+        public GearSetElement() : this(1, Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? JobIDs.GLD) { }
+
         public override void ExecuteAction()
         {
             ChatHelper.SendChatMessage($"/gs change {GearSetID}");

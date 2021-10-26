@@ -1,8 +1,5 @@
-﻿using Dalamud.Interface.Windowing;
-using Dalamud.Logging;
-using ImGuiNET;
+﻿using ImGuiNET;
 using ImGuiScene;
-using System;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
@@ -19,7 +16,6 @@ namespace TPie.Config
             get => _gearSetElement;
             set
             {
-                _editing = true;
                 _gearSetElement = value;
                 _inputText = value != null ? $"{value.GearSetID}" : "";
 
@@ -35,6 +31,12 @@ namespace TPie.Config
             }
         }
 
+        protected override RingElement? Element
+        {
+            get => GearSetElement;
+            set => GearSetElement = value is GearSetElement o ? o : null;
+        }
+
         private uint[] _jobIds;
         private string[] _jobNames;
         protected string _jobInputText = "";
@@ -43,23 +45,6 @@ namespace TPie.Config
         {
             _jobIds = JobsHelper.JobNames.Keys.ToArray();
             _jobNames = JobsHelper.JobNames.Values.ToArray();
-        }
-
-        protected override RingElement? Element()
-        {
-            return GearSetElement;
-        }
-
-        protected override void CreateElement()
-        {
-            uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? JobIDs.GLD;
-            _gearSetElement = new GearSetElement(1, jobId);
-            _inputText = "";
-        }
-
-        protected override void DestroyElement()
-        {
-            GearSetElement = null;
         }
 
         public override void Draw()
@@ -105,11 +90,6 @@ namespace TPie.Config
                             GearSetElement.GearSetID = 0;
                         }
                         GearSetElement.JobID = jobID;
-
-                        Callback?.Invoke(GearSetElement);
-                        Callback = null;
-                        IsOpen = false;
-                        return;
                     }
 
                     // icon

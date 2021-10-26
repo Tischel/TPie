@@ -1,6 +1,5 @@
 ﻿using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using System;
 using System.Numerics;
 using TPie.Models;
 using TPie.Models.Elements;
@@ -9,10 +8,10 @@ namespace TPie.Config
 {
     public abstract class RingElementWindow : Window
     {
-        public Action<RingElement?>? Callback = null;
         public Ring? Ring = null;
 
-        protected bool _editing = false;
+        protected abstract RingElement? Element { get; set; }
+
         protected string _inputText = "";
         protected bool _needsFocus = false;
 
@@ -31,9 +30,7 @@ namespace TPie.Config
 
         public override void OnClose()
         {
-            Callback?.Invoke(null);
-            Callback = null;
-            DestroyElement();
+            Element = null;
         }
 
         protected void FocusIfNeeded()
@@ -45,19 +42,8 @@ namespace TPie.Config
             }
         }
 
-        protected abstract RingElement? Element();
-        protected abstract void CreateElement();
-        protected abstract void DestroyElement();
-
         public override void PreDraw()
         {
-            RingElement? element = Element();
-            if (element == null)
-            {
-                CreateElement();
-                _editing = false;
-            }
-
             if (Ring != null)
             {
                 Settings settings = Plugin.Settings;
@@ -67,8 +53,7 @@ namespace TPie.Config
                     return;
                 }
 
-
-                if (_editing && element != null && !Ring.Items.Contains(element))
+                if (Element != null && !Ring.Items.Contains(Element))
                 {
                     IsOpen = false;
                     return;

@@ -16,6 +16,8 @@ namespace TPie.Models.Elements
             IconID = iconId;
         }
 
+        public MacroElement() : this("New Macro", "", 66001) { }
+
         public override string Description()
         {
             return $"{Name} ({Command})";

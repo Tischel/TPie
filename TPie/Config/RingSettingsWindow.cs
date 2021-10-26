@@ -222,39 +222,41 @@ namespace TPie.Config
 
             if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
             {
-                Action<RingElement?> callback = (actionElement) =>
-                {
-                    if (actionElement != null)
-                    {
-                        if (_selectedIndex >= 0 && Ring.Items.Count > 0)
-                        {
-                            Ring.Items.Insert(_selectedIndex, actionElement);
-                        }
-                        else
-                        {
-                            Ring.Items.Add(actionElement);
-                        }
-                    }
-                };
+                RingElement? elementToAdd = null;
 
                 if (ImGui.Selectable("Action"))
                 {
-                    Plugin.ShowActionElementWindow(ItemWindowPos, Ring, null, callback);
+                    elementToAdd = new ActionElement();
                 }
 
                 if (ImGui.Selectable("Item"))
                 {
-                    Plugin.ShowItemElementWindow(ItemWindowPos, Ring, null, callback);
+                    elementToAdd = new ItemElement();
                 }
 
                 if (ImGui.Selectable("Gear Set"))
                 {
-                    Plugin.ShowGearSetElementWindow(ItemWindowPos, Ring, null, callback);
+                    elementToAdd = new GearSetElement();
                 }
 
                 if (ImGui.Selectable("Macro"))
                 {
-                    Plugin.ShowMacroElementWindow(ItemWindowPos, Ring, null, callback);
+                    elementToAdd = new MacroElement();
+                }
+
+                if (elementToAdd != null)
+                {
+                    if (_selectedIndex >= 0 && Ring.Items.Count > 0)
+                    {
+                        Ring.Items.Insert(_selectedIndex, elementToAdd);
+                    }
+                    else
+                    {
+                        Ring.Items.Add(elementToAdd);
+                        _selectedIndex = Ring.Items.Count - 1;
+                    }
+
+                    ShowEditItemWindow();
                 }
 
                 ImGui.EndPopup();
@@ -266,23 +268,7 @@ namespace TPie.Config
             if (Ring == null || _selectedIndex < 0 || _selectedIndex >= Ring.Items.Count) return;
 
             RingElement element = Ring.Items[_selectedIndex];
-
-            if (element is ActionElement a)
-            {
-                Plugin.ShowActionElementWindow(ItemWindowPos, Ring, a, null);
-            }
-            else if (element is ItemElement i)
-            {
-                Plugin.ShowItemElementWindow(ItemWindowPos, Ring, i, null);
-            }
-            else if (element is GearSetElement g)
-            {
-                Plugin.ShowGearSetElementWindow(ItemWindowPos, Ring, g, null);
-            }
-            else if (element is MacroElement m)
-            {
-                Plugin.ShowMacroElementWindow(ItemWindowPos, Ring, m, null);
-            }
+            Plugin.ShowElementWindow(ItemWindowPos, Ring, element);
         }
 
         public override void OnClose()

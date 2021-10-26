@@ -1,7 +1,6 @@
 ﻿using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -20,7 +19,6 @@ namespace TPie.Config
             get => _itemElement;
             set
             {
-                _editing = true;
                 _itemElement = value;
                 _inputText = "";
                 _searchResult.Clear();
@@ -31,6 +29,12 @@ namespace TPie.Config
                     _needsSearch = true;
                 }
             }
+        }
+
+        protected override RingElement? Element
+        {
+            get => ItemElement;
+            set => ItemElement = value is ItemElement o ? o : null;
         }
 
         private bool _hq = false;
@@ -47,23 +51,6 @@ namespace TPie.Config
         {
             _itemsSheet = Plugin.DataManager.GetExcelSheet<LuminaItem>();
             _keyItemsSheet = Plugin.DataManager.GetExcelSheet<LuminaKeyItem>();
-        }
-
-        protected override RingElement? Element()
-        {
-            return ItemElement;
-        }
-
-        protected override void CreateElement()
-        {
-            _itemElement = new ItemElement(0, false, "", 0);
-            _inputText = "";
-            _searchResult.Clear();
-        }
-
-        protected override void DestroyElement()
-        {
-            ItemElement = null;
         }
 
         public override void Draw()
@@ -103,11 +90,6 @@ namespace TPie.Config
                         ItemElement.HQ = _hq;
                         ItemElement.Name = data.Name;
                         ItemElement.IconID = data.IconID;
-
-                        Callback?.Invoke(ItemElement);
-                        Callback = null;
-                        IsOpen = false;
-                        return;
                     }
 
                     ImGui.PopStyleColor();
