@@ -1,14 +1,8 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using ImGuiScene;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using TPie.Helpers;
 using TPie.Models;
 
@@ -21,6 +15,9 @@ namespace TPie.Config
 
         private string[] _fontSizes;
         private string[] _animationNames;
+
+        private Vector2 _windowPos = Vector2.Zero;
+        private Vector2 RingWindowPos => _windowPos + new Vector2(410, 0);
 
         public SettingsWindow(string name) : base(name)
         {
@@ -46,6 +43,8 @@ namespace TPie.Config
 
         public override void Draw()
         {
+            _windowPos = ImGui.GetWindowPos();
+
             if (!ImGui.BeginTabBar("##TPie_Settings_TabBar"))
             {
                 return;
@@ -256,7 +255,7 @@ namespace TPie.Config
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
                         {
-                            Plugin.ShowRingSettingsWindow(ring);
+                            Plugin.ShowRingSettingsWindow(RingWindowPos, ring);
                         }
                         ImGui.PopFont();
                         DrawHelper.SetTooltip("Edit Elements");

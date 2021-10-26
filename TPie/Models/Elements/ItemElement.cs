@@ -29,6 +29,11 @@ namespace TPie.Models.Elements
             return ItemID > 0;
         }
 
+        public override string InvalidReason()
+        {
+            return "This item won't show if it's not in your inventory.";
+        }
+
         public override string Description()
         {
             UsableItem? item = ItemsHelper.Instance?.GetUsableItem(ItemID, HQ);

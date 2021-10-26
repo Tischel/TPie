@@ -35,6 +35,8 @@ namespace TPie.Models.Elements
 
         public abstract bool IsValid();
 
+        public abstract string InvalidReason();
+
         public abstract string Description();
     }
 

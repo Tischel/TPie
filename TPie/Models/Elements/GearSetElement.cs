@@ -26,6 +26,11 @@ namespace TPie.Models.Elements
             return true;
         }
 
+        public override string InvalidReason()
+        {
+            return "";
+        }
+
         public override string Description()
         {
             if (JobsHelper.JobNames.TryGetValue(JobID, out string? value) && value != null)

@@ -15,10 +15,24 @@ namespace TPie.Models
     public class Ring
     {
         public string Name;
-        public Vector4 Color;
         public KeyBind KeyBind;
         public float Radius;
         public Vector2 ItemSize;
+
+        private Vector4 _color = Vector4.One;
+        public Vector4 Color
+        {
+            get => _color;
+            set
+            {
+                _color = value;
+                _baseColor = ImGui.ColorConvertFloat4ToU32(value);
+                _lineColor = ImGui.ColorConvertFloat4ToU32(new Vector4(value.X, value.Y, value.Z, 0.5f));
+            }
+        }
+
+        private uint _baseColor;
+        private uint _lineColor;
 
         public List<RingElement> Items;
 
@@ -30,8 +44,6 @@ namespace TPie.Models
         private List<RingElement> _validItems = null!;
         private Vector2? _center = null;
         private int _selectedIndex = -1;
-        public uint _color;
-        public uint _lineColor;
 
         private AnimationState _animState = AnimationState.Closed;
         private bool _animating = false;
@@ -50,18 +62,13 @@ namespace TPie.Models
             ItemSize = itemSize;
 
             Items = new List<RingElement>();
-
-            _color = ImGui.ColorConvertFloat4ToU32(Color);
-            _lineColor = ImGui.ColorConvertFloat4ToU32(new Vector4(Color.X, Color.Y, Color.Z, 0.5f));
         }
 
         public void Preview(Vector2 position)
         {
             _center = position;
-            if (Previewing) return;
-
-            Previewing = true;
             SetAnimState(AnimationState.Opened);
+            Previewing = true;
         }
 
         public void EndPreview()
@@ -199,7 +206,7 @@ namespace TPie.Models
                 index++;
             }
 
-            uint color = !Previewing && _selectedIndex >= 0 ? _color : _lineColor;
+            uint color = !Previewing && _selectedIndex >= 0 ? _baseColor : _lineColor;
             drawList.AddCircleFilled(center, 10, color);
 
             if (!Previewing && _animState == AnimationState.Opened)
@@ -213,7 +220,7 @@ namespace TPie.Models
             {
                 bool selected = !Previewing && _animState == AnimationState.Opened && i == _selectedIndex;
                 float scale = !Previewing && Plugin.Settings.AnimateIconSizes ? (selected ? 2f : itemScales[i]) : 1f;
-                _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _color, _itemsAlpha[i], drawList);
+                _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _baseColor, _itemsAlpha[i], drawList);
             }
 
             ImGui.End();

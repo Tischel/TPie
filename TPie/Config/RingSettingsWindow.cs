@@ -1,13 +1,9 @@
-﻿using Dalamud.Interface.Windowing;
+﻿using Dalamud.Interface;
+using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using ImGuiScene;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TPie.Helpers;
 using TPie.Models;
 using TPie.Models.Elements;
@@ -21,15 +17,22 @@ namespace TPie.Config
         private bool _preview = true;
         private int _selectedIndex = -1;
 
+        private Vector2 _windowPos = Vector2.Zero;
+        private Vector2 ItemWindowPos => _windowPos + new Vector2(410, 0);
+
         public RingSettingsWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
             Size = new Vector2(400, 394);
+
+            PositionCondition = ImGuiCond.Appearing;
         }
 
         public override void Draw()
         {
             if (Ring == null) return;
+
+            _windowPos = ImGui.GetWindowPos();
 
             // ring preview
             if (_preview)
@@ -41,7 +44,6 @@ namespace TPie.Config
             }
 
             // info
-            ImGui.Text("Info");
             ImGui.BeginChild("##Ring_Info", new Vector2(384, 120), true);
             {
                 ImGui.PushItemWidth(320);
@@ -71,7 +73,7 @@ namespace TPie.Config
                             ImGuiTableFlags.ScrollY |
                             ImGuiTableFlags.SizingFixedSame;
 
-            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(384, 210)))
+            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354, 230)))
             {
                 ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthStretch, 15, 0);
                 ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthStretch, 7, 1);
@@ -111,14 +113,136 @@ namespace TPie.Config
                     // description
                     if (ImGui.TableSetColumnIndex(2))
                     {
-                        ImGui.Text(item.Description());
+                        bool valid = item.IsValid();
+                        Vector4 c = valid ? Vector4.One : new(1, 0, 0, 1);
+                        ImGui.TextColored(c, item.Description());
+
+                        if (!valid)
+                        {
+                            DrawHelper.SetTooltip(item.InvalidReason());
+                        }
                     }
                 }
 
                 ImGui.EndTable();
             }
 
+            ImGui.SetCursorPos(new Vector2(369, 170));
+            ImGui.PushFont(UiBuilder.IconFont);
+            if (ImGui.Button(FontAwesomeIcon.Plus.ToIconString()))
+            {
+                ImGui.OpenPopup("##TPie_Add_Item_Menu");
+            }
+            ImGui.PopFont();
+            DrawHelper.SetTooltip("Add");
+
+            if (_selectedIndex >= 0)
+            {
+                ImGui.SetCursorPos(new Vector2(369, 200));
+                ImGui.PushFont(UiBuilder.IconFont);
+                if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
+                {
+                    ShowEditItemWindow();
+                }
+                ImGui.PopFont();
+                DrawHelper.SetTooltip("Edit");
+            }
+
+
+            if (_selectedIndex >= 0)
+            {
+                ImGui.SetCursorPos(new Vector2(369, 230));
+                ImGui.PushFont(UiBuilder.IconFont);
+                if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
+                {
+                    Ring.Items.RemoveAt(_selectedIndex);
+                    _selectedIndex = -1;
+                }
+                ImGui.PopFont();
+                DrawHelper.SetTooltip("Delete");
+            }
+
+            if (_selectedIndex > 0)
+            {
+                ImGui.SetCursorPos(new Vector2(369, 310));
+                ImGui.PushFont(UiBuilder.IconFont);
+                if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
+                {
+                    var tmp = Ring.Items[_selectedIndex];
+                    Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex - 1];
+                    Ring.Items[_selectedIndex - 1] = tmp;
+                    _selectedIndex--;
+                }
+                ImGui.PopFont();
+                DrawHelper.SetTooltip("Move up");
+            }
+
+            if (_selectedIndex >= 0 && _selectedIndex < Ring.Items.Count - 1)
+            {
+                ImGui.SetCursorPos(new Vector2(369, 340));
+                ImGui.PushFont(UiBuilder.IconFont);
+                if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
+                {
+                    var tmp = Ring.Items[_selectedIndex];
+                    Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex + 1];
+                    Ring.Items[_selectedIndex + 1] = tmp;
+                    _selectedIndex++;
+                }
+                ImGui.PopFont();
+                DrawHelper.SetTooltip("Move down");
+            }
+
+            DrawAddItemMenu();
         }
+
+        private void DrawAddItemMenu()
+        {
+            ImGui.SetNextWindowSize(new(80, 80));
+
+            if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
+            {
+                if (ImGui.Selectable("Action"))
+                {
+                    Plugin.ShowActionElementWindow(ItemWindowPos, null, (actionElement) =>
+                    {
+                        if (actionElement != null)
+                        {
+                            if (_selectedIndex >= 0)
+                            {
+                                Ring?.Items.Insert(_selectedIndex, actionElement);
+                            }
+                            else
+                            {
+                                Ring?.Items.Add(actionElement);
+                            }
+                        }
+                    });
+                }
+
+                if (ImGui.Selectable("Item"))
+                {
+                }
+
+                if (ImGui.Selectable("Gear Set"))
+                {
+                }
+
+                ImGui.EndPopup();
+            }
+        }
+
+        private void ShowEditItemWindow()
+        {
+            if (Ring == null || _selectedIndex < 0 || _selectedIndex >= Ring.Items.Count) return;
+
+            RingElement item = Ring.Items[_selectedIndex];
+
+            if (item is ActionElement a)
+            {
+                Plugin.ShowActionElementWindow(ItemWindowPos, a, null);
+            }
+        }
+
 
         public override void OnClose()
         {

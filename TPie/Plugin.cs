@@ -1,15 +1,10 @@
 ﻿using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.JobGauge;
-using Dalamud.Game.ClientState.Objects;
-using Dalamud.Game.ClientState.Party;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
-using Dalamud.Logging;
 using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
@@ -45,7 +40,7 @@ namespace TPie
         private static WindowSystem _windowSystem = null!;
         private static SettingsWindow _settingsWindow = null!;
         private static RingSettingsWindow _ringSettingsWindow = null!;
-        //private static RingPreviewWindow _ringPreviewWindow = null!;
+        private static ActionElementWindow _actionElementWindow = null!;
 
         public Plugin(
             ClientState clientState,
@@ -152,16 +147,29 @@ namespace TPie
         {
             _settingsWindow = new SettingsWindow("TPie Settings");
             _ringSettingsWindow = new RingSettingsWindow("Ring Settings");
+            _actionElementWindow = new ActionElementWindow("Add Action");
 
             _windowSystem = new WindowSystem("TPie_Windows");
             _windowSystem.AddWindow(_settingsWindow);
             _windowSystem.AddWindow(_ringSettingsWindow);
+            _windowSystem.AddWindow(_actionElementWindow);
         }
 
-        public static void ShowRingSettingsWindow(Ring ring)
+        public static void ShowRingSettingsWindow(Vector2 position, Ring ring)
         {
+            _ringSettingsWindow.Position = position;
             _ringSettingsWindow.Ring = ring;
             _ringSettingsWindow.IsOpen = true;
+        }
+
+        public static void ShowActionElementWindow(Vector2 position, ActionElement? actionElement, Action<ActionElement?>? callback)
+        {
+            _actionElementWindow.Position = position;
+            _actionElementWindow.WindowName = actionElement != null ? "Edit Action" : "Add Action";
+            _actionElementWindow.ActionElement = actionElement;
+            _actionElementWindow.Callback = callback;
+
+            _actionElementWindow.IsOpen = true;
         }
 
         private void Update(Framework framework)

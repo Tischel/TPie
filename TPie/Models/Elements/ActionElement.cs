@@ -1,8 +1,8 @@
 ﻿using FFXIVClientStructs.FFXIV.Client.Game;
 using ImGuiNET;
 using Lumina.Excel;
+using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json;
-using System;
 using System.Numerics;
 using TPie.Helpers;
 using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
@@ -11,41 +11,67 @@ namespace TPie.Models.Elements
 {
     public class ActionElement : RingElement
     {
-        public readonly uint ActionID;
+        private uint _actionId;
 
-        [JsonIgnore] private readonly LuminaAction? _data;
-
-        public ActionElement(uint actionID)
+        [JsonProperty]
+        public uint ActionID
         {
-            ActionID = actionID;
+            get => _actionId;
+            set
+            {
+                _actionId = value;
 
-            ExcelSheet<LuminaAction>? sheet = Plugin.DataManager.GetExcelSheet<LuminaAction>();
-            _data = sheet?.GetRow(actionID);
+                if (value > 0)
+                {
+                    ExcelSheet<LuminaAction>? sheet = Plugin.DataManager.GetExcelSheet<LuminaAction>();
+                    Data = sheet?.GetRow(value);
 
-            IconID = _data?.Icon ?? 0;
+                    IconID = Data?.Icon ?? 0;
+                }
+                else
+                {
+                    Data = null;
+                    IconID = 0;
+                }
+            }
+        }
+
+        [JsonIgnore] public LuminaAction? Data { get; private set; }
+
+        public ActionElement(uint actionId)
+        {
+            ActionID = actionId;
         }
 
         public override void ExecuteAction()
         {
-            if (_data != null)
+            if (Data != null)
             {
-                ChatHelper.SendChatMessage($"/ac \"{_data.Name}\"");
+                ChatHelper.SendChatMessage($"/ac \"{Data.Name}\"");
             }
         }
 
         public override bool IsValid()
         {
+            if (_actionId == 0) return false;
+
             uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? 0;
             if (jobId <= 0) return false;
 
-            return ActionID > 0 && _data != null && JobsHelper.Instance?.ClassJobCategoryContainsJob(_data.ClassJobCategory.Row, jobId) == true;
+            ClassJobCategory? classJobCategory = Data?.ClassJobCategory.Value;
+            if (classJobCategory == null) return false;
+
+            return classJobCategory.Name.ToString().Contains(JobsHelper.JobNames[jobId]);
+        }
+
+        public override string InvalidReason()
+        {
+            return "This action won't show on the current Job.";
         }
 
         public override string Description()
         {
-            if (_data == null) return "";
-
-            return _data.Name;
+            return Data?.Name ?? "";
         }
 
         public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
