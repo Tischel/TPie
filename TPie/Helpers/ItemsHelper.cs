@@ -74,32 +74,36 @@ namespace TPie.Helpers
 
             UsableItems.Clear();
 
-            foreach (InventoryType inventoryType in inventoryTypes)
+            try
             {
-                InventoryContainer* container = manager->GetInventoryContainer(inventoryType);
-                if (container == null) continue;
-
-                for (int i = 0; i < container->Size; i++)
+                foreach (InventoryType inventoryType in inventoryTypes)
                 {
-                    InventoryItem* item = container->GetInventorySlot(i);
-                    if (item == null) continue;
+                    InventoryContainer* container = manager->GetInventoryContainer(inventoryType);
+                    if (container == null) continue;
 
-                    if (item->Quantity == 0) continue;
-
-                    bool hq = (item->Flags & InventoryItem.ItemFlags.HQ) != 0;
-                    string hqString = hq ? "_1" : "_0";
-                    string key = $"{item->ItemID}{hqString}";
-
-                    if (_usableItems.TryGetValue(item->ItemID, out Item? itemData) && itemData != null)
+                    for (int i = 0; i < container->Size; i++)
                     {
-                        UsableItems.Add(key, new UsableItem(itemData, hq, item->Quantity));
-                    }
-                    else if (_usableEventItems.TryGetValue(item->ItemID, out EventItem? eventItemData) && eventItemData != null)
-                    {
-                        UsableItems.Add(key, new UsableItem(eventItemData, hq, item->Quantity));
+                        InventoryItem* item = container->GetInventorySlot(i);
+                        if (item == null) continue;
+
+                        if (item->Quantity == 0) continue;
+
+                        bool hq = (item->Flags & InventoryItem.ItemFlags.HQ) != 0;
+                        string hqString = hq ? "_1" : "_0";
+                        string key = $"{item->ItemID}{hqString}";
+
+                        if (_usableItems.TryGetValue(item->ItemID, out Item? itemData) && itemData != null)
+                        {
+                            UsableItems.Add(key, new UsableItem(itemData, hq, item->Quantity));
+                        }
+                        else if (_usableEventItems.TryGetValue(item->ItemID, out EventItem? eventItemData) && eventItemData != null)
+                        {
+                            UsableItems.Add(key, new UsableItem(eventItemData, hq, item->Quantity));
+                        }
                     }
                 }
             }
+            catch { }
         }
 
         public UsableItem? GetUsableItem(uint itemId, bool hq)
