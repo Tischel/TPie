@@ -99,7 +99,7 @@ namespace TPie.Models
             IsActive = _validItems.Count > 0;
         }
 
-        public void Draw()
+        public void Draw(string id)
         {
             if (!Previewing && !IsActive)
             {
@@ -145,7 +145,7 @@ namespace TPie.Models
             ImGui.SetNextWindowSize(radius * 2 + margin * 2, ImGuiCond.Always);
             ImGui.SetNextWindowBgAlpha(0);
 
-            if (!ImGui.Begin($"TPie_{Name}", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoInputs))
+            if (!ImGui.Begin($"TPie_{id}", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoInputs))
             {
                 ImGui.End();
                 return;

@@ -210,9 +210,9 @@ namespace TPie
 
             _windowSystem.Draw();
 
-            foreach (Ring ring in Rings)
+            for (int i = 0; i < Rings.Count; i++)
             {
-                ring.Draw();
+                Rings[i].Draw($"ring_{i}");
             }
         }
 

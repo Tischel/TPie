@@ -4,6 +4,7 @@ using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json;
 using System.Numerics;
+using System.Reflection;
 using TPie.Helpers;
 using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
 
@@ -61,7 +62,14 @@ namespace TPie.Models.Elements
             ClassJobCategory? classJobCategory = Data?.ClassJobCategory.Value;
             if (classJobCategory == null) return false;
 
-            return classJobCategory.Name.ToString().Contains(JobsHelper.JobNames[jobId]);
+            PropertyInfo? property = classJobCategory.GetType().GetProperty(JobsHelper.JobNames[jobId]);
+            bool? value = (bool?)property?.GetValue(classJobCategory);
+            if (value.HasValue)
+            {
+                return value.Value;
+            }
+
+            return classJobCategory.Name == "All Classes" || classJobCategory.Name.ToString().Contains(JobsHelper.JobNames[jobId]);
         }
 
         public override string InvalidReason()

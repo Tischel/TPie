@@ -61,10 +61,11 @@ namespace TPie.Config
             ImGui.BeginChild("##Ring_Info", new Vector2(384, 148), true);
             {
                 ImGui.PushItemWidth(310);
-                ImGui.InputText("Name", ref Ring.Name, 64);
+
+                ImGui.InputText("Name ##Ring_Info_Name", ref Ring.Name, 100);
 
                 Vector3 color = new Vector3(Ring.Color.X, Ring.Color.Y, Ring.Color.Z);
-                if (ImGui.ColorEdit3("Color", ref color))
+                if (ImGui.ColorEdit3("Color ##Ring_Info_Color", ref color))
                 {
                     Ring.Color = new Vector4(color.X, color.Y, color.Z, 1);
                 }
@@ -78,20 +79,19 @@ namespace TPie.Config
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 4);
                 ImGui.Text("Keybind");
 
-                ImGui.DragFloat("Radius", ref Ring.Radius, 1, 150, 500);
+                ImGui.DragFloat("Radius ##Ring_Info_Radius", ref Ring.Radius, 1, 150, 500);
 
-                ImGui.DragFloat2("Items Size", ref Ring.ItemSize, 1, 10, 500);
+                ImGui.DragFloat2("Items Size ##Ring_Info_ItemSize", ref Ring.ItemSize, 1, 10, 500);
             }
             ImGui.EndChild();
 
             // items
-            var flags =
-                            ImGuiTableFlags.RowBg |
-                            ImGuiTableFlags.Borders |
-                            ImGuiTableFlags.BordersOuter |
-                            ImGuiTableFlags.BordersInner |
-                            ImGuiTableFlags.ScrollY |
-                            ImGuiTableFlags.SizingFixedSame;
+            var flags = ImGuiTableFlags.RowBg |
+                ImGuiTableFlags.Borders |
+                ImGuiTableFlags.BordersOuter |
+                ImGuiTableFlags.BordersInner |
+                ImGuiTableFlags.ScrollY |
+                ImGuiTableFlags.SizingFixedSame;
 
             if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354, 202)))
             {
@@ -226,7 +226,7 @@ namespace TPie.Config
                 {
                     if (actionElement != null)
                     {
-                        if (_selectedIndex >= 0)
+                        if (_selectedIndex >= 0 && Ring.Items.Count > 0)
                         {
                             Ring.Items.Insert(_selectedIndex, actionElement);
                         }
