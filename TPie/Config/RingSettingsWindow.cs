@@ -218,7 +218,7 @@ namespace TPie.Config
         {
             if (Ring == null) return;
 
-            ImGui.SetNextWindowSize(new(80, 80));
+            ImGui.SetNextWindowSize(new(80, 100));
 
             if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
             {
@@ -252,6 +252,11 @@ namespace TPie.Config
                     Plugin.ShowGearSetElementWindow(ItemWindowPos, Ring, null, callback);
                 }
 
+                if (ImGui.Selectable("Macro"))
+                {
+                    Plugin.ShowMacroElementWindow(ItemWindowPos, Ring, null, callback);
+                }
+
                 ImGui.EndPopup();
             }
         }
@@ -273,6 +278,10 @@ namespace TPie.Config
             else if (element is GearSetElement g)
             {
                 Plugin.ShowGearSetElementWindow(ItemWindowPos, Ring, g, null);
+            }
+            else if (element is MacroElement m)
+            {
+                Plugin.ShowMacroElementWindow(ItemWindowPos, Ring, m, null);
             }
         }
 

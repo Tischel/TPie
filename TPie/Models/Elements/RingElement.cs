@@ -77,6 +77,14 @@ namespace TPie.Models.Elements
                         uint jobId = jo.Value<uint>("JobID");
                         return new GearSetElement(gearSetId, jobId);
                     }
+
+                    if (type.Contains("Macro"))
+                    {
+                        string name = jo.Value<string>("Name") ?? "";
+                        string command = jo.Value<string>("Command") ?? "";
+                        uint iconId = jo.Value<uint>("IconID");
+                        return new MacroElement(name, command, iconId);
+                    }
                 }
             }
             catch (Exception e)

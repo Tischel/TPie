@@ -43,6 +43,7 @@ namespace TPie
         private static ActionElementWindow _actionElementWindow = null!;
         private static ItemElementWindow _itemElementWindow = null!;
         private static GearSetElementWindow _gearSetElementWindow = null!;
+        private static MacroElementWindow _macroElementWindow = null!;
 
         public Plugin(
             ClientState clientState,
@@ -98,28 +99,6 @@ namespace TPie
 
             Settings = Settings.Load();
 
-            //Settings.Rings.Clear();
-            //KeyBind keybind = new KeyBind(72);
-            //Ring ring = new Ring("Test", Vector4.One, keybind, 150, new Vector2(40, 40));
-
-            //ActionElement? teleport = new ActionElement(3574);
-            //ring.Items.Add(teleport);
-
-            //ItemElement? item = new ItemElement(2001886, false, "Aether Compass", 25948);
-            //ring.Items.Add(item);
-
-            //ItemElement? food = new ItemElement(23187, false, "Matcha", 24414);
-            //ring.Items.Add(food);
-
-            //GearSetElement? blm = new GearSetElement(1, JobIDs.BLM);
-            //ring.Items.Add(blm);
-
-            //GearSetElement? rdm = new GearSetElement(3, JobIDs.RDM);
-            //ring.Items.Add(rdm);
-
-            //Rings.Add(ring);
-            //Settings.Save(Settings);
-
             if (!FontsHelper.DefaultFontBuilt)
             {
                 UiBuilder.RebuildFonts();
@@ -151,6 +130,7 @@ namespace TPie
             _actionElementWindow = new ActionElementWindow("Add Action");
             _itemElementWindow = new ItemElementWindow("Add Item");
             _gearSetElementWindow = new GearSetElementWindow("Add Gear Set");
+            _macroElementWindow = new MacroElementWindow("Add Macro");
 
             _windowSystem = new WindowSystem("TPie_Windows");
             _windowSystem.AddWindow(_settingsWindow);
@@ -158,6 +138,7 @@ namespace TPie
             _windowSystem.AddWindow(_actionElementWindow);
             _windowSystem.AddWindow(_itemElementWindow);
             _windowSystem.AddWindow(_gearSetElementWindow);
+            _windowSystem.AddWindow(_macroElementWindow);
         }
 
         public static void ShowRingSettingsWindow(Vector2 position, Ring ring)
@@ -198,6 +179,17 @@ namespace TPie
             _gearSetElementWindow.Callback = callback;
 
             _gearSetElementWindow.IsOpen = true;
+        }
+
+        public static void ShowMacroElementWindow(Vector2 position, Ring ring, MacroElement? macroElement, Action<RingElement?>? callback)
+        {
+            _macroElementWindow.Ring = ring;
+            _macroElementWindow.Position = position;
+            _macroElementWindow.WindowName = macroElement != null ? "Edit Macro" : "Add Macro";
+            _macroElementWindow.MacroElement = macroElement;
+            _macroElementWindow.Callback = callback;
+
+            _macroElementWindow.IsOpen = true;
         }
 
         private void Update(Framework framework)
