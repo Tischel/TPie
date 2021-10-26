@@ -42,6 +42,7 @@ namespace TPie
         private static RingSettingsWindow _ringSettingsWindow = null!;
         private static ActionElementWindow _actionElementWindow = null!;
         private static ItemElementWindow _itemElementWindow = null!;
+        private static GearSetElementWindow _gearSetElementWindow = null!;
 
         public Plugin(
             ClientState clientState,
@@ -149,12 +150,14 @@ namespace TPie
             _ringSettingsWindow = new RingSettingsWindow("Ring Settings");
             _actionElementWindow = new ActionElementWindow("Add Action");
             _itemElementWindow = new ItemElementWindow("Add Item");
+            _gearSetElementWindow = new GearSetElementWindow("Add Gear Set");
 
             _windowSystem = new WindowSystem("TPie_Windows");
             _windowSystem.AddWindow(_settingsWindow);
             _windowSystem.AddWindow(_ringSettingsWindow);
             _windowSystem.AddWindow(_actionElementWindow);
             _windowSystem.AddWindow(_itemElementWindow);
+            _windowSystem.AddWindow(_gearSetElementWindow);
         }
 
         public static void ShowRingSettingsWindow(Vector2 position, Ring ring)
@@ -182,6 +185,16 @@ namespace TPie
             _itemElementWindow.Callback = callback;
 
             _itemElementWindow.IsOpen = true;
+        }
+
+        public static void ShowGearSetElementWindow(Vector2 position, GearSetElement? gearSetElement, Action<RingElement?>? callback)
+        {
+            _gearSetElementWindow.Position = position;
+            _gearSetElementWindow.WindowName = gearSetElement != null ? "Edit Gear Set" : "Add Gear Set";
+            _gearSetElementWindow.GearSetElement = gearSetElement;
+            _gearSetElementWindow.Callback = callback;
+
+            _gearSetElementWindow.IsOpen = true;
         }
 
         private void Update(Framework framework)

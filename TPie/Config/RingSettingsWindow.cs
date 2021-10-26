@@ -229,6 +229,7 @@ namespace TPie.Config
 
                 if (ImGui.Selectable("Gear Set"))
                 {
+                    Plugin.ShowGearSetElementWindow(ItemWindowPos, null, callback);
                 }
 
                 ImGui.EndPopup();
@@ -248,6 +249,10 @@ namespace TPie.Config
             else if (element is ItemElement i)
             {
                 Plugin.ShowItemElementWindow(ItemWindowPos, i, null);
+            }
+            else if (element is GearSetElement g)
+            {
+                Plugin.ShowGearSetElementWindow(ItemWindowPos, g, null);
             }
         }
 

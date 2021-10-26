@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Newtonsoft.Json;
 using System.Numerics;
 using TPie.Helpers;
 
@@ -6,14 +7,25 @@ namespace TPie.Models.Elements
 {
     public class GearSetElement : RingElement
     {
-        public readonly uint GearSetID;
-        public readonly uint JobID;
+        public uint GearSetID;
+
+        private uint _jobId;
+
+        [JsonProperty]
+        public uint JobID
+        {
+            get => _jobId;
+            set
+            {
+                _jobId = value;
+                IconID = 62800 + value;
+            }
+        }
 
         public GearSetElement(uint gearSetId, uint jobId)
         {
             GearSetID = gearSetId;
             JobID = jobId;
-            IconID = 62800 + jobId;
         }
 
         public override void ExecuteAction()
