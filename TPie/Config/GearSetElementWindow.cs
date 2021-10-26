@@ -1,9 +1,11 @@
 ﻿using Dalamud.Interface.Windowing;
+using Dalamud.Logging;
 using ImGuiNET;
 using ImGuiScene;
 using System;
 using System.Linq;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using TPie.Helpers;
 using TPie.Models.Elements;
 
@@ -67,8 +69,12 @@ namespace TPie.Config
             if (GearSetElement == null) return;
 
             ImGui.PushItemWidth(180);
-            if (ImGui.InputText("Gear Set Number ##GearSet", ref _inputText, 100, ImGuiInputTextFlags.CharsDecimal))
+
+            string str = _inputText;
+            if (ImGui.InputText("Gear Set Number ##GearSet", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
             {
+                _inputText = Regex.Replace(str, @"[^\d]", "");
+
                 try
                 {
                     GearSetElement.GearSetID = uint.Parse(_inputText);
