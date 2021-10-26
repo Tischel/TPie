@@ -32,7 +32,7 @@ namespace TPie.Config
             }
         }
 
-        public Action<ActionElement?>? Callback = null;
+        public Action<RingElement?>? Callback = null;
 
         private string _inputText = "";
         private List<LuminaAction> _searchResult = new List<LuminaAction>();
@@ -75,7 +75,7 @@ namespace TPie.Config
             if (ActionElement == null) return;
 
             ImGui.PushItemWidth(210);
-            if (ImGui.InputText("ID or Name", ref _inputText, 100))
+            if (ImGui.InputText("ID or Name ##Action", ref _inputText, 100))
             {
                 SearchActions(_inputText);
             }

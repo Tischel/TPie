@@ -11,7 +11,7 @@ namespace TPie.Models.Elements
     [JsonConverter(typeof(RingElementConverter))]
     public abstract class RingElement
     {
-        public uint IconID { get; protected set; }
+        public uint IconID { get; set; }
 
         public virtual void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
         {
@@ -66,8 +66,9 @@ namespace TPie.Models.Elements
                     {
                         uint itemId = jo.Value<uint>("ItemID");
                         bool hq = jo.Value<bool>("HQ");
+                        string name = jo.Value<string>("Name") ?? "";
                         uint iconId = jo.Value<uint>("IconID");
-                        return new ItemElement(itemId, hq, iconId);
+                        return new ItemElement(itemId, hq, name, iconId);
                     }
 
                     if (type.Contains("GearSetElement"))

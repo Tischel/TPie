@@ -79,8 +79,8 @@ namespace TPie.Models
 
         public void Update()
         {
+            HasInventoryItems = Items.FirstOrDefault(item => item is ItemElement) != null;
             _validItems = Items.Where(o => o.IsValid()).ToList();
-            HasInventoryItems = _validItems.FirstOrDefault(item => item is ItemElement) != null;
 
             if (!KeyBind.IsActive())
             {

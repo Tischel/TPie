@@ -54,18 +54,24 @@ namespace TPie.Models
             ImGui.InputText($"##{id}_Keybind", ref dispKey, 200, ImGuiInputTextFlags.ReadOnly);
             DrawHelper.SetTooltip("Escape to clear");
 
-            int keyPressed = KeyboardHelper.Instance.GetKeyPressed();
-            if (ImGui.IsItemActive() && keyPressed > 0)
+            if (ImGui.IsItemActive())
             {
-                Ctrl = io.KeyCtrl;
-                Alt = io.KeyAlt;
-                Shift = io.KeyShift;
-                Key = keyPressed;
-            }
+                if (KeyboardHelper.Instance.IsKeyPressed((int)Keys.Escape))
+                {
+                    Key = 0;
+                }
+                else
+                {
+                    int keyPressed = KeyboardHelper.Instance.GetKeyPressed();
+                    if (keyPressed > 0)
+                    {
 
-            if (KeyboardHelper.Instance.IsKeyPressed((int)Keys.Escape))
-            {
-                Key = 0;
+                        Ctrl = io.KeyCtrl;
+                        Alt = io.KeyAlt;
+                        Shift = io.KeyShift;
+                        Key = keyPressed;
+                    }
+                }
             }
         }
     }

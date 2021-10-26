@@ -8,12 +8,14 @@ namespace TPie.Models.Elements
 {
     public class ItemElement : RingElement
     {
-        public readonly uint ItemID;
-        public readonly bool HQ;
+        public uint ItemID;
+        public string Name;
+        public bool HQ;
 
-        public ItemElement(uint itemId, bool hq, uint iconId)
+        public ItemElement(uint itemId, bool hq, string name, uint iconId)
         {
             ItemID = itemId;
+            Name = name;
             HQ = hq;
             IconID = iconId;
         }
@@ -26,7 +28,8 @@ namespace TPie.Models.Elements
 
         public override bool IsValid()
         {
-            return ItemID > 0;
+            UsableItem? item = ItemsHelper.Instance?.GetUsableItem(ItemID, HQ);
+            return ItemID > 0 && item?.Count > 0;
         }
 
         public override string InvalidReason()
@@ -37,9 +40,11 @@ namespace TPie.Models.Elements
         public override string Description()
         {
             UsableItem? item = ItemsHelper.Instance?.GetUsableItem(ItemID, HQ);
-            if (item == null) return "";
 
-            return HQ ? item.Name + " (HQ)" : item.Name;
+            string hqString = HQ ? " (HQ)" : "";
+            string countString = item?.Count > 0 && item?.IsKey == false ? $" x{item.Count}" : "";
+
+            return $"{Name}{hqString}{countString}";
         }
 
         public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)

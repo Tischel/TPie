@@ -2,6 +2,7 @@
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using ImGuiScene;
+using System;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using TPie.Helpers;
@@ -201,26 +202,29 @@ namespace TPie.Config
 
             if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
             {
+                Action<RingElement?> callback = (actionElement) =>
+                {
+                    if (actionElement != null)
+                    {
+                        if (_selectedIndex >= 0)
+                        {
+                            Ring?.Items.Insert(_selectedIndex, actionElement);
+                        }
+                        else
+                        {
+                            Ring?.Items.Add(actionElement);
+                        }
+                    }
+                };
+
                 if (ImGui.Selectable("Action"))
                 {
-                    Plugin.ShowActionElementWindow(ItemWindowPos, null, (actionElement) =>
-                    {
-                        if (actionElement != null)
-                        {
-                            if (_selectedIndex >= 0)
-                            {
-                                Ring?.Items.Insert(_selectedIndex, actionElement);
-                            }
-                            else
-                            {
-                                Ring?.Items.Add(actionElement);
-                            }
-                        }
-                    });
+                    Plugin.ShowActionElementWindow(ItemWindowPos, null, callback);
                 }
 
                 if (ImGui.Selectable("Item"))
                 {
+                    Plugin.ShowItemElementWindow(ItemWindowPos, null, callback);
                 }
 
                 if (ImGui.Selectable("Gear Set"))
@@ -235,14 +239,17 @@ namespace TPie.Config
         {
             if (Ring == null || _selectedIndex < 0 || _selectedIndex >= Ring.Items.Count) return;
 
-            RingElement item = Ring.Items[_selectedIndex];
+            RingElement element = Ring.Items[_selectedIndex];
 
-            if (item is ActionElement a)
+            if (element is ActionElement a)
             {
                 Plugin.ShowActionElementWindow(ItemWindowPos, a, null);
             }
+            else if (element is ItemElement i)
+            {
+                Plugin.ShowItemElementWindow(ItemWindowPos, i, null);
+            }
         }
-
 
         public override void OnClose()
         {

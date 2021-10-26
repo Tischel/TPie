@@ -41,6 +41,7 @@ namespace TPie
         private static SettingsWindow _settingsWindow = null!;
         private static RingSettingsWindow _ringSettingsWindow = null!;
         private static ActionElementWindow _actionElementWindow = null!;
+        private static ItemElementWindow _itemElementWindow = null!;
 
         public Plugin(
             ClientState clientState,
@@ -103,10 +104,10 @@ namespace TPie
             //ActionElement? teleport = new ActionElement(3574);
             //ring.Items.Add(teleport);
 
-            //ItemElement? item = new ItemElement(2001886, false, 25948);
+            //ItemElement? item = new ItemElement(2001886, false, "Aether Compass", 25948);
             //ring.Items.Add(item);
 
-            //ItemElement? food = new ItemElement(23187, false, 24414);
+            //ItemElement? food = new ItemElement(23187, false, "Matcha", 24414);
             //ring.Items.Add(food);
 
             //GearSetElement? blm = new GearSetElement(1, JobIDs.BLM);
@@ -140,7 +141,6 @@ namespace TPie
         private void PluginCommand(string command, string arguments)
         {
             _settingsWindow.IsOpen = !_settingsWindow.IsOpen;
-            _ringSettingsWindow.IsOpen = !_ringSettingsWindow.IsOpen;
         }
 
         private void CreateWindows()
@@ -148,11 +148,13 @@ namespace TPie
             _settingsWindow = new SettingsWindow("TPie Settings");
             _ringSettingsWindow = new RingSettingsWindow("Ring Settings");
             _actionElementWindow = new ActionElementWindow("Add Action");
+            _itemElementWindow = new ItemElementWindow("Add Item");
 
             _windowSystem = new WindowSystem("TPie_Windows");
             _windowSystem.AddWindow(_settingsWindow);
             _windowSystem.AddWindow(_ringSettingsWindow);
             _windowSystem.AddWindow(_actionElementWindow);
+            _windowSystem.AddWindow(_itemElementWindow);
         }
 
         public static void ShowRingSettingsWindow(Vector2 position, Ring ring)
@@ -162,7 +164,7 @@ namespace TPie
             _ringSettingsWindow.IsOpen = true;
         }
 
-        public static void ShowActionElementWindow(Vector2 position, ActionElement? actionElement, Action<ActionElement?>? callback)
+        public static void ShowActionElementWindow(Vector2 position, ActionElement? actionElement, Action<RingElement?>? callback)
         {
             _actionElementWindow.Position = position;
             _actionElementWindow.WindowName = actionElement != null ? "Edit Action" : "Add Action";
@@ -172,21 +174,25 @@ namespace TPie
             _actionElementWindow.IsOpen = true;
         }
 
+        public static void ShowItemElementWindow(Vector2 position, ItemElement? itemElement, Action<RingElement?>? callback)
+        {
+            _itemElementWindow.Position = position;
+            _itemElementWindow.WindowName = itemElement != null ? "Edit Item" : "Add Item";
+            _itemElementWindow.ItemElement = itemElement;
+            _itemElementWindow.Callback = callback;
+
+            _itemElementWindow.IsOpen = true;
+        }
+
         private void Update(Framework framework)
         {
             if (Settings == null || ClientState.LocalPlayer == null) return;
 
-            bool needsItems = false;
+            ItemsHelper.Instance?.CalculateUsableItems();
 
             foreach (Ring ring in Rings)
             {
                 ring.Update();
-                needsItems |= ((ring.IsActive || ring.Previewing) && ring.HasInventoryItems);
-            }
-
-            if (needsItems)
-            {
-                ItemsHelper.Instance?.CalculateUsableItems();
             }
         }
 
