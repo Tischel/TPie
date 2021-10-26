@@ -171,7 +171,7 @@ namespace TPie.Config
                 if (ImGui.Button(FontAwesomeIcon.Plus.ToIconString()))
                 {
                     Ring newRing = new Ring($"Ring{Rings.Count + 1}", Vector4.One, new KeyBind(0), 150f, new Vector2(40));
-                    Rings.Add(newRing);
+                    Plugin.Settings.AddRing(newRing);
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Adds a new empty Ring");
@@ -184,7 +184,11 @@ namespace TPie.Config
                 {
                     string importString = ImGui.GetClipboardText();
                     List<Ring> newRings = ImportExportHelper.ImportRings(importString);
-                    Rings.AddRange(newRings);
+
+                    foreach (Ring ring in newRings)
+                    {
+                        Plugin.Settings.AddRing(ring);
+                    }
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Adds new Rings by importing them from the clipboard");
@@ -251,7 +255,10 @@ namespace TPie.Config
                     if (ImGui.TableSetColumnIndex(2))
                     {
                         ImGui.PushItemWidth(140);
-                        ring.KeyBind.Draw(ring.Name);
+                        if (ring.KeyBind.Draw(ring.Name))
+                        {
+                            Plugin.Settings.ValidateKeyBind(ring);
+                        }
                     }
 
                     // actions
@@ -305,11 +312,6 @@ namespace TPie.Config
                     _removingRing = null;
                 }
             }
-        }
-
-        private static void InputKeybind(string id, ref KeyBind keybind)
-        {
-
         }
     }
 }

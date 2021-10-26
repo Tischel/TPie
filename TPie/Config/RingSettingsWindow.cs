@@ -61,7 +61,11 @@ namespace TPie.Config
                     Ring.Color = new Vector4(color.X, color.Y, color.Z, 1);
                 }
 
-                Ring.KeyBind.Draw(Ring.Name);
+                if (Ring.KeyBind.Draw(Ring.Name))
+                {
+                    Plugin.Settings.ValidateKeyBind(Ring);
+                }
+
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 4);
                 ImGui.Text("Keybind");

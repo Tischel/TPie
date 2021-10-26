@@ -1,5 +1,5 @@
-﻿using Dalamud.Logging;
-using ImGuiNET;
+﻿using ImGuiNET;
+using System;
 using System.Windows.Forms;
 using TPie.Helpers;
 
@@ -46,7 +46,7 @@ namespace TPie.Models
             return ctrl && alt && shift && key;
         }
 
-        public void Draw(string id)
+        public bool Draw(string id)
         {
             ImGuiIOPtr io = ImGui.GetIO();
             string dispKey = ToString();
@@ -58,7 +58,7 @@ namespace TPie.Models
             {
                 if (KeyboardHelper.Instance.IsKeyPressed((int)Keys.Escape))
                 {
-                    Key = 0;
+                    Reset();
                 }
                 else
                 {
@@ -70,9 +70,28 @@ namespace TPie.Models
                         Alt = io.KeyAlt;
                         Shift = io.KeyShift;
                         Key = keyPressed;
+                        return true;
                     }
                 }
             }
+
+            return false;
+        }
+
+        public void Reset()
+        {
+            Key = 0;
+            Ctrl = false;
+            Alt = false;
+            Shift = false;
+        }
+
+        public bool Equals(KeyBind bind)
+        {
+            return Key == bind.Key &&
+                   Ctrl == bind.Ctrl &&
+                   Alt == bind.Alt &&
+                   Shift == bind.Shift;
         }
     }
 }

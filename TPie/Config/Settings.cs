@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using TPie.Models;
 
@@ -27,6 +28,29 @@ namespace TPie.Config
 
         public bool ShowCooldowns = true;
         public bool ShowRemainingItemCount = true;
+
+        public void AddRing(Ring ring)
+        {
+            if (Rings.Any(o => o.KeyBind.Equals(ring.KeyBind)))
+            {
+                ring.KeyBind.Reset();
+            }
+
+            Rings.Add(ring);
+        }
+
+        public void ValidateKeyBind(Ring prioritizedRing)
+        {
+            foreach (Ring ring in Rings)
+            {
+                if (ring == prioritizedRing) continue;
+
+                if (ring.KeyBind.Equals(prioritizedRing.KeyBind))
+                {
+                    ring.KeyBind.Reset();
+                }
+            }
+        }
 
         #region load / save
         private static string JsonPath = Path.Combine(Plugin.PluginInterface.GetPluginConfigDirectory(), "Settings.json");
