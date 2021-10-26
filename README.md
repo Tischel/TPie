@@ -8,7 +8,7 @@ A Final Fantasy XIV Dalamud Plugin for configurable ring-shaped hotbars.
 
 Each ring has a keybind assigned to it. By pressing and holding that keybind the hotbar appears. An element can be selected by moving the cursor on top of it and releasing the keybind.
 
-![example](.\Images\example.gif)
+![example](https://github.com/Tischel/TPie/blob/develop/example.gif)
 
 
 
@@ -16,12 +16,12 @@ Each ring has a keybind assigned to it. By pressing and holding that keybind the
 
 TPie comes with user friendly menus to configure the rings. Rings can also be imported/exported.
 
-![image-20211026183510415](.\Images\config.png)![image-20211026183517860](.\Images\rings_config.png)
+![config](https://github.com/Tischel/TPie/blob/develop/config.png)![ring_config](https://github.com/Tischel/TPie/blob/develop/rings_config.png)
 
 
 
 Each ring can contain actions, items, gear sets or macros.
 
-![image-20211026183728586](.\Images\ring_1.png)
+![ring_1](https://github.com/Tischel/TPie/blob/develop/ring_1.png)
 
-![image-20211026183741120](.\Images\ring_2.png)
+![ring_2](https://github.com/Tischel/TPie/blob/develop/ring_2.png)
