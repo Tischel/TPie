@@ -12,7 +12,7 @@ using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
 
 namespace TPie.Config
 {
-    public class ActionElementWindow : Window
+    public class ActionElementWindow : RingElementWindow
     {
         private ActionElement? _actionElement = null;
         public ActionElement? ActionElement
@@ -20,6 +20,7 @@ namespace TPie.Config
             get => _actionElement;
             set
             {
+                _editing = true;
                 _actionElement = value;
                 _inputText = "";
                 _searchResult.Clear();
@@ -32,42 +33,29 @@ namespace TPie.Config
             }
         }
 
-        public Action<RingElement?>? Callback = null;
-
-        private string _inputText = "";
         private List<LuminaAction> _searchResult = new List<LuminaAction>();
         private ExcelSheet<LuminaAction>? _sheet;
 
-        private bool _needsFocus = false;
-
         public ActionElementWindow(string name) : base(name)
         {
-            Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(300, 300);
-
-            PositionCondition = ImGuiCond.Appearing;
-
             _sheet = Plugin.DataManager.GetExcelSheet<LuminaAction>();
         }
 
-        public override void OnOpen()
+        protected override RingElement? Element()
         {
-            _needsFocus = true;
+            return ActionElement;
         }
 
-        public override void OnClose()
+        protected override void CreateElement()
         {
-            Callback?.Invoke(null);
-            Callback = null;
+            _actionElement = new ActionElement(0);
+            _inputText = "";
+            _searchResult.Clear();
+        }
+
+        protected override void DestroyElement()
+        {
             ActionElement = null;
-        }
-
-        public override void PreDraw()
-        {
-            if (ActionElement == null)
-            {
-                ActionElement = new ActionElement(0);
-            }
         }
 
         public override void Draw()
@@ -80,11 +68,7 @@ namespace TPie.Config
                 SearchActions(_inputText);
             }
 
-            if (_needsFocus)
-            {
-                ImGui.SetKeyboardFocusHere(0);
-                _needsFocus = false;
-            }
+            FocusIfNeeded();
 
             ImGui.BeginChild("##Actions_List", new Vector2(284, 236), true);
             {

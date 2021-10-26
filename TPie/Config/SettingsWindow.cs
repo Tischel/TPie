@@ -20,6 +20,7 @@ namespace TPie.Config
         private Vector2 RingWindowPos => _windowPos + new Vector2(410, 0);
 
         private Ring? _removingRing = null;
+        private Ring? _editingRing = null;
 
         public SettingsWindow(string name) : base(name)
         {
@@ -268,6 +269,7 @@ namespace TPie.Config
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
                         {
+                            _editingRing = ring;
                             Plugin.ShowRingSettingsWindow(RingWindowPos, ring);
                         }
                         ImGui.PopFont();

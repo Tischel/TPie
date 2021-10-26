@@ -11,7 +11,7 @@ using TPie.Models.Elements;
 
 namespace TPie.Config
 {
-    public class GearSetElementWindow : Window
+    public class GearSetElementWindow : RingElementWindow
     {
         private GearSetElement? _gearSetElement = null;
         public GearSetElement? GearSetElement
@@ -19,49 +19,36 @@ namespace TPie.Config
             get => _gearSetElement;
             set
             {
+                _editing = true;
                 _gearSetElement = value;
                 _inputText = value != null ? $"{value.GearSetID}" : "";
             }
         }
 
-        public Action<RingElement?>? Callback = null;
-
         private uint[] _jobIds;
         private string[] _jobNames;
 
-        private string _inputText = "";
-        private bool _needsFocus = false;
-
         public GearSetElementWindow(string name) : base(name)
         {
-            Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(300, 300);
-
-            PositionCondition = ImGuiCond.Appearing;
-
             _jobIds = JobsHelper.JobNames.Keys.ToArray();
             _jobNames = JobsHelper.JobNames.Values.ToArray();
         }
 
-        public override void OnOpen()
+        protected override RingElement? Element()
         {
-            _needsFocus = true;
+            return GearSetElement;
         }
 
-        public override void OnClose()
+        protected override void CreateElement()
         {
-            Callback?.Invoke(GearSetElement);
-            Callback = null;
+            uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? JobIDs.GLD;
+            _gearSetElement = new GearSetElement(1, jobId);
+            _inputText = "";
+        }
+
+        protected override void DestroyElement()
+        {
             GearSetElement = null;
-        }
-
-        public override void PreDraw()
-        {
-            if (GearSetElement == null)
-            {
-                uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? JobIDs.GLD;
-                GearSetElement = new GearSetElement(1, jobId);
-            }
         }
 
         public override void Draw()

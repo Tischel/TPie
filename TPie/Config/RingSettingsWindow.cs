@@ -37,6 +37,14 @@ namespace TPie.Config
             PositionCondition = ImGuiCond.Appearing;
         }
 
+        public override void PreDraw()
+        {
+            if (Ring == null || !Plugin.Settings.Rings.Contains(Ring))
+            {
+                IsOpen = false;
+            }
+        }
+
         public override void Draw()
         {
             if (Ring == null) return;
@@ -208,6 +216,8 @@ namespace TPie.Config
 
         private void DrawAddItemMenu()
         {
+            if (Ring == null) return;
+
             ImGui.SetNextWindowSize(new(80, 80));
 
             if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
@@ -218,28 +228,28 @@ namespace TPie.Config
                     {
                         if (_selectedIndex >= 0)
                         {
-                            Ring?.Items.Insert(_selectedIndex, actionElement);
+                            Ring.Items.Insert(_selectedIndex, actionElement);
                         }
                         else
                         {
-                            Ring?.Items.Add(actionElement);
+                            Ring.Items.Add(actionElement);
                         }
                     }
                 };
 
                 if (ImGui.Selectable("Action"))
                 {
-                    Plugin.ShowActionElementWindow(ItemWindowPos, null, callback);
+                    Plugin.ShowActionElementWindow(ItemWindowPos, Ring, null, callback);
                 }
 
                 if (ImGui.Selectable("Item"))
                 {
-                    Plugin.ShowItemElementWindow(ItemWindowPos, null, callback);
+                    Plugin.ShowItemElementWindow(ItemWindowPos, Ring, null, callback);
                 }
 
                 if (ImGui.Selectable("Gear Set"))
                 {
-                    Plugin.ShowGearSetElementWindow(ItemWindowPos, null, callback);
+                    Plugin.ShowGearSetElementWindow(ItemWindowPos, Ring, null, callback);
                 }
 
                 ImGui.EndPopup();
@@ -254,15 +264,15 @@ namespace TPie.Config
 
             if (element is ActionElement a)
             {
-                Plugin.ShowActionElementWindow(ItemWindowPos, a, null);
+                Plugin.ShowActionElementWindow(ItemWindowPos, Ring, a, null);
             }
             else if (element is ItemElement i)
             {
-                Plugin.ShowItemElementWindow(ItemWindowPos, i, null);
+                Plugin.ShowItemElementWindow(ItemWindowPos, Ring, i, null);
             }
             else if (element is GearSetElement g)
             {
-                Plugin.ShowGearSetElementWindow(ItemWindowPos, g, null);
+                Plugin.ShowGearSetElementWindow(ItemWindowPos, Ring, g, null);
             }
         }
 

@@ -1,13 +1,10 @@
-﻿using Dalamud.Interface.Windowing;
-using ImGuiNET;
+﻿using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using TPie.Helpers;
 using TPie.Models.Elements;
 using LuminaItem = Lumina.Excel.GeneratedSheets.Item;
@@ -15,7 +12,7 @@ using LuminaKeyItem = Lumina.Excel.GeneratedSheets.EventItem;
 
 namespace TPie.Config
 {
-    public class ItemElementWindow : Window
+    public class ItemElementWindow : RingElementWindow
     {
         private ItemElement? _itemElement = null;
         public ItemElement? ItemElement
@@ -23,6 +20,7 @@ namespace TPie.Config
             get => _itemElement;
             set
             {
+                _editing = true;
                 _itemElement = value;
                 _inputText = "";
                 _searchResult.Clear();
@@ -35,9 +33,6 @@ namespace TPie.Config
             }
         }
 
-        public Action<RingElement?>? Callback = null;
-
-        private string _inputText = "";
         private bool _hq = false;
         private bool _onlyInIventory = true;
 
@@ -46,38 +41,29 @@ namespace TPie.Config
         private ExcelSheet<LuminaItem>? _itemsSheet;
         private ExcelSheet<LuminaKeyItem>? _keyItemsSheet;
 
-        private bool _needsFocus = false;
         private bool _needsSearch = false;
 
         public ItemElementWindow(string name) : base(name)
         {
-            Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(300, 300);
-
-            PositionCondition = ImGuiCond.Appearing;
-
             _itemsSheet = Plugin.DataManager.GetExcelSheet<LuminaItem>();
             _keyItemsSheet = Plugin.DataManager.GetExcelSheet<LuminaKeyItem>();
         }
 
-        public override void OnOpen()
+        protected override RingElement? Element()
         {
-            _needsFocus = true;
+            return ItemElement;
         }
 
-        public override void OnClose()
+        protected override void CreateElement()
         {
-            Callback?.Invoke(null);
-            Callback = null;
+            _itemElement = new ItemElement(0, false, "", 0);
+            _inputText = "";
+            _searchResult.Clear();
+        }
+
+        protected override void DestroyElement()
+        {
             ItemElement = null;
-        }
-
-        public override void PreDraw()
-        {
-            if (ItemElement == null)
-            {
-                ItemElement = new ItemElement(0, false, "", 0);
-            }
         }
 
         public override void Draw()
@@ -91,11 +77,7 @@ namespace TPie.Config
                 _needsSearch = false;
             }
 
-            if (_needsFocus)
-            {
-                ImGui.SetKeyboardFocusHere(0);
-                _needsFocus = false;
-            }
+            FocusIfNeeded();
 
             ImGui.Checkbox("In Inventory", ref _onlyInIventory);
 
