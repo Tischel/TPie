@@ -60,6 +60,7 @@
 	<ItemGroup>
 		<Content Include="TPie.json" CopyToOutputDirectory="Always" />
 		<Content Include="Media\**" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Media\icon.png" Link="images/icon.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
 	</ItemGroup>
 
 	<!-- Library References -->
