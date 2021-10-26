@@ -270,9 +270,9 @@ namespace TPie.Config
 
                 if (elementToAdd != null)
                 {
-                    if (_selectedIndex >= 0 && Ring.Items.Count > 0)
+                    if (Ring.Items.Count > 0 && _selectedIndex >= 0 && _selectedIndex < Ring.Items.Count - 1)
                     {
-                        Ring.Items.Insert(_selectedIndex, elementToAdd);
+                        Ring.Items.Insert(_selectedIndex + 1, elementToAdd);
                     }
                     else
                     {
