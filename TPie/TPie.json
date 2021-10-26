@@ -1,8 +1,8 @@
 ﻿{
   "Name": "TPie",
   "Author": "Tischel",
-  "Punchline": "Customizable radial hotbars",
-  "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items or Gear Sets. You can create profiles and link them to different jobs.",
+  "Punchline": "Customizable ring-shaped hotbars",
+  "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items or Gear Sets.",
   "RepoUrl": "https://github.com/Tischel/TPie",
   "Tags": ["UI"]
 }
