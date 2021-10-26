@@ -303,7 +303,7 @@ namespace TPie.Models
             // spiral
             if (type == RingAnimationType.Spiral)
             {
-                _angleOffset = -0.8f * (1 - _animProgress);
+                _angleOffset = -1.6f * (1 - _animProgress);
 
                 for (int i = 0; i < count; i++)
                 {
