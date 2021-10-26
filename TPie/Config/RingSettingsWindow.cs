@@ -3,6 +3,7 @@ using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using ImGuiScene;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using TPie.Helpers;
@@ -181,31 +182,54 @@ namespace TPie.Config
                 DrawHelper.SetTooltip("Delete");
             }
 
-            if (_selectedIndex > 0)
+            int count = Ring.Items.Count;
+            if (count > 0)
             {
                 ImGui.SetCursorPos(new Vector2(369, 310));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
                 {
                     var tmp = Ring.Items[_selectedIndex];
-                    Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex - 1];
-                    Ring.Items[_selectedIndex - 1] = tmp;
-                    _selectedIndex--;
+
+                    // circular?
+                    if (_selectedIndex == 0)
+                    {
+                        Ring.Items.Remove(tmp);
+                        Ring.Items.Add(tmp);
+                        _selectedIndex = count - 1;
+                    }
+                    else
+                    {
+                        Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex - 1];
+                        Ring.Items[_selectedIndex - 1] = tmp;
+                        _selectedIndex--;
+                    }
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Move up");
             }
 
-            if (_selectedIndex >= 0 && _selectedIndex < Ring.Items.Count - 1)
+            if (count > 0)
             {
                 ImGui.SetCursorPos(new Vector2(369, 340));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
                 {
                     var tmp = Ring.Items[_selectedIndex];
-                    Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex + 1];
-                    Ring.Items[_selectedIndex + 1] = tmp;
-                    _selectedIndex++;
+
+                    // circular?
+                    if (_selectedIndex == count - 1)
+                    {
+                        Ring.Items.Remove(tmp);
+                        Ring.Items.Insert(0, tmp);
+                        _selectedIndex = 0;
+                    }
+                    else
+                    {
+                        Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex + 1];
+                        Ring.Items[_selectedIndex + 1] = tmp;
+                        _selectedIndex++;
+                    }
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Move down");
