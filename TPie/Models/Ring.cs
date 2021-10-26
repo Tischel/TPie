@@ -212,8 +212,15 @@ namespace TPie.Models
             if (!Previewing && _animState == AnimationState.Opened)
             {
                 Vector2 endPos = _selectedIndex >= 0 ? itemPositions[_selectedIndex] : mousePos;
-                Vector2 startPos = center + Vector2.Normalize(endPos - center) * 9.5f;
+                Vector2 direction = Vector2.Normalize(endPos - center);
+                Vector2 startPos = center + direction * 9.5f;
                 drawList.AddLine(startPos, endPos, color, 4);
+
+                if (_selectedIndex == -1)
+                {
+                    Vector2 endCircleCenter = endPos + direction * 3;
+                    drawList.AddCircleFilled(endCircleCenter, 4, color);
+                }
             }
 
             for (int i = 0; i < count; i++)
