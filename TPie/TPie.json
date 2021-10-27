@@ -2,7 +2,7 @@
   "Name": "TPie",
   "Author": "Tischel",
   "Punchline": "Customizable ring-shaped hotbars",
-  "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items or Gear Sets.",
+  "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items, Gear Sets or Macros.",
   "RepoUrl": "https://github.com/Tischel/TPie",
   "Tags": ["UI"]
 }
