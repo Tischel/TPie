@@ -189,6 +189,7 @@ namespace TPie
         {
             if (Settings == null || ClientState.LocalPlayer == null) return;
 
+            KeyboardHelper.Instance?.Update();
             ItemsHelper.Instance?.CalculateUsableItems();
 
             foreach (Ring ring in Rings)

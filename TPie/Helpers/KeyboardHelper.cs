@@ -11,31 +11,6 @@ namespace TPie.Helpers
         private KeyboardHelper()
         {
             _keyStates = new bool[256];
-
-            ulong processId = (ulong)Process.GetCurrentProcess().Id;
-
-            IntPtr hWnd = IntPtr.Zero;
-            do
-            {
-                hWnd = FindWindowExW(IntPtr.Zero, hWnd, "FFXIVGAME", null);
-                if (hWnd == IntPtr.Zero) { return; }
-
-                ulong wndProcessId = 0;
-                GetWindowThreadProcessId(hWnd, ref wndProcessId);
-
-                if (wndProcessId == processId)
-                {
-                    break;
-                }
-
-            } while (hWnd != IntPtr.Zero);
-
-            if (hWnd != IntPtr.Zero)
-            {
-                _wndProcDelegate = WndProcDetour;
-                _wndProcPtr = Marshal.GetFunctionPointerForDelegate(_wndProcDelegate);
-                _imguiWndProcPtr = SetWindowLongPtr(hWnd, GWL_WNDPROC, _wndProcPtr);
-            }
         }
 
         public static void Initialize() { Instance = new KeyboardHelper(); }
@@ -61,12 +36,44 @@ namespace TPie.Helpers
             }
 
             // give imgui the control of inputs again
-            IntPtr windowHandle = Process.GetCurrentProcess().MainWindowHandle;
-            SetWindowLongPtr(windowHandle, GWL_WNDPROC, _imguiWndProcPtr);
+            if (_wndHandle != IntPtr.Zero && _imguiWndProcPtr != IntPtr.Zero)
+            {
+                SetWindowLongPtr(_wndHandle, GWL_WNDPROC, _imguiWndProcPtr);
+            }
 
             Instance = null!;
         }
         #endregion
+
+        public void Update()
+        {
+            if (_wndHandle != IntPtr.Zero) { return; }
+
+            ulong processId = (ulong)Process.GetCurrentProcess().Id;
+
+            IntPtr hWnd = IntPtr.Zero;
+            do
+            {
+                hWnd = FindWindowExW(IntPtr.Zero, hWnd, "FFXIVGAME", null);
+                if (hWnd == IntPtr.Zero) { return; }
+
+                ulong wndProcessId = 0;
+                GetWindowThreadProcessId(hWnd, ref wndProcessId);
+
+                if (wndProcessId == processId)
+                {
+                    break;
+                }
+
+            } while (hWnd != IntPtr.Zero);
+
+            if (hWnd == IntPtr.Zero) { return; }
+
+            _wndHandle = hWnd;
+            _wndProcDelegate = WndProcDetour;
+            _wndProcPtr = Marshal.GetFunctionPointerForDelegate(_wndProcDelegate);
+            _imguiWndProcPtr = SetWindowLongPtr(hWnd, GWL_WNDPROC, _wndProcPtr);
+        }
 
         public bool IsKeyPressed(int key)
         {
@@ -89,6 +96,7 @@ namespace TPie.Helpers
         }
 
         private bool[] _keyStates;
+        private IntPtr _wndHandle = IntPtr.Zero;
         private WndProcDelegate _wndProcDelegate = null!;
         private IntPtr _wndProcPtr = IntPtr.Zero;
         private IntPtr _imguiWndProcPtr = IntPtr.Zero;
