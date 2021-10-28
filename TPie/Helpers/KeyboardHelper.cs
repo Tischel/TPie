@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dalamud.Logging;
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -10,7 +11,7 @@ namespace TPie.Helpers
         #region singleton
         private KeyboardHelper()
         {
-            _keyStates = new bool[256];
+            _keyStates = new byte[256];
         }
 
         public static void Initialize() { Instance = new KeyboardHelper(); }
@@ -35,58 +36,27 @@ namespace TPie.Helpers
                 return;
             }
 
-            // give imgui the control of inputs again
-            if (_wndHandle != IntPtr.Zero && _imguiWndProcPtr != IntPtr.Zero)
-            {
-                SetWindowLongPtr(_wndHandle, GWL_WNDPROC, _imguiWndProcPtr);
-            }
-
             Instance = null!;
         }
         #endregion
 
         public void Update()
         {
-            if (_wndHandle != IntPtr.Zero) { return; }
-
-            ulong processId = (ulong)Process.GetCurrentProcess().Id;
-
-            IntPtr hWnd = IntPtr.Zero;
-            do
-            {
-                hWnd = FindWindowExW(IntPtr.Zero, hWnd, "FFXIVGAME", null);
-                if (hWnd == IntPtr.Zero) { return; }
-
-                ulong wndProcessId = 0;
-                GetWindowThreadProcessId(hWnd, ref wndProcessId);
-
-                if (wndProcessId == processId)
-                {
-                    break;
-                }
-
-            } while (hWnd != IntPtr.Zero);
-
-            if (hWnd == IntPtr.Zero) { return; }
-
-            _wndHandle = hWnd;
-            _wndProcDelegate = WndProcDetour;
-            _wndProcPtr = Marshal.GetFunctionPointerForDelegate(_wndProcDelegate);
-            _imguiWndProcPtr = SetWindowLongPtr(hWnd, GWL_WNDPROC, _wndProcPtr);
+            GetKeyboardState(_keyStates);
         }
 
         public bool IsKeyPressed(int key)
         {
             if (key < 0 || key >= 256) return false;
 
-            return _keyStates[key];
+            return _keyStates[key] > 1;
         }
 
         public int GetKeyPressed()
         {
             for (int i = (int)Keys.Space; i < _keyStates.Length; i++)
             {
-                if (_keyStates[i])
+                if (_keyStates[i] > 1)
                 {
                     return i;
                 }
@@ -95,48 +65,10 @@ namespace TPie.Helpers
             return 0;
         }
 
-        private bool[] _keyStates;
-        private IntPtr _wndHandle = IntPtr.Zero;
-        private WndProcDelegate _wndProcDelegate = null!;
-        private IntPtr _wndProcPtr = IntPtr.Zero;
-        private IntPtr _imguiWndProcPtr = IntPtr.Zero;
+        private byte[] _keyStates;
 
-        private IntPtr WndProcDetour(IntPtr hWnd, uint msg, ulong wParam, long lParam)
-        {
-            if (wParam < 256)
-            {
-                if (msg == WM_KEYDOWN)
-                {
-                    _keyStates[wParam] = true;
-                }
-                else if (msg == WM_KEYUP)
-                {
-                    _keyStates[wParam] = false;
-                }
-            }
-
-            // call imgui's wnd proc
-            return (IntPtr)CallWindowProc(_imguiWndProcPtr, hWnd, msg, wParam, lParam);
-        }
-
-        #region user32
-        public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, ulong wParam, long lParam);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW", SetLastError = true)]
-        public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
-        [DllImport("user32.dll", EntryPoint = "CallWindowProcW")]
-        public static extern long CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, ulong wParam, long lParam);
-        [DllImport("user32.dll", EntryPoint = "FindWindowExW", SetLastError = true)]
-        public static extern IntPtr FindWindowExW(IntPtr hWndParent, IntPtr hWndChildAfter, [MarshalAs(UnmanagedType.LPWStr)] string? lpszClass, [MarshalAs(UnmanagedType.LPWStr)] string? lpszWindow);
-
-        [DllImport("user32.dll", EntryPoint = "GetWindowThreadProcessId", SetLastError = true)]
-        public static extern ulong GetWindowThreadProcessId(IntPtr hWnd, ref ulong id);
-
-        private const uint WM_KEYDOWN = 256;
-        private const uint WM_KEYUP = 257;
-
-        private const int GWL_WNDPROC = -4;
-        #endregion
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetKeyboardState(byte[] keyStates);
     }
 }
