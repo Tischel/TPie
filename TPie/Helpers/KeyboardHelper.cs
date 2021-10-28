@@ -46,7 +46,10 @@ namespace TPie.Helpers
 
         public bool IsKeyPressed(int key)
         {
-            if (!_supportedKeys.Contains((Keys)key)) return false;
+            if (key != (int)Keys.Back && !_supportedKeys.Contains((Keys)key))
+            {
+                return false;
+            }
 
             return _keyStates[key] > 1;
         }

@@ -52,11 +52,11 @@ namespace TPie.Models
             string dispKey = ToString();
 
             ImGui.InputText($"##{id}_Keybind", ref dispKey, 200, ImGuiInputTextFlags.ReadOnly);
-            DrawHelper.SetTooltip("Escape to clear");
+            DrawHelper.SetTooltip("Backspace to clear");
 
             if (ImGui.IsItemActive())
             {
-                if (KeyboardHelper.Instance.IsKeyPressed((int)Keys.Escape))
+                if (KeyboardHelper.Instance.IsKeyPressed((int)Keys.Back))
                 {
                     Reset();
                 }
