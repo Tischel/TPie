@@ -69,7 +69,7 @@ namespace TPie.Config
 
             ImGui.InputText("Job ##Gear Set", ref _jobInputText, 100);
 
-            ImGui.BeginChild("##GearSets_List", new Vector2(284 * _scale, 206 * _scale), true);
+            ImGui.BeginChild("##GearSets_List", new Vector2(284 * _scale, 170 * _scale), true);
             {
                 for (int i = 0; i < _jobIds.Length; i++)
                 {
@@ -103,6 +103,10 @@ namespace TPie.Config
                 }
             }
             ImGui.EndChild();
+
+            // border
+            ImGui.NewLine();
+            GearSetElement.Border.Draw();
         }
     }
 }

@@ -96,6 +96,10 @@ namespace TPie.Config
                     ImGui.Image(texture.ImGuiHandle, new Vector2(80 * _scale));
                 }
             }
+
+            // border
+            ImGui.NewLine();
+            MacroElement.Border.Draw();
         }
     }
 }

@@ -8,6 +8,7 @@ namespace TPie.Models.Elements
     {
         public string Name;
         public string Command;
+        public bool DrawBorder;
 
         public MacroElement(string name, string command, uint iconId)
         {

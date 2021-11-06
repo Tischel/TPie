@@ -71,7 +71,7 @@ namespace TPie.Config
             ImGui.SameLine();
             ImGui.Checkbox("High Quality", ref _hq);
 
-            ImGui.BeginChild("##Items_List", new Vector2(284 * _scale, 200 * _scale), true);
+            ImGui.BeginChild("##Items_List", new Vector2(284 * _scale, 170 * _scale), true);
             {
                 foreach (ItemSearchData data in _searchResult)
                 {
@@ -105,6 +105,10 @@ namespace TPie.Config
                 }
             }
             ImGui.EndChild();
+
+            // border
+            ImGui.NewLine();
+            ItemElement.Border.Draw();
         }
 
         private void SearchItems(string text)

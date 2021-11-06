@@ -12,6 +12,7 @@ namespace TPie.Models.Elements
     public abstract class RingElement
     {
         public uint IconID { get; set; }
+        public ItemBorder Border { get; set; } = ItemBorder.Default();
 
         public virtual void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
         {
@@ -19,16 +20,20 @@ namespace TPie.Models.Elements
 
             if (selected)
             {
-                Vector2 borderSize = new Vector2(size.X + 6, size.Y + 6);
+                float offset = (Border.Thickness + 4) * scale;
+                Vector2 borderSize = new Vector2(size.X + offset, size.Y + offset);
                 Vector2 borderPos = position - borderSize / 2;
-                drawList.AddRectFilled(borderPos, borderPos + borderSize, color, 3);
+                drawList.AddRectFilled(borderPos, borderPos + borderSize, color, Border.Radius * scale);
             }
 
             position = position - size / 2f;
             DrawHelper.DrawIcon(IconID, position, size, alpha, drawList);
 
-            uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(0, 0, 0, alpha));
-            drawList.AddRect(position, position + size, c, 2, ImDrawFlags.None, 3);
+            if (Border.Thickness > 0)
+            {
+                uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(Border.Color.X, Border.Color.Y, Border.Color.Z, alpha));
+                drawList.AddRect(position, position + size, c, Border.Radius * scale, ImDrawFlags.None, Border.Thickness * scale);
+            }
         }
 
         public abstract void ExecuteAction();
@@ -56,10 +61,15 @@ namespace TPie.Models.Elements
                 string? type = jo.Value<string>("$type");
                 if (type != null)
                 {
+                    ItemBorder border = jo.GetValue("Border")?.ToObject<ItemBorder>() ?? ItemBorder.Default();
+
                     if (type.Contains("ActionElement"))
                     {
                         uint actionId = jo.Value<uint>("ActionID");
-                        return new ActionElement(actionId);
+
+                        ActionElement element = new ActionElement(actionId);
+                        element.Border = border;
+                        return element;
                     }
 
                     if (type.Contains("ItemElement"))
@@ -68,14 +78,20 @@ namespace TPie.Models.Elements
                         bool hq = jo.Value<bool>("HQ");
                         string name = jo.Value<string>("Name") ?? "";
                         uint iconId = jo.Value<uint>("IconID");
-                        return new ItemElement(itemId, hq, name, iconId);
+
+                        ItemElement element = new ItemElement(itemId, hq, name, iconId);
+                        element.Border = border;
+                        return element;
                     }
 
                     if (type.Contains("GearSetElement"))
                     {
                         uint gearSetId = jo.Value<uint>("GearSetID");
                         uint jobId = jo.Value<uint>("JobID");
-                        return new GearSetElement(gearSetId, jobId);
+
+                        GearSetElement element = new GearSetElement(gearSetId, jobId);
+                        element.Border = border;
+                        return element;
                     }
 
                     if (type.Contains("Macro"))
@@ -83,7 +99,10 @@ namespace TPie.Models.Elements
                         string name = jo.Value<string>("Name") ?? "";
                         string command = jo.Value<string>("Command") ?? "";
                         uint iconId = jo.Value<uint>("IconID");
-                        return new MacroElement(name, command, iconId);
+
+                        MacroElement element = new MacroElement(name, command, iconId);
+                        element.Border = border;
+                        return element;
                     }
                 }
             }

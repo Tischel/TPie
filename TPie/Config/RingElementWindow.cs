@@ -20,7 +20,7 @@ namespace TPie.Config
         public RingElementWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(300, 300);
+            Size = new Vector2(300, 394);
 
             PositionCondition = ImGuiCond.Appearing;
         }

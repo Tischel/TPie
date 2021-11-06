@@ -56,7 +56,7 @@ namespace TPie.Config
 
             FocusIfNeeded();
 
-            ImGui.BeginChild("##Actions_List", new Vector2(284 * _scale, 236 * _scale), true);
+            ImGui.BeginChild("##Actions_List", new Vector2(284 * _scale, 200 * _scale), true);
             {
                 foreach (LuminaAction data in _searchResult)
                 {
@@ -77,6 +77,10 @@ namespace TPie.Config
                 }
             }
             ImGui.EndChild();
+
+            // border
+            ImGui.NewLine();
+            ActionElement.Border.Draw();
         }
 
         private void SearchActions(string text)
