@@ -2,8 +2,6 @@
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using ImGuiScene;
-using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using TPie.Helpers;
@@ -26,9 +24,10 @@ namespace TPie.Config
         }
 
         private int _selectedIndex = -1;
+        private float _scale => ImGuiHelpers.GlobalScale;
 
         private Vector2 _windowPos = Vector2.Zero;
-        private Vector2 ItemWindowPos => _windowPos + new Vector2(410, 0);
+        private Vector2 ItemWindowPos => _windowPos + new Vector2(410 * _scale, 0);
 
         public RingSettingsWindow(string name) : base(name)
         {
@@ -54,14 +53,14 @@ namespace TPie.Config
 
             // ring preview
             Vector2 windowPos = ImGui.GetWindowPos();
-            Vector2 margin = new Vector2(20);
+            Vector2 margin = new Vector2(20 * _scale);
             Vector2 ringCenter = windowPos + new Vector2(Size!.Value.X + Ring.Radius + margin.X, Size!.Value.Y / 2f);
             Ring.Preview(ringCenter);
 
             // info
-            ImGui.BeginChild("##Ring_Info", new Vector2(384, 148), true);
+            ImGui.BeginChild("##Ring_Info", new Vector2(384 * _scale, 148 * _scale), true);
             {
-                ImGui.PushItemWidth(310);
+                ImGui.PushItemWidth(310 * _scale);
 
                 ImGui.InputText("Name ##Ring_Info_Name", ref Ring.Name, 100);
 
@@ -94,7 +93,7 @@ namespace TPie.Config
                 ImGuiTableFlags.ScrollY |
                 ImGuiTableFlags.SizingFixedSame;
 
-            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354, 202)))
+            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354 * _scale, 202 * _scale)))
             {
                 ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthStretch, 15, 0);
                 ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthStretch, 7, 1);
@@ -148,7 +147,7 @@ namespace TPie.Config
                 ImGui.EndTable();
             }
 
-            ImGui.SetCursorPos(new Vector2(369, 200));
+            ImGui.SetCursorPos(new Vector2(369 * _scale, 200 * _scale));
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.Button(FontAwesomeIcon.Plus.ToIconString()))
             {
@@ -159,7 +158,7 @@ namespace TPie.Config
 
             if (_selectedIndex >= 0)
             {
-                ImGui.SetCursorPos(new Vector2(369, 230));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, 230 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
                 {
@@ -171,7 +170,7 @@ namespace TPie.Config
 
             if (_selectedIndex >= 0)
             {
-                ImGui.SetCursorPos(new Vector2(369, 260));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, 260 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
                 {
@@ -185,7 +184,7 @@ namespace TPie.Config
             int count = Ring.Items.Count;
             if (count > 0)
             {
-                ImGui.SetCursorPos(new Vector2(369, 310));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, 310 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
                 {
@@ -211,7 +210,7 @@ namespace TPie.Config
 
             if (count > 0)
             {
-                ImGui.SetCursorPos(new Vector2(369, 340));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, 340 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
                 {
@@ -242,7 +241,7 @@ namespace TPie.Config
         {
             if (Ring == null) return;
 
-            ImGui.SetNextWindowSize(new(80, 100));
+            ImGui.SetNextWindowSize(new(80 * _scale, 100 * _scale));
 
             if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
             {

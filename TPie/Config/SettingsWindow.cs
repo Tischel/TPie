@@ -17,10 +17,10 @@ namespace TPie.Config
         private string[] _animationNames;
 
         private Vector2 _windowPos = Vector2.Zero;
-        private Vector2 RingWindowPos => _windowPos + new Vector2(410, 0);
+        private Vector2 RingWindowPos => _windowPos + new Vector2(410 * _scale, 0);
 
         private Ring? _removingRing = null;
-        private Ring? _editingRing = null;
+        private float _scale => ImGuiHelpers.GlobalScale;
 
         public SettingsWindow(string name) : base(name)
         {
@@ -74,7 +74,7 @@ namespace TPie.Config
         {
             // position
             ImGui.Text("Position");
-            ImGui.BeginChild("##Position", new Vector2(384, 70), true);
+            ImGui.BeginChild("##Position", new Vector2(384 * _scale, 70 * _scale), true);
             {
                 if (ImGui.RadioButton("Center at Cursor", Settings.AppearAtCursor))
                 {
@@ -88,7 +88,7 @@ namespace TPie.Config
                 DrawHelper.SetTooltip("(0,0) is the center of the screen");
 
                 ImGui.SameLine();
-                ImGui.PushItemWidth(140);
+                ImGui.PushItemWidth(140 * _scale);
                 ImGui.DragFloat2("##Position", ref Settings.CenterPositionOffset, 0.5f, -4000, 4000);
                 DrawHelper.SetTooltip("(0,0) is the center of the screen");
             }
@@ -97,7 +97,7 @@ namespace TPie.Config
             // font
             ImGui.Spacing();
             ImGui.Text("Font");
-            ImGui.BeginChild("##Font", new Vector2(384, 40), true);
+            ImGui.BeginChild("##Font", new Vector2(384 * _scale, 40 * _scale), true);
             {
                 ImGui.Checkbox("Use Custom Font", ref Settings.UseCustomFont);
                 DrawHelper.SetTooltip("Enable to use the Expressway font that comes with TPie.\nDisable to use the system font.");
@@ -108,7 +108,7 @@ namespace TPie.Config
                     ImGui.Text("\t");
                     ImGui.SameLine();
 
-                    ImGui.PushItemWidth(80);
+                    ImGui.PushItemWidth(80 * _scale);
                     int fontIndex = Settings.FontSize - 14;
                     if (ImGui.Combo("Size", ref fontIndex, _fontSizes, _fontSizes.Length))
                     {
@@ -123,7 +123,7 @@ namespace TPie.Config
             // style
             ImGui.Spacing();
             ImGui.Text("Style");
-            ImGui.BeginChild("##Style", new Vector2(384, 70), true);
+            ImGui.BeginChild("##Style", new Vector2(384 * _scale, 70 * _scale), true);
             {
                 ImGui.Checkbox("Draw Rings Background", ref Settings.DrawRingBackground);
 
@@ -140,9 +140,9 @@ namespace TPie.Config
             // animation
             ImGui.Spacing();
             ImGui.Text("Animation");
-            ImGui.BeginChild("##Animation", new Vector2(384, 40), true);
+            ImGui.BeginChild("##Animation", new Vector2(384 * _scale, 40 * _scale), true);
             {
-                ImGui.PushItemWidth(100);
+                ImGui.PushItemWidth(100 * _scale);
                 int animIndex = (int)Settings.AnimationType;
                 if (ImGui.Combo("##AnimationType", ref animIndex, _animationNames, _animationNames.Length))
                 {
@@ -163,7 +163,7 @@ namespace TPie.Config
         private void DrawRingsTab()
         {
             // options
-            ImGui.BeginChild("##Options", new Vector2(384, 40), true);
+            ImGui.BeginChild("##Options", new Vector2(384 * _scale, 40 * _scale), true);
             {
                 ImGui.SameLine();
                 ImGui.Text("Create New");
@@ -217,7 +217,7 @@ namespace TPie.Config
                 ImGuiTableFlags.SizingFixedSame;
 
             // rings
-            if (ImGui.BeginTable("##Rings_Table", 4, flags, new Vector2(384, 284)))
+            if (ImGui.BeginTable("##Rings_Table", 4, flags, new Vector2(384 * _scale, 284 * _scale)))
             {
                 ImGui.TableSetupColumn("Color", ImGuiTableColumnFlags.WidthStretch, 10, 0);
                 ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 26, 1);
@@ -255,7 +255,7 @@ namespace TPie.Config
                     // keybind
                     if (ImGui.TableSetColumnIndex(2))
                     {
-                        ImGui.PushItemWidth(140);
+                        ImGui.PushItemWidth(140 * _scale);
                         if (ring.KeyBind.Draw(ring.Name))
                         {
                             Plugin.Settings.ValidateKeyBind(ring);
@@ -269,7 +269,6 @@ namespace TPie.Config
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
                         {
-                            _editingRing = ring;
                             Plugin.ShowRingSettingsWindow(RingWindowPos, ring);
                         }
                         ImGui.PopFont();

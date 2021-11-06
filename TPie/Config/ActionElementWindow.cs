@@ -48,7 +48,7 @@ namespace TPie.Config
         {
             if (ActionElement == null) return;
 
-            ImGui.PushItemWidth(210);
+            ImGui.PushItemWidth(210 * _scale);
             if (ImGui.InputText("ID or Name ##Action", ref _inputText, 100))
             {
                 SearchActions(_inputText);
@@ -56,15 +56,14 @@ namespace TPie.Config
 
             FocusIfNeeded();
 
-            ImGui.BeginChild("##Actions_List", new Vector2(284, 236), true);
+            ImGui.BeginChild("##Actions_List", new Vector2(284 * _scale, 236 * _scale), true);
             {
                 foreach (LuminaAction data in _searchResult)
                 {
                     // name
-                    if (ImGui.Selectable($"\t\t\t{data.Name} (ID: {data.RowId})", false, ImGuiSelectableFlags.None, new Vector2(0, 24)))
+                    if (ImGui.Selectable($"\t\t\t{data.Name} (ID: {data.RowId})", false, ImGuiSelectableFlags.None, new Vector2(0, 24 * _scale)))
                     {
                         ActionElement.ActionID = data.RowId;
-                        return;
                     }
 
                     // icon
@@ -72,8 +71,8 @@ namespace TPie.Config
                     if (texture != null)
                     {
                         ImGui.SameLine();
-                        ImGui.SetCursorPosX(10);
-                        ImGui.Image(texture.ImGuiHandle, new Vector2(24));
+                        ImGui.SetCursorPosX(10 * _scale);
+                        ImGui.Image(texture.ImGuiHandle, new Vector2(24 * _scale));
                     }
                 }
             }

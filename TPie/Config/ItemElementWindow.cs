@@ -57,7 +57,7 @@ namespace TPie.Config
         {
             if (ItemElement == null) return;
 
-            ImGui.PushItemWidth(240);
+            ImGui.PushItemWidth(240 * _scale);
             if (ImGui.InputText("Name ##Item", ref _inputText, 100) || _needsSearch)
             {
                 SearchItems(_inputText);
@@ -71,7 +71,7 @@ namespace TPie.Config
             ImGui.SameLine();
             ImGui.Checkbox("High Quality", ref _hq);
 
-            ImGui.BeginChild("##Items_List", new Vector2(284, 200), true);
+            ImGui.BeginChild("##Items_List", new Vector2(284 * _scale, 200 * _scale), true);
             {
                 foreach (ItemSearchData data in _searchResult)
                 {
@@ -99,8 +99,8 @@ namespace TPie.Config
                     if (texture != null)
                     {
                         ImGui.SameLine();
-                        ImGui.SetCursorPosX(10);
-                        ImGui.Image(texture.ImGuiHandle, new Vector2(24));
+                        ImGui.SetCursorPosX(10 * _scale);
+                        ImGui.Image(texture.ImGuiHandle, new Vector2(24 * _scale));
                     }
                 }
             }

@@ -41,7 +41,7 @@ namespace TPie.Config
         {
             if (MacroElement == null) return;
 
-            ImGui.PushItemWidth(210);
+            ImGui.PushItemWidth(210 * _scale);
 
             // name
             FocusIfNeeded();
@@ -59,7 +59,7 @@ namespace TPie.Config
             ImGui.NewLine();
             ImGui.NewLine();
 
-            ImGui.PushItemWidth(50);
+            ImGui.PushItemWidth(50 * _scale);
             if (ImGui.Button("Default"))
             {
                 MacroElement.IconID = 66001;
@@ -68,7 +68,7 @@ namespace TPie.Config
 
             // icon id
             ImGui.SameLine();
-            ImGui.PushItemWidth(154);
+            ImGui.PushItemWidth(154 * _scale);
             string str = _iconInputText;
             if (ImGui.InputText("Icon ID ##Macro", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
             {
@@ -92,8 +92,8 @@ namespace TPie.Config
                 TextureWrap? texture = TexturesCache.Instance?.GetTextureFromIconId(MacroElement.IconID);
                 if (texture != null)
                 {
-                    ImGui.SetCursorPosX(110);
-                    ImGui.Image(texture.ImGuiHandle, new Vector2(80));
+                    ImGui.SetCursorPosX(110 * _scale);
+                    ImGui.Image(texture.ImGuiHandle, new Vector2(80 * _scale));
                 }
             }
         }

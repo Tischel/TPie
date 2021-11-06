@@ -51,7 +51,7 @@ namespace TPie.Config
         {
             if (GearSetElement == null) return;
 
-            ImGui.PushItemWidth(180);
+            ImGui.PushItemWidth(180 * _scale);
 
             FocusIfNeeded();
 
@@ -69,7 +69,7 @@ namespace TPie.Config
 
             ImGui.InputText("Job ##Gear Set", ref _jobInputText, 100);
 
-            ImGui.BeginChild("##GearSets_List", new Vector2(284, 206), true);
+            ImGui.BeginChild("##GearSets_List", new Vector2(284 * _scale, 206 * _scale), true);
             {
                 for (int i = 0; i < _jobIds.Length; i++)
                 {
@@ -79,7 +79,7 @@ namespace TPie.Config
                     if (_jobInputText.Length > 0 && !jobName.Contains(_jobInputText.ToUpper())) continue;
 
                     // name
-                    if (ImGui.Selectable($"\t\t\t{jobName}", false, ImGuiSelectableFlags.None, new Vector2(0, 24)))
+                    if (ImGui.Selectable($"\t\t\t{jobName}", false, ImGuiSelectableFlags.None, new Vector2(0, 24 * _scale)))
                     {
                         try
                         {
@@ -97,8 +97,8 @@ namespace TPie.Config
                     if (texture != null)
                     {
                         ImGui.SameLine();
-                        ImGui.SetCursorPosX(10);
-                        ImGui.Image(texture.ImGuiHandle, new Vector2(24));
+                        ImGui.SetCursorPosX(10 * _scale);
+                        ImGui.Image(texture.ImGuiHandle, new Vector2(24 * _scale));
                     }
                 }
             }

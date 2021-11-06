@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Windowing;
+﻿using Dalamud.Interface;
+using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using System.Numerics;
 using TPie.Models;
@@ -14,6 +15,7 @@ namespace TPie.Config
 
         protected string _inputText = "";
         protected bool _needsFocus = false;
+        protected float _scale => ImGuiHelpers.GlobalScale;
 
         public RingElementWindow(string name) : base(name)
         {
