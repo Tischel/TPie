@@ -8,6 +8,9 @@ namespace TPie.Models.Elements
     public class GearSetElement : RingElement
     {
         public uint GearSetID;
+        public bool UseID;
+        public string GearSetName;
+        public bool DrawText;
 
         private uint _jobId;
 
@@ -22,17 +25,27 @@ namespace TPie.Models.Elements
             }
         }
 
-        public GearSetElement(uint gearSetId, uint jobId)
+        public GearSetElement(uint gearSetId, bool useId, string? name, bool drawText, uint jobId)
         {
             GearSetID = gearSetId;
+            UseID = useId;
+            GearSetName = name ?? "";
+            DrawText = drawText;
             JobID = jobId;
         }
 
-        public GearSetElement() : this(1, Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? JobIDs.GLD) { }
+        public GearSetElement() : this(1, true, null, true, Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? JobIDs.GLD) { }
 
         public override void ExecuteAction()
         {
-            ChatHelper.SendChatMessage($"/gs change {GearSetID}");
+            if (UseID)
+            {
+                ChatHelper.SendChatMessage($"/gs change {GearSetID}");
+            }
+            else
+            {
+                ChatHelper.SendChatMessage($"/gs change {GearSetName}");
+            }
         }
 
         public override bool IsValid()
@@ -49,7 +62,12 @@ namespace TPie.Models.Elements
         {
             if (JobsHelper.JobNames.TryGetValue(JobID, out string? value) && value != null)
             {
-                return $"{value} ({GearSetID})";
+                if (UseID)
+                {
+                    return $"{value} ({GearSetID})";
+                }
+
+                return value == GearSetName ? value : $"{value} ({GearSetName})";
             }
 
             return "";
@@ -59,9 +77,13 @@ namespace TPie.Models.Elements
         {
             base.Draw(position, size, scale, selected, color, alpha, drawList);
 
+            if (!DrawText) return;
+
             size = size * scale;
 
-            DrawHelper.DrawOutlinedText($"{GearSetID}", position + size / 2 - new Vector2(2 * scale), true, scale, drawList);
+            string text = UseID ? $"{GearSetID}" : $"{GearSetName}";
+            Vector2 textPos = UseID ? position + (size / 2f) - new Vector2(2 * scale) : position;
+            DrawHelper.DrawOutlinedText(text, textPos, true, scale, drawList);
         }
     }
 }

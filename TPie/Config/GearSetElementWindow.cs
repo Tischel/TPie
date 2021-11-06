@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using ImGuiScene;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
@@ -23,6 +24,11 @@ namespace TPie.Config
                     JobsHelper.JobNames.TryGetValue(value.JobID, out string? jobName) && jobName != null)
                 {
                     _jobInputText = jobName;
+                    if (value.UseID)
+                    {
+                        _nameInputText = jobName;
+                        value.GearSetName = jobName;
+                    }
                 }
                 else
                 {
@@ -38,38 +44,75 @@ namespace TPie.Config
         }
 
         private uint[] _jobIds;
-        private string[] _jobNames;
-        protected string _jobInputText = "";
+        private List<string> _jobNames;
+        private string _jobInputText = "";
+        private string _nameInputText = "";
 
         public GearSetElementWindow(string name) : base(name)
         {
             _jobIds = JobsHelper.JobNames.Keys.ToArray();
-            _jobNames = JobsHelper.JobNames.Values.ToArray();
+            _jobNames = JobsHelper.JobNames.Values.ToList();
         }
 
         public override void Draw()
         {
             if (GearSetElement == null) return;
 
-            ImGui.PushItemWidth(180 * _scale);
+            ImGui.PushItemWidth(120 * _scale);
 
+            if (ImGui.RadioButton("Use Set Number", GearSetElement.UseID))
+            {
+                GearSetElement.UseID = true;
+                ImGui.SetKeyboardFocusHere(0);
+            }
+
+            ImGui.SameLine();
+            if (ImGui.RadioButton("Use Set Name", !GearSetElement.UseID))
+            {
+                GearSetElement.UseID = false;
+                ImGui.SetKeyboardFocusHere(0);
+            }
+
+            ImGui.PushItemWidth(180 * _scale);
             FocusIfNeeded();
 
-            string str = _inputText;
-            if (ImGui.InputText("Gear Set Number ##GearSet", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
+            if (GearSetElement.UseID)
             {
-                _inputText = Regex.Replace(str, @"[^\d]", "");
-
-                try
+                string str = _inputText;
+                if (ImGui.InputText("Gear Set Number ##GearSet", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
                 {
-                    GearSetElement.GearSetID = uint.Parse(_inputText);
+                    _inputText = Regex.Replace(str, @"[^\d]", "");
+
+                    try
+                    {
+                        GearSetElement.GearSetID = uint.Parse(_inputText);
+                    }
+                    catch { }
                 }
-                catch { }
+            }
+            else
+            {
+                if (ImGui.InputText("Gear Set Name ##GearSet", ref _nameInputText, 100))
+                {
+                    GearSetElement.GearSetName = _nameInputText;
+
+                    if (_nameInputText.Length >= 3)
+                    {
+                        string firstThreeLetters = _nameInputText.Substring(0, 3).ToUpper();
+                        int index = _jobNames.IndexOf(firstThreeLetters);
+                        if (index >= 0)
+                        {
+                            GearSetElement.JobID = _jobIds[index];
+                            _jobInputText = firstThreeLetters;
+                        }
+                    }
+                    DrawHelper.SetTooltip("Your gear set name should start with this (case sensitive)");
+                }
             }
 
             ImGui.InputText("Job ##Gear Set", ref _jobInputText, 100);
 
-            ImGui.BeginChild("##GearSets_List", new Vector2(284 * _scale, 170 * _scale), true);
+            ImGui.BeginChild("##GearSets_List", new Vector2(284 * _scale, 130 * _scale), true);
             {
                 for (int i = 0; i < _jobIds.Length; i++)
                 {
@@ -81,14 +124,6 @@ namespace TPie.Config
                     // name
                     if (ImGui.Selectable($"\t\t\t{jobName}", false, ImGuiSelectableFlags.None, new Vector2(0, 24 * _scale)))
                     {
-                        try
-                        {
-                            GearSetElement.GearSetID = uint.Parse(_inputText);
-                        }
-                        catch
-                        {
-                            GearSetElement.GearSetID = 0;
-                        }
                         GearSetElement.JobID = jobID;
                     }
 
@@ -104,8 +139,11 @@ namespace TPie.Config
             }
             ImGui.EndChild();
 
-            // border
+            // draw text
             ImGui.NewLine();
+            ImGui.Checkbox("Draw Text", ref GearSetElement.DrawText);
+
+            // border
             GearSetElement.Border.Draw();
         }
     }

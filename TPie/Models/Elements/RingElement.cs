@@ -87,9 +87,12 @@ namespace TPie.Models.Elements
                     if (type.Contains("GearSetElement"))
                     {
                         uint gearSetId = jo.Value<uint>("GearSetID");
+                        bool useId = jo.GetValue("UseID") != null ? jo.Value<bool>("GearSetID") : true;
+                        string name = jo.Value<string>("GearSetName") ?? "";
+                        bool drawText = jo.GetValue("DrawText") != null ? jo.Value<bool>("DrawText") : true;
                         uint jobId = jo.Value<uint>("JobID");
 
-                        GearSetElement element = new GearSetElement(gearSetId, jobId);
+                        GearSetElement element = new GearSetElement(gearSetId, useId, name, drawText, jobId);
                         element.Border = border;
                         return element;
                     }
