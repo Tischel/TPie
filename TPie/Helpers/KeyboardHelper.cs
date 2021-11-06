@@ -72,6 +72,7 @@ namespace TPie.Helpers
 
         private static List<Keys> _supportedKeys = new List<Keys>()
         {
+            Keys.CapsLock,
             Keys.Space,
             Keys.PageUp,
             Keys.Next,
