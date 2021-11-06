@@ -272,6 +272,7 @@ namespace TPie.Config
                     if (Ring.Items.Count > 0 && _selectedIndex >= 0 && _selectedIndex < Ring.Items.Count - 1)
                     {
                         Ring.Items.Insert(_selectedIndex + 1, elementToAdd);
+                        _selectedIndex++;
                     }
                     else
                     {
