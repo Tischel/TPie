@@ -18,6 +18,7 @@ namespace TPie.Config
             get => _ring;
             set
             {
+                _selectedIndex = -1;
                 _ring?.EndPreview();
                 _ring = value;
             }
@@ -298,6 +299,7 @@ namespace TPie.Config
         public override void OnClose()
         {
             Ring = null;
+            _selectedIndex = -1;
 
             Settings.Save(Plugin.Settings);
         }

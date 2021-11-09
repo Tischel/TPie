@@ -1,3 +1,6 @@
+# 0.0.2.1
+- Fixed edit buttons showing on a ring with no elements which lead to a crash.
+
 # 0.0.2.0
 - Added border settings for ring elements.
 - Added more settings for gear sets.
