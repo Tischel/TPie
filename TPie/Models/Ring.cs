@@ -79,7 +79,7 @@ namespace TPie.Models
             Previewing = false;
         }
 
-        public void Update()
+        public bool Update()
         {
             HasInventoryItems = Items.FirstOrDefault(item => item is ItemElement) != null;
             _validItems = Items.Where(o => o.IsValid()).ToList();
@@ -93,10 +93,11 @@ namespace TPie.Models
             if (!KeyBind.IsActive())
             {
                 IsActive = false;
-                return;
+                return false;
             }
 
             IsActive = _validItems.Count > 0;
+            return IsActive;
         }
 
         public void Draw(string id)

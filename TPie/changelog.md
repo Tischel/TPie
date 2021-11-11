@@ -1,3 +1,6 @@
+# 0.0.2.2
+- Fixed being able to show 2 rings at the same time, which can lead to a crash.
+
 # 0.0.2.1
 - Fixed edit buttons showing on a ring with no elements which lead to a crash.
 

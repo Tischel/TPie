@@ -45,6 +45,9 @@ namespace TPie
         private static GearSetElementWindow _gearSetElementWindow = null!;
         private static MacroElementWindow _macroElementWindow = null!;
 
+        private Ring? _activeRing = null;
+        private int _activeRingIndex = 0;
+
         public Plugin(
             ClientState clientState,
             CommandManager commandManager,
@@ -73,7 +76,7 @@ namespace TPie
                 AssemblyLocation = Assembly.GetExecutingAssembly().Location;
             }
 
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.2.1";
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.2.2";
 
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
@@ -192,9 +195,14 @@ namespace TPie
             KeyboardHelper.Instance?.Update();
             ItemsHelper.Instance?.CalculateUsableItems();
 
-            foreach (Ring ring in Rings)
+            for (int i = 0; i < Rings.Count; i++)
             {
-                ring.Update();
+                if (Rings[i].Update())
+                {
+                    _activeRing = Rings[i];
+                    _activeRingIndex = i;
+                    break;
+                }
             }
         }
 
@@ -204,8 +212,13 @@ namespace TPie
 
             _windowSystem.Draw();
 
+            _activeRing?.Draw($"ring_{_activeRingIndex}");
+
             for (int i = 0; i < Rings.Count; i++)
             {
+                if (_activeRingIndex == i) continue;
+                if (!Rings[i].Previewing) continue;
+
                 Rings[i].Draw($"ring_{i}");
             }
         }
