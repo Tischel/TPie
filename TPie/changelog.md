@@ -1,3 +1,6 @@
+# 0.0.2.3
+- Fixed keybinds being active when the game window is not focused.
+
 # 0.0.2.2
 - Fixed being able to show 2 rings at the same time, which can lead to a crash.
 

@@ -46,6 +46,8 @@ namespace TPie.Helpers
 
         public bool IsKeyPressed(int key)
         {
+            if (!IsGameFocused()) return false;
+
             if (key != (int)Keys.Back && !_supportedKeys.Contains((Keys)key))
             {
                 return false;
@@ -56,6 +58,8 @@ namespace TPie.Helpers
 
         public int GetKeyPressed()
         {
+            if (!IsGameFocused()) return 0;
+
             for (int i = 0; i < _supportedKeys.Count; i++)
             {
                 int key = (int)_supportedKeys[i];
@@ -187,5 +191,19 @@ namespace TPie.Helpers
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool GetKeyboardState(byte[] keyStates);
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
+
+        private bool IsGameFocused()
+        {
+            var foregroundWindowHandle = GetForegroundWindow();
+            if (foregroundWindowHandle == IntPtr.Zero) return false;
+
+            GetWindowThreadProcessId(foregroundWindowHandle, out var activeProcessId);
+
+            return activeProcessId == Environment.ProcessId;
+        }
     }
 }
