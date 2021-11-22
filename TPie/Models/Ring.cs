@@ -244,9 +244,14 @@ namespace TPie.Models
 
         #region anim
 
+        public bool IsClosed()
+        {
+            return _animState == AnimationState.Closed;
+        }
+
         public void ForceClose()
         {
-            if (_animState != AnimationState.Closed)
+            if (_animState != AnimationState.Closed && _animState != AnimationState.Closing)
             {
                 SetAnimState(AnimationState.Closed);
             }

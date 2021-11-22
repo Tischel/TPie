@@ -195,7 +195,12 @@ namespace TPie
             KeyboardHelper.Instance?.Update();
             ItemsHelper.Instance?.CalculateUsableItems();
 
-            _activeRing = null;
+            if (_activeRing?.IsClosed() == true)
+            {
+                _activeRing = null;
+            }
+
+            _activeRing?.Update();
 
             for (int i = 0; i < Rings.Count; i++)
             {
@@ -203,8 +208,9 @@ namespace TPie
                 {
                     _activeRing = Rings[i];
                     _activeRingIndex = i;
+                    break;
                 }
-                else
+                else if (Rings[i] != _activeRing)
                 {
                     Rings[i].ForceClose();
                 }
