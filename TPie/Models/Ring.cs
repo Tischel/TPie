@@ -243,6 +243,15 @@ namespace TPie.Models
         }
 
         #region anim
+
+        public void ForceClose()
+        {
+            if (_animState != AnimationState.Closed)
+            {
+                SetAnimState(AnimationState.Closed);
+            }
+        }
+
         private void SetAnimState(AnimationState state)
         {
             float animDuration = Plugin.Settings.AnimationDuration;
