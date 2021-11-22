@@ -1,3 +1,6 @@
+# 0.0.2.4
+- Fixed some "weird" crashes.
+
 # 0.0.2.3
 - Fixed keybinds being active when the game window is not focused.
 

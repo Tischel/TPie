@@ -32,7 +32,7 @@ namespace TPie.Models
 
         public bool IsActive()
         {
-            if (ChatHelper.Instance.IsInputTextActive() || ImGui.GetIO().WantCaptureKeyboard)
+            if (ChatHelper.Instance?.IsInputTextActive() == true || ImGui.GetIO().WantCaptureKeyboard)
             {
                 return false;
             }
@@ -56,13 +56,13 @@ namespace TPie.Models
 
             if (ImGui.IsItemActive())
             {
-                if (KeyboardHelper.Instance.IsKeyPressed((int)Keys.Back))
+                if (KeyboardHelper.Instance?.IsKeyPressed((int)Keys.Back) == true)
                 {
                     Reset();
                 }
                 else
                 {
-                    int keyPressed = KeyboardHelper.Instance.GetKeyPressed();
+                    int keyPressed = KeyboardHelper.Instance?.GetKeyPressed() ?? 0;
                     if (keyPressed > 0)
                     {
 

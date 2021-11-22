@@ -76,7 +76,7 @@ namespace TPie
                 AssemblyLocation = Assembly.GetExecutingAssembly().Location;
             }
 
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.2.3";
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.2.4";
 
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
@@ -237,11 +237,11 @@ namespace TPie
 
             Settings.Save(Settings);
 
-            ChatHelper.Instance.Dispose();
-            KeyboardHelper.Instance.Dispose();
-            JobsHelper.Instance.Dispose();
-            ItemsHelper.Instance.Dispose();
-            TexturesCache.Instance.Dispose();
+            ChatHelper.Instance?.Dispose();
+            KeyboardHelper.Instance?.Dispose();
+            JobsHelper.Instance?.Dispose();
+            ItemsHelper.Instance?.Dispose();
+            TexturesCache.Instance?.Dispose();
 
             _windowSystem.RemoveAllWindows();
 

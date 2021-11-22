@@ -11,7 +11,7 @@ namespace TPie.Helpers
     {
         public static void DrawIcon(uint iconId, Vector2 position, Vector2 size, float alpha, ImDrawListPtr drawList)
         {
-            TextureWrap? texture = TexturesCache.Instance.GetTextureFromIconId(iconId);
+            TextureWrap? texture = TexturesCache.Instance?.GetTextureFromIconId(iconId);
             if (texture == null) return;
 
             uint color = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, alpha));
