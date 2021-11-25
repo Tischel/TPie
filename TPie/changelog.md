@@ -1,3 +1,6 @@
+# 0.0.2.5
+- Fixed inventory items not working properly when having multiple stacks of the same item.
+
 # 0.0.2.4
 - Fixed some "weird" crashes.
 - Fixed rings sometimes appearing on wrong positions when multiple keybinds are active at the same time.

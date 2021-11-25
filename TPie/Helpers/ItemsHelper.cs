@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
+﻿using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
@@ -83,23 +84,34 @@ namespace TPie.Helpers
 
                     for (int i = 0; i < container->Size; i++)
                     {
-                        InventoryItem* item = container->GetInventorySlot(i);
-                        if (item == null) continue;
-
-                        if (item->Quantity == 0) continue;
-
-                        bool hq = (item->Flags & InventoryItem.ItemFlags.HQ) != 0;
-                        string hqString = hq ? "_1" : "_0";
-                        string key = $"{item->ItemID}{hqString}";
-
-                        if (_usableItems.TryGetValue(item->ItemID, out Item? itemData) && itemData != null)
+                        try
                         {
-                            UsableItems.Add(key, new UsableItem(itemData, hq, item->Quantity));
+                            InventoryItem* item = container->GetInventorySlot(i);
+                            if (item == null) continue;
+
+                            if (item->Quantity == 0) continue;
+
+                            bool hq = (item->Flags & InventoryItem.ItemFlags.HQ) != 0;
+                            string hqString = hq ? "_1" : "_0";
+                            string key = $"{item->ItemID}{hqString}";
+
+                            if (UsableItems.TryGetValue(key, out UsableItem? usableItem) && usableItem != null)
+                            {
+                                usableItem.Count += item->Quantity;
+                            }
+                            else
+                            {
+                                if (_usableItems.TryGetValue(item->ItemID, out Item? itemData) && itemData != null)
+                                {
+                                    UsableItems.Add(key, new UsableItem(itemData, hq, item->Quantity));
+                                }
+                                else if (_usableEventItems.TryGetValue(item->ItemID, out EventItem? eventItemData) && eventItemData != null)
+                                {
+                                    UsableItems.Add(key, new UsableItem(eventItemData, hq, item->Quantity));
+                                }
+                            }
                         }
-                        else if (_usableEventItems.TryGetValue(item->ItemID, out EventItem? eventItemData) && eventItemData != null)
-                        {
-                            UsableItems.Add(key, new UsableItem(eventItemData, hq, item->Quantity));
-                        }
+                        catch { }
                     }
                 }
             }
@@ -142,7 +154,7 @@ namespace TPie.Helpers
         public readonly uint ID;
         public readonly bool IsHQ;
         public readonly uint IconID;
-        public readonly uint Count;
+        public uint Count;
         public readonly bool IsKey;
 
         public UsableItem(Item item, bool hq, uint count)
