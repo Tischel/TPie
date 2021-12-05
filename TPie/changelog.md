@@ -1,3 +1,9 @@
+# 0.1.0.0
+- Endwalker support (there might still be some issues with Reaper / Sage actions).
+
+# 0.0.2.6
+- Fixed gear sets names not saving properly.
+
 # 0.0.2.5
 - Fixed inventory items not working properly when having multiple stacks of the same item.
 

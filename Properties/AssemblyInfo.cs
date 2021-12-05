@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TPiePlugin")]
-[assembly: AssemblyCopyright("Copyright © 2021 Tische")]
+[assembly: AssemblyCopyright("Copyright © 2021 Tischel")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

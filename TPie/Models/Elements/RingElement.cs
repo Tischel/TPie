@@ -87,7 +87,7 @@ namespace TPie.Models.Elements
                     if (type.Contains("GearSetElement"))
                     {
                         uint gearSetId = jo.Value<uint>("GearSetID");
-                        bool useId = jo.GetValue("UseID") != null ? jo.Value<bool>("GearSetID") : true;
+                        bool useId = jo.GetValue("UseID") != null ? jo.Value<bool>("UseID") : true;
                         string name = jo.Value<string>("GearSetName") ?? "";
                         bool drawText = jo.GetValue("DrawText") != null ? jo.Value<bool>("DrawText") : true;
                         uint jobId = jo.Value<uint>("JobID");
