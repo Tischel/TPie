@@ -90,6 +90,11 @@ namespace TPie.Models
                 _previousCount = _validItems.Count;
             }
 
+            if (Previewing)
+            {
+                return true;
+            }
+
             if (!KeyBind.IsActive())
             {
                 IsActive = false;
@@ -251,7 +256,7 @@ namespace TPie.Models
 
         public void ForceClose()
         {
-            if (_animState != AnimationState.Closed && _animState != AnimationState.Closing)
+            if (!Previewing && _animState != AnimationState.Closed && _animState != AnimationState.Closing)
             {
                 SetAnimState(AnimationState.Closed);
             }
