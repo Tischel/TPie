@@ -75,6 +75,12 @@ namespace TPie.Models
             return active;
         }
 
+        public void Deactivate()
+        {
+            _active = false;
+            _waitingForRelease = false;
+        }
+
         public bool Draw(string id)
         {
             ImGuiIOPtr io = ImGui.GetIO();

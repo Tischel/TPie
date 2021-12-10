@@ -95,6 +95,14 @@ namespace TPie.Models
                 return true;
             }
 
+            // click to select in toggle mode
+            if (Plugin.Settings.KeybindToggleMode &&
+                ImGui.GetIO().MouseClicked[0] &&
+                _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
+            {
+                KeyBind.Deactivate();
+            }
+
             if (!KeyBind.IsActive())
             {
                 IsActive = false;
@@ -151,7 +159,13 @@ namespace TPie.Models
             ImGui.SetNextWindowSize(radius * 2 + margin * 2, ImGuiCond.Always);
             ImGui.SetNextWindowBgAlpha(0);
 
-            if (!ImGui.Begin($"TPie_{id}", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoInputs))
+            ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
+            if (!Plugin.Settings.KeybindToggleMode)
+            {
+                flags |= ImGuiWindowFlags.NoInputs;
+            }
+
+            if (!ImGui.Begin($"TPie_{id}", flags))
             {
                 ImGui.End();
                 return;

@@ -129,7 +129,7 @@ namespace TPie.Config
 
                 ImGui.SameLine();
                 ImGui.Checkbox("Toggle Mode", ref Settings.KeybindToggleMode);
-                DrawHelper.SetTooltip("When enabled, keybinds will behave as a toggle instead of \"press and hold\"");
+                DrawHelper.SetTooltip("When enabled, keybinds will behave as a toggle instead of \"press and hold\".\nOn this mode, once an item is selected, you can either press the keybind again or just click to activate it.");
             }
             ImGui.EndChild();
 
