@@ -11,6 +11,10 @@ namespace TPie.Models
         public bool Ctrl;
         public bool Alt;
         public bool Shift;
+
+        private bool _waitingForRelease;
+        private bool _active;
+
         public KeyBind(int key, bool ctrl = false, bool alt = false, bool shift = false)
         {
             Ctrl = ctrl;
@@ -33,7 +37,7 @@ namespace TPie.Models
         {
             if (ChatHelper.Instance?.IsInputTextActive() == true || ImGui.GetIO().WantCaptureKeyboard)
             {
-                return false;
+                return Plugin.Settings.KeybindToggleMode ? _active : false;
             }
 
             ImGuiIOPtr io = ImGui.GetIO();
@@ -51,6 +55,21 @@ namespace TPie.Models
                     Plugin.KeyState[Key] = false;
                 }
                 catch { }
+            }
+
+            if (Plugin.Settings.KeybindToggleMode)
+            {
+                if (active && !_waitingForRelease)
+                {
+                    _active = !_active;
+                    _waitingForRelease = true;
+                }
+                else if (!active)
+                {
+                    _waitingForRelease = false;
+                }
+
+                return _active;
             }
 
             return active;
