@@ -1,3 +1,8 @@
+# 0.1.1.0
+- Added keybind passthrough setting.
+- Added keybind toggle mode setting.
+- Fixed rings preview sometimes not working.
+
 # 0.1.0.0
 - Endwalker support (there might still be some issues with Reaper / Sage actions).
 

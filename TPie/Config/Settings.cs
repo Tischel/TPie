@@ -29,6 +29,9 @@ namespace TPie.Config
         public bool ShowCooldowns = true;
         public bool ShowRemainingItemCount = true;
 
+        public bool KeybindPassthrough = false;
+        public bool KeybindToggleMode = false;
+
         public void AddRing(Ring ring)
         {
             if (Rings.Any(o => o.KeyBind.Equals(ring.KeyBind)))

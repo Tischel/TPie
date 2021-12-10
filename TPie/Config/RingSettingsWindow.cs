@@ -33,7 +33,7 @@ namespace TPie.Config
         public RingSettingsWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(400, 394);
+            Size = new Vector2(400, 464);
 
             PositionCondition = ImGuiCond.Appearing;
         }
@@ -94,7 +94,7 @@ namespace TPie.Config
                 ImGuiTableFlags.ScrollY |
                 ImGuiTableFlags.SizingFixedSame;
 
-            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354 * _scale, 202 * _scale)))
+            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354 * _scale, 272 * _scale)))
             {
                 ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthStretch, 15, 0);
                 ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthStretch, 7, 1);
@@ -185,7 +185,7 @@ namespace TPie.Config
             int count = Ring.Items.Count;
             if (count > 0)
             {
-                ImGui.SetCursorPos(new Vector2(369 * _scale, 310 * _scale));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, 380 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
                 {
@@ -211,7 +211,7 @@ namespace TPie.Config
 
             if (count > 0)
             {
-                ImGui.SetCursorPos(new Vector2(369 * _scale, 340 * _scale));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, 410 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
                 {

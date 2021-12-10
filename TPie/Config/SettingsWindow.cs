@@ -25,7 +25,7 @@ namespace TPie.Config
         public SettingsWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(400, 394);
+            Size = new Vector2(400, 464);
 
             _fontSizes = new string[40 - 13];
             for (int i = 14; i <= 40; i++)
@@ -119,6 +119,19 @@ namespace TPie.Config
             }
             ImGui.EndChild();
 
+            // keybinds
+            ImGui.Spacing();
+            ImGui.Text("Keybinds");
+            ImGui.BeginChild("##Keybinds", new Vector2(384 * _scale, 40 * _scale), true);
+            {
+                ImGui.Checkbox("Keybind Passthrough", ref Settings.KeybindPassthrough);
+                DrawHelper.SetTooltip("When enabled, TPie wont prevent the game from receiving a key press asssigned for a ring.");
+
+                ImGui.SameLine();
+                ImGui.Checkbox("Toggle Mode", ref Settings.KeybindToggleMode);
+                DrawHelper.SetTooltip("When enabled, keybinds will behave as a toggle instead of \"press and hold\"");
+            }
+            ImGui.EndChild();
 
             // style
             ImGui.Spacing();
@@ -217,7 +230,7 @@ namespace TPie.Config
                 ImGuiTableFlags.SizingFixedSame;
 
             // rings
-            if (ImGui.BeginTable("##Rings_Table", 4, flags, new Vector2(384 * _scale, 284 * _scale)))
+            if (ImGui.BeginTable("##Rings_Table", 4, flags, new Vector2(384 * _scale, 354 * _scale)))
             {
                 ImGui.TableSetupColumn("Color", ImGuiTableColumnFlags.WidthStretch, 10, 0);
                 ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 26, 1);

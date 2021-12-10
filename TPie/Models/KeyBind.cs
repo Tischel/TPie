@@ -11,7 +11,6 @@ namespace TPie.Models
         public bool Ctrl;
         public bool Alt;
         public bool Shift;
-
         public KeyBind(int key, bool ctrl = false, bool alt = false, bool shift = false)
         {
             Ctrl = ctrl;
@@ -42,8 +41,19 @@ namespace TPie.Models
             bool alt = Alt ? io.KeyAlt : !io.KeyAlt;
             bool shift = Shift ? io.KeyShift : !io.KeyShift;
             bool key = KeyboardHelper.Instance?.IsKeyPressed(Key) == true;
+            bool active = ctrl && alt && shift && key;
 
-            return ctrl && alt && shift && key;
+            // block keybind for the game?
+            if (active && !Plugin.Settings.KeybindPassthrough)
+            {
+                try
+                {
+                    Plugin.KeyState[Key] = false;
+                }
+                catch { }
+            }
+
+            return active;
         }
 
         public bool Draw(string id)

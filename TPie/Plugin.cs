@@ -1,6 +1,7 @@
 ﻿using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.Interface;
@@ -28,6 +29,7 @@ namespace TPie
         public static GameGui GameGui { get; private set; } = null!;
         public static SigScanner SigScanner { get; private set; } = null!;
         public static UiBuilder UiBuilder { get; private set; } = null!;
+        public static KeyState KeyState { get; private set; } = null!;
 
         public static string AssemblyLocation { get; private set; } = "";
         public string Name => "TPie";
@@ -55,7 +57,8 @@ namespace TPie
             DataManager dataManager,
             Framework framework,
             GameGui gameGui,
-            SigScanner sigScanner
+            SigScanner sigScanner,
+            KeyState keyState
         )
         {
             ClientState = clientState;
@@ -66,6 +69,7 @@ namespace TPie
             GameGui = gameGui;
             SigScanner = sigScanner;
             UiBuilder = PluginInterface.UiBuilder;
+            KeyState = keyState;
 
             if (pluginInterface.AssemblyLocation.DirectoryName != null)
             {
