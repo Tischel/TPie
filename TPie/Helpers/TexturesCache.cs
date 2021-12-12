@@ -7,7 +7,7 @@ using System.IO;
 
 namespace TPie.Helpers
 {
-    internal class TexturesCache : IDisposable
+    public class TexturesCache : IDisposable
     {
         private Dictionary<uint, TextureWrap> _cache = new();
 
@@ -97,7 +97,7 @@ namespace TPie.Helpers
             }
         }
 
-        public void Clear() { _cache.Clear(); }
+        public void Clear() => _cache.Clear();
 
         #region plugin textures
         public TextureWrap? RingBackground;
@@ -123,17 +123,12 @@ namespace TPie.Helpers
         }
         #endregion
 
-        #region Singleton
         private ICallGateSubscriber<string, string> _penumbraPathResolver;
 
-        private TexturesCache()
+        public TexturesCache()
         {
             _penumbraPathResolver = Plugin.PluginInterface.GetIpcSubscriber<string, string>("Penumbra.ResolveDefaultPath");
         }
-
-        public static void Initialize() { Instance = new TexturesCache(); }
-
-        public static TexturesCache Instance { get; private set; } = null!;
 
         ~TexturesCache()
         {
@@ -160,9 +155,6 @@ namespace TPie.Helpers
             }
 
             _cache.Clear();
-
-            Instance = null!;
         }
-        #endregion
     }
 }

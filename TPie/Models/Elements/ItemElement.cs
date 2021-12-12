@@ -58,7 +58,7 @@ namespace TPie.Models.Elements
             // hq icon
             if (HQ)
             {
-                TextureWrap? hqIcon = TexturesCache.Instance?.HQIcon;
+                TextureWrap? hqIcon = Plugin.TexturesCache.HQIcon;
                 if (hqIcon != null)
                 {
                     Vector2 iconSize = new Vector2(16 * scale);

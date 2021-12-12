@@ -176,7 +176,7 @@ namespace TPie.Models
             // bg
             if (Plugin.Settings.DrawRingBackground)
             {
-                TextureWrap? bg = TexturesCache.Instance?.RingBackground;
+                TextureWrap? bg = Plugin.TexturesCache.RingBackground;
                 if (bg != null)
                 {
                     Vector2 bgSize = new Vector2(Radius * 1.3f);

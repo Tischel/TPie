@@ -1,3 +1,6 @@
+# 0.2.0.0
+- Added an icon browser.
+
 # 0.1.1.0
 - Added keybind passthrough setting.
 - Added keybind toggle mode setting.

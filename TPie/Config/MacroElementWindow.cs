@@ -89,7 +89,7 @@ namespace TPie.Config
             // icon
             if (MacroElement.IconID > 0)
             {
-                TextureWrap? texture = TexturesCache.Instance?.GetTextureFromIconId(MacroElement.IconID);
+                TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(MacroElement.IconID);
                 if (texture != null)
                 {
                     ImGui.SetCursorPosX(110 * _scale);

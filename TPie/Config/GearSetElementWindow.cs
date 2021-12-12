@@ -128,7 +128,7 @@ namespace TPie.Config
                     }
 
                     // icon
-                    TextureWrap? texture = TexturesCache.Instance?.GetTextureFromIconId(62800 + jobID);
+                    TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(62800 + jobID);
                     if (texture != null)
                     {
                         ImGui.SameLine();

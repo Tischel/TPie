@@ -31,6 +31,8 @@ namespace TPie
         public static UiBuilder UiBuilder { get; private set; } = null!;
         public static KeyState KeyState { get; private set; } = null!;
 
+        public static TexturesCache TexturesCache { get; private set; } = null!;
+
         public static string AssemblyLocation { get; private set; } = "";
         public string Name => "TPie";
 
@@ -46,6 +48,7 @@ namespace TPie
         private static ItemElementWindow _itemElementWindow = null!;
         private static GearSetElementWindow _gearSetElementWindow = null!;
         private static MacroElementWindow _macroElementWindow = null!;
+        private static IconBrowserWindow _iconBrowserWindow = null!;
 
         private Ring? _activeRing = null;
         private int _activeRingIndex = 0;
@@ -80,7 +83,7 @@ namespace TPie
                 AssemblyLocation = Assembly.GetExecutingAssembly().Location;
             }
 
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.1.1.0";
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.2.0.0";
 
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
@@ -101,8 +104,9 @@ namespace TPie
             KeyboardHelper.Initialize();
             JobsHelper.Initialize();
             ItemsHelper.Initialize();
-            TexturesCache.Initialize();
-            TexturesCache.Instance?.LoadPluginTextures();
+
+            TexturesCache = new TexturesCache();
+            TexturesCache.LoadPluginTextures();
 
             Settings = Settings.Load();
 
@@ -138,6 +142,7 @@ namespace TPie
             _itemElementWindow = new ItemElementWindow("Edit Item");
             _gearSetElementWindow = new GearSetElementWindow("Edit Gear Set");
             _macroElementWindow = new MacroElementWindow("Edit Macro");
+            _iconBrowserWindow = new IconBrowserWindow("Icon Picker");
 
             _windowSystem = new WindowSystem("TPie_Windows");
             _windowSystem.AddWindow(_settingsWindow);
@@ -146,6 +151,9 @@ namespace TPie
             _windowSystem.AddWindow(_itemElementWindow);
             _windowSystem.AddWindow(_gearSetElementWindow);
             _windowSystem.AddWindow(_macroElementWindow);
+            _windowSystem.AddWindow(_iconBrowserWindow);
+
+            _iconBrowserWindow.IsOpen = true;
         }
 
         public static void ShowRingSettingsWindow(Vector2 position, Ring ring)
@@ -225,7 +233,7 @@ namespace TPie
         {
             if (Settings == null || ClientState.LocalPlayer == null) return;
 
-            _windowSystem.Draw();
+            _windowSystem?.Draw();
 
             _activeRing?.Draw($"ring_{_activeRingIndex}");
 
@@ -256,7 +264,7 @@ namespace TPie
             KeyboardHelper.Instance?.Dispose();
             JobsHelper.Instance?.Dispose();
             ItemsHelper.Instance?.Dispose();
-            TexturesCache.Instance?.Dispose();
+            TexturesCache.Dispose();
 
             _windowSystem.RemoveAllWindows();
 
