@@ -1,5 +1,6 @@
 # 0.2.0.0
 - Added an icon browser.
+- Added settings to hide the ring's selection line and background.
 - Fixed high quality items showing when searching for normal items.
 
 # 0.1.1.0

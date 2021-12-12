@@ -59,7 +59,7 @@ namespace TPie.Config
             Ring.Preview(ringCenter);
 
             // info
-            ImGui.BeginChild("##Ring_Info", new Vector2(384 * _scale, 148 * _scale), true);
+            ImGui.BeginChild("##Ring_Info", new Vector2(384 * _scale, 178 * _scale), true);
             {
                 ImGui.PushItemWidth(310 * _scale);
 
@@ -83,6 +83,11 @@ namespace TPie.Config
                 ImGui.DragFloat("Radius ##Ring_Info_Radius", ref Ring.Radius, 1, 150, 500);
 
                 ImGui.DragFloat2("Items Size ##Ring_Info_ItemSize", ref Ring.ItemSize, 1, 10, 500);
+
+                ImGui.Checkbox("Draw Line", ref Ring.DrawLine);
+
+                ImGui.SameLine();
+                ImGui.Checkbox("Draw Selection Background", ref Ring.DrawSelectionBackground);
             }
             ImGui.EndChild();
 
@@ -94,7 +99,7 @@ namespace TPie.Config
                 ImGuiTableFlags.ScrollY |
                 ImGuiTableFlags.SizingFixedSame;
 
-            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354 * _scale, 272 * _scale)))
+            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354 * _scale, 242 * _scale)))
             {
                 ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthStretch, 15, 0);
                 ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthStretch, 7, 1);
@@ -148,7 +153,7 @@ namespace TPie.Config
                 ImGui.EndTable();
             }
 
-            ImGui.SetCursorPos(new Vector2(369 * _scale, 200 * _scale));
+            ImGui.SetCursorPos(new Vector2(369 * _scale, 230 * _scale));
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.Button(FontAwesomeIcon.Plus.ToIconString()))
             {
@@ -159,7 +164,7 @@ namespace TPie.Config
 
             if (_selectedIndex >= 0)
             {
-                ImGui.SetCursorPos(new Vector2(369 * _scale, 230 * _scale));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, 260 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
                 {
@@ -171,7 +176,7 @@ namespace TPie.Config
 
             if (_selectedIndex >= 0)
             {
-                ImGui.SetCursorPos(new Vector2(369 * _scale, 260 * _scale));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, 290 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
                 {

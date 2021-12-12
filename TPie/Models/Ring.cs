@@ -19,6 +19,9 @@ namespace TPie.Models
         public float Radius;
         public Vector2 ItemSize;
 
+        public bool DrawLine = true;
+        public bool DrawSelectionBackground = true;
+
         private Vector4 _color = Vector4.One;
         public Vector4 Color
         {
@@ -235,17 +238,17 @@ namespace TPie.Models
             }
 
             uint color = !Previewing && _selectedIndex >= 0 ? _baseColor : _lineColor;
-            drawList.AddCircleFilled(center, 10, color);
-
-            if (!Previewing && _animState == AnimationState.Opened)
+            if (DrawLine)
             {
-                Vector2 endPos = _selectedIndex >= 0 ? itemPositions[_selectedIndex] : mousePos;
-                Vector2 direction = Vector2.Normalize(endPos - center);
-                Vector2 startPos = center + direction * 9.5f;
-                drawList.AddLine(startPos, endPos, color, 4);
+                drawList.AddCircleFilled(center, 10, color);
 
-                if (_selectedIndex == -1)
+                if (!Previewing && _animState == AnimationState.Opened)
                 {
+                    Vector2 endPos = _selectedIndex >= 0 ? itemPositions[_selectedIndex] : mousePos;
+                    Vector2 direction = Vector2.Normalize(endPos - center);
+                    Vector2 startPos = center + direction * 9.5f;
+                    drawList.AddLine(startPos, endPos, color, 4);
+
                     Vector2 endCircleCenter = endPos + direction * 3;
                     drawList.AddCircleFilled(endCircleCenter, 4, color);
                 }
@@ -253,8 +256,12 @@ namespace TPie.Models
 
             for (int i = 0; i < count; i++)
             {
-                bool selected = !Previewing && _animState == AnimationState.Opened && i == _selectedIndex;
+                bool selected =
+                    DrawSelectionBackground && !Previewing &&
+                    _animState == AnimationState.Opened && i == _selectedIndex;
+
                 float scale = !Previewing && Plugin.Settings.AnimateIconSizes ? (selected ? 2f : itemScales[i]) : 1f;
+
                 _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _baseColor, _itemsAlpha[i], drawList);
             }
 
