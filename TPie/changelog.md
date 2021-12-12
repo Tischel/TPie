@@ -1,5 +1,6 @@
 # 0.2.0.0
 - Added an icon browser.
+- Fixed high quality items showing when searching for normal items.
 
 # 0.1.1.0
 - Added keybind passthrough setting.

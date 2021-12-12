@@ -76,7 +76,7 @@ namespace TPie.Config
                 foreach (ItemSearchData data in _searchResult)
                 {
                     if (_onlyInIventory && data.UsableItem == null) continue;
-                    if (_hq && !data.HQ) continue;
+                    if (_hq != data.HQ) continue;
 
                     // name
                     string countString = data.UsableItem?.Count > 0 && data.UsableItem?.IsKey == false ? $" x{data.UsableItem.Count}" : "";
