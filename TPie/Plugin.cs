@@ -152,8 +152,6 @@ namespace TPie
             _windowSystem.AddWindow(_gearSetElementWindow);
             _windowSystem.AddWindow(_macroElementWindow);
             _windowSystem.AddWindow(_iconBrowserWindow);
-
-            _iconBrowserWindow.IsOpen = true;
         }
 
         public static void ShowRingSettingsWindow(Vector2 position, Ring ring)
@@ -198,6 +196,13 @@ namespace TPie
                 window.Position = position;
                 window.IsOpen = true;
             }
+        }
+
+        public static void ShowIconBrowserWindow(uint selectedIconId, Action<uint> onSelect)
+        {
+            _iconBrowserWindow._selectedId = selectedIconId;
+            _iconBrowserWindow.OnSelect = onSelect;
+            _iconBrowserWindow.IsOpen = true;
         }
 
         private void Update(Framework framework)

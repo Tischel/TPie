@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Interface;
+using ImGuiNET;
 using ImGuiScene;
 using System.Numerics;
 using System.Text.RegularExpressions;
@@ -59,15 +60,7 @@ namespace TPie.Config
             ImGui.NewLine();
             ImGui.NewLine();
 
-            ImGui.PushItemWidth(50 * _scale);
-            if (ImGui.Button("Default"))
-            {
-                MacroElement.IconID = 66001;
-                _iconInputText = "66001";
-            }
-
             // icon id
-            ImGui.SameLine();
             ImGui.PushItemWidth(154 * _scale);
             string str = _iconInputText;
             if (ImGui.InputText("Icon ID ##Macro", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
@@ -83,6 +76,29 @@ namespace TPie.Config
                     MacroElement.IconID = 0;
                 }
             }
+
+            ImGui.SameLine();
+            ImGui.PushFont(UiBuilder.IconFont);
+            if (ImGui.Button("\uf2f9"))
+            {
+                MacroElement.IconID = 66001;
+                _iconInputText = "66001";
+            }
+            ImGui.PopFont();
+            DrawHelper.SetTooltip("Reset to default");
+
+            ImGui.SameLine();
+            ImGui.PushFont(UiBuilder.IconFont);
+            if (ImGui.Button(FontAwesomeIcon.Search.ToIconString()))
+            {
+                Plugin.ShowIconBrowserWindow(MacroElement.IconID, (iconId) =>
+                {
+                    MacroElement.IconID = iconId;
+                    _iconInputText = $"{iconId}";
+                });
+            }
+            ImGui.PopFont();
+            DrawHelper.SetTooltip("Search ");
 
             ImGui.NewLine();
 

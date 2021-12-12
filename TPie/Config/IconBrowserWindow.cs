@@ -19,7 +19,6 @@ namespace TPie.Config
         private float _scale => ImGuiHelpers.GlobalScale;
         private int _columns;
         private Vector2 IconSize = new Vector2(50);
-        private uint? _selectedId;
 
         private int _searchTypeIndex = 0;
         private string _searchTerm = "";
@@ -27,6 +26,9 @@ namespace TPie.Config
 
         private TexturesCache _cache = new TexturesCache();
         private BrowsableIcons _browsableIcons = new BrowsableIcons();
+
+        public uint? _selectedId = null;
+        public Action<uint>? OnSelect = null;
 
         public IconBrowserWindow(string name) : base(name)
         {
@@ -228,7 +230,7 @@ namespace TPie.Config
                             if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
                             {
                                 _selectedId = iconId;
-                                ImGui.SetClipboardText($"{iconId}");
+                                OnSelect?.Invoke(iconId);
                             }
                         }
 
