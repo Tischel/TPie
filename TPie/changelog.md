@@ -1,3 +1,6 @@
+# 0.2.0.1
+- Fixed texture loading related crashes (textures will still not load when corrupted/invalid, but TPie shouldn't crash anymore).
+
 # 0.2.0.0
 - Added an icon browser.
 - Added settings to hide the ring's selection line and background.

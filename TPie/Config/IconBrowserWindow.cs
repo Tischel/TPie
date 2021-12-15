@@ -290,8 +290,15 @@ namespace TPie.Config
 
         private bool IsIDValid(int id)
         {
-            var path = $"ui/icon/{id / 1000 * 1000:000000}/{id:000000}_hr1.tex";
-            return Plugin.DataManager.GetFile<TexFile>(path) != null;
+            try
+            {
+                var path = $"ui/icon/{id / 1000 * 1000:000000}/{id:000000}_hr1.tex";
+                return Plugin.DataManager.GetFile<TexFile>(path) != null;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

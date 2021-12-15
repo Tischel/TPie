@@ -17,10 +17,17 @@ namespace TPie.Helpers
         {
             if (!manualLoad)
             {
-                TexFile? iconFile = Plugin.DataManager.GetFile<TexFile>(path);
-                if (iconFile != null)
+                try
                 {
-                    return Plugin.UiBuilder.LoadImageRaw(iconFile.GetRgbaImageData(), iconFile.Header.Width, iconFile.Header.Height, 4);
+                    TexFile? iconFile = Plugin.DataManager.GetFile<TexFile>(path);
+                    if (iconFile != null)
+                    {
+                        return Plugin.UiBuilder.LoadImageRaw(iconFile.GetRgbaImageData(), iconFile.Header.Width, iconFile.Header.Height, 4);
+                    }
+                }
+                catch 
+                {
+                    return null;
                 }
             }
 
