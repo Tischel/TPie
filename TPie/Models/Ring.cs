@@ -162,6 +162,8 @@ namespace TPie.Models
             ImGui.SetNextWindowSize(radius * 2 + margin * 2, ImGuiCond.Always);
             ImGui.SetNextWindowBgAlpha(0);
 
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
+
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
             if (!Plugin.Settings.KeybindToggleMode)
             {
@@ -171,6 +173,7 @@ namespace TPie.Models
             if (!ImGui.Begin($"TPie_{id}", flags))
             {
                 ImGui.End();
+                ImGui.PopStyleVar();
                 return;
             }
 
@@ -266,6 +269,7 @@ namespace TPie.Models
             }
 
             ImGui.End();
+            ImGui.PopStyleVar();
         }
 
         #region anim

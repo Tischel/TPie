@@ -3,6 +3,7 @@
 - Old macro elements renamed to "Commmand". These will remain as single-lined text commands.
 - Added more icons to the browse tab.
 - Increased leniency so it's easier to select elements without needing much precision.
+- Fixed rings showing the window border (usually caused by Dalamud themes).
 
 # 0.2.0.1
 - Fixed texture loading related crashes (textures will still not load when corrupted/invalid, but TPie shouldn't crash anymore).
