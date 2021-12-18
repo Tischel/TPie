@@ -222,7 +222,7 @@ namespace TPie.Models
                     float distance = (itemPositions[index] - mousePos).Length();
                     if (distance < minDistance)
                     {
-                        bool selected = distance <= ItemSize.Y * 0.75f;
+                        bool selected = distance <= ItemSize.Y * 2;
                         _selectedIndex = selected ? index : _selectedIndex;
                         minDistance = selected ? distance : minDistance;
                     }
