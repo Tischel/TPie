@@ -1,4 +1,6 @@
 # 0.3.0.0
+- Added a new type of element to execute the user-defined game macros.
+- Old macro elements renamed to "Commmand". These will remain as single-lined text commands.
 - Added more icons to the browse tab.
 
 # 0.2.0.1

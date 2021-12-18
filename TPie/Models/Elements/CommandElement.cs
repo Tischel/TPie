@@ -4,20 +4,19 @@ using TPie.Helpers;
 
 namespace TPie.Models.Elements
 {
-    public class MacroElement : RingElement
+    public class CommandElement : RingElement
     {
         public string Name;
         public string Command;
-        public bool DrawBorder;
 
-        public MacroElement(string name, string command, uint iconId)
+        public CommandElement(string name, string command, uint iconId)
         {
             Name = name;
             Command = command;
             IconID = iconId;
         }
 
-        public MacroElement() : this("New Macro", "", 66001) { }
+        public CommandElement() : this("New Command", "", 66001) { }
 
         public override string Description()
         {

@@ -47,7 +47,8 @@ namespace TPie
         private static ActionElementWindow _actionElementWindow = null!;
         private static ItemElementWindow _itemElementWindow = null!;
         private static GearSetElementWindow _gearSetElementWindow = null!;
-        private static MacroElementWindow _macroElementWindow = null!;
+        private static CommandElementWindow _commandElementWindow = null!;
+        private static GameMacroElementWindow _gameMacroElementWindow = null!;
         private static IconBrowserWindow _iconBrowserWindow = null!;
 
         private Ring? _activeRing = null;
@@ -141,7 +142,8 @@ namespace TPie
             _actionElementWindow = new ActionElementWindow("Edit Action");
             _itemElementWindow = new ItemElementWindow("Edit Item");
             _gearSetElementWindow = new GearSetElementWindow("Edit Gear Set");
-            _macroElementWindow = new MacroElementWindow("Edit Macro");
+            _commandElementWindow = new CommandElementWindow("Edit Command");
+            _gameMacroElementWindow = new GameMacroElementWindow("Edit Game Macro");
             _iconBrowserWindow = new IconBrowserWindow("Icon Picker");
 
             _windowSystem = new WindowSystem("TPie_Windows");
@@ -150,7 +152,8 @@ namespace TPie
             _windowSystem.AddWindow(_actionElementWindow);
             _windowSystem.AddWindow(_itemElementWindow);
             _windowSystem.AddWindow(_gearSetElementWindow);
-            _windowSystem.AddWindow(_macroElementWindow);
+            _windowSystem.AddWindow(_commandElementWindow);
+            _windowSystem.AddWindow(_gameMacroElementWindow);
             _windowSystem.AddWindow(_iconBrowserWindow);
         }
 
@@ -184,10 +187,16 @@ namespace TPie
                 _gearSetElementWindow.GearSetElement = gearSetElement;
             }
 
-            else if (element is MacroElement macroElement)
+            else if (element is CommandElement commandElement)
             {
-                window = _macroElementWindow;
-                _macroElementWindow.MacroElement = macroElement;
+                window = _commandElementWindow;
+                _commandElementWindow.CommandElement = commandElement;
+            }
+
+            else if (element is GameMacroElement gameMacroElement)
+            {
+                window = _gameMacroElementWindow;
+                _gameMacroElementWindow.GameMacroElement = gameMacroElement;
             }
 
             if (window != null)

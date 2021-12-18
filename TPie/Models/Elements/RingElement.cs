@@ -97,13 +97,25 @@ namespace TPie.Models.Elements
                         return element;
                     }
 
-                    if (type.Contains("Macro"))
+                    if (type.Contains("GameMacro"))
+                    {
+                        string name = jo.Value<string>("Name") ?? "";
+                        int id = jo.Value<int>("Identifier");
+                        bool shared = jo.GetValue("IsShared") != null ? jo.Value<bool>("IsShared") : false;
+                        uint iconId = jo.Value<uint>("IconID");
+
+                        GameMacroElement element = new GameMacroElement(name, id, shared, iconId);
+                        element.Border = border;
+                        return element;
+                    }
+
+                    if (type.Contains("Macro") || type.Contains("Command"))
                     {
                         string name = jo.Value<string>("Name") ?? "";
                         string command = jo.Value<string>("Command") ?? "";
                         uint iconId = jo.Value<uint>("IconID");
 
-                        MacroElement element = new MacroElement(name, command, iconId);
+                        CommandElement element = new CommandElement(name, command, iconId);
                         element.Border = border;
                         return element;
                     }

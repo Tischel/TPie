@@ -101,9 +101,9 @@ namespace TPie.Config
 
             if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354 * _scale, 242 * _scale)))
             {
-                ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthStretch, 15, 0);
+                ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthStretch, 22, 0);
                 ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthStretch, 7, 1);
-                ImGui.TableSetupColumn("Description", ImGuiTableColumnFlags.WidthStretch, 78, 2);
+                ImGui.TableSetupColumn("Description", ImGuiTableColumnFlags.WidthStretch, 71, 2);
 
                 ImGui.TableSetupScrollFreeze(0, 1);
                 ImGui.TableHeadersRow();
@@ -247,7 +247,7 @@ namespace TPie.Config
         {
             if (Ring == null) return;
 
-            ImGui.SetNextWindowSize(new(80 * _scale, 100 * _scale));
+            ImGui.SetNextWindowSize(new(94 * _scale, 120 * _scale));
 
             if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
             {
@@ -268,9 +268,14 @@ namespace TPie.Config
                     elementToAdd = new GearSetElement();
                 }
 
-                if (ImGui.Selectable("Macro"))
+                if (ImGui.Selectable("Command"))
                 {
-                    elementToAdd = new MacroElement();
+                    elementToAdd = new CommandElement();
+                }
+
+                if (ImGui.Selectable("Game Macro"))
+                {
+                    elementToAdd = new GameMacroElement();
                 }
 
                 if (elementToAdd != null)

@@ -8,54 +8,64 @@ using TPie.Models.Elements;
 
 namespace TPie.Config
 {
-    public class MacroElementWindow : RingElementWindow
+    public class GameMacroElementWindow : RingElementWindow
     {
-        private MacroElement? _macroElement = null;
-        public MacroElement? MacroElement
+        private GameMacroElement? _gameMacroElement = null;
+        public GameMacroElement? GameMacroElement
         {
-            get => _macroElement;
+            get => _gameMacroElement;
             set
             {
-                _macroElement = value;
+                _gameMacroElement = value;
 
                 _inputText = value != null ? value.Name : "";
-                _commandInputText = value != null ? value.Command : "";
+                _macroId = value != null ? value.Identifier : 0;
                 _iconInputText = value != null ? $"{value.IconID}" : "";
             }
         }
 
         protected override RingElement? Element
         {
-            get => MacroElement;
-            set => MacroElement = value is MacroElement o ? o : null;
+            get => GameMacroElement;
+            set => GameMacroElement = value is GameMacroElement o ? o : null;
         }
 
-        protected string _commandInputText = "";
+        protected int _macroId = 0;
         protected string _iconInputText = "";
 
-        public MacroElementWindow(string name) : base(name)
-        {
+        private string[] _macroIds = null!;
 
+        public GameMacroElementWindow(string name) : base(name)
+        {
+            _macroIds = new string[100];
+            for (int i = 0; i < 100; i++)
+            {
+                _macroIds[i] = $"{i}";
+            }
         }
 
         public override void Draw()
         {
-            if (MacroElement == null) return;
+            if (GameMacroElement == null) return;
 
             ImGui.PushItemWidth(210 * _scale);
 
             // name
             FocusIfNeeded();
-            if (ImGui.InputText("Name ##Macro", ref _inputText, 100))
+            if (ImGui.InputText("Name ##GameMacro", ref _inputText, 100))
             {
-                MacroElement.Name = _inputText;
+                GameMacroElement.Name = _inputText;
             }
 
-            // command
-            if (ImGui.InputText("Command ##Macro", ref _commandInputText, 100))
+            // id
+            ImGui.PushItemWidth(100 * _scale);
+            if (ImGui.Combo("ID", ref _macroId, _macroIds, _macroIds.Length))
             {
-                MacroElement.Command = _commandInputText;
+                GameMacroElement.Identifier = _macroId;
             }
+
+            ImGui.SameLine();
+            ImGui.Checkbox("Shared", ref GameMacroElement.IsShared);
 
             ImGui.NewLine();
             ImGui.NewLine();
@@ -63,17 +73,17 @@ namespace TPie.Config
             // icon id
             ImGui.PushItemWidth(154 * _scale);
             string str = _iconInputText;
-            if (ImGui.InputText("Icon ID ##Macro", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
+            if (ImGui.InputText("Icon ID ##GameMacro", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
             {
                 _iconInputText = Regex.Replace(str, @"[^\d]", "");
 
                 try
                 {
-                    MacroElement.IconID = uint.Parse(_iconInputText);
+                    GameMacroElement.IconID = uint.Parse(_iconInputText);
                 }
                 catch
                 {
-                    MacroElement.IconID = 0;
+                    GameMacroElement.IconID = 0;
                 }
             }
 
@@ -81,7 +91,7 @@ namespace TPie.Config
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.Button("\uf2f9"))
             {
-                MacroElement.IconID = 66001;
+                GameMacroElement.IconID = 66001;
                 _iconInputText = "66001";
             }
             ImGui.PopFont();
@@ -91,9 +101,9 @@ namespace TPie.Config
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.Button(FontAwesomeIcon.Search.ToIconString()))
             {
-                Plugin.ShowIconBrowserWindow(MacroElement.IconID, (iconId) =>
+                Plugin.ShowIconBrowserWindow(GameMacroElement.IconID, (iconId) =>
                 {
-                    MacroElement.IconID = iconId;
+                    GameMacroElement.IconID = iconId;
                     _iconInputText = $"{iconId}";
                 });
             }
@@ -103,9 +113,9 @@ namespace TPie.Config
             ImGui.NewLine();
 
             // icon
-            if (MacroElement.IconID > 0)
+            if (GameMacroElement.IconID > 0)
             {
-                TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(MacroElement.IconID);
+                TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(GameMacroElement.IconID);
                 if (texture != null)
                 {
                     ImGui.SetCursorPosX(110 * _scale);
@@ -115,7 +125,7 @@ namespace TPie.Config
 
             // border
             ImGui.NewLine();
-            MacroElement.Border.Draw();
+            GameMacroElement.Border.Draw();
         }
     }
 }
