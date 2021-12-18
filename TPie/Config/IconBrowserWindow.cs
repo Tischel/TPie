@@ -256,11 +256,15 @@ namespace TPie.Config
     {
         private static Range[] _ranges = {
             new Range(66000, 66399), // macro
-            new Range(62000, 62599),
+            new Range(62000, 62599), // job
             new Range(62801, 62899), // gear set
-            new Range(1, 99), // system
+            new Range(1, 125), // system
+            new Range(901, 906), // chocobo
+            new Range(516, 532), // carbuncle
             new Range(61200, 61250), // marks
             new Range(61290, 61390), // marks
+            new Range(64001, 64186), // emotes 1
+            new Range(64326, 64413), // emotes 2
             new Range(65001, 65900), // currency
             new Range(91000, 94999), // symbols
         };
@@ -270,7 +274,7 @@ namespace TPie.Config
             66000, 66020, 66040, 66060, 66080, 66100, 66120, 66140, 66160, 66180, 66300,
             62000, 62100, 62200, 62250, 62275, 62300, 62400, 62500, 62520, 62580, 61200,
             61210, 61220, 61230, 61240, 61250, 61290, 61300, 61310, 61320, 61330, 61340,
-            61350, 61370, 61377, 61390
+            61350, 61370, 61377, 61390, 100, 64100, 64150, 64160,
         };
 
         public List<uint> IDs = new List<uint>();
