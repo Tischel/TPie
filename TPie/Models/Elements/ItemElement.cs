@@ -49,9 +49,9 @@ namespace TPie.Models.Elements
             return $"{Name}{hqString}{countString}";
         }
 
-        public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
+        public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, bool tooltip, ImDrawListPtr drawList)
         {
-            base.Draw(position, size, scale, selected, color, alpha, drawList);
+            base.Draw(position, size, scale, selected, color, alpha, tooltip, drawList);
 
             size = size * scale;
 

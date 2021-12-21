@@ -22,6 +22,7 @@ namespace TPie.Models
 
         public bool DrawLine = true;
         public bool DrawSelectionBackground = true;
+        public bool ShowTooltips = false;
 
         private Vector4 _color = Vector4.One;
         public Vector4 Color
@@ -267,7 +268,7 @@ namespace TPie.Models
 
                 float scale = !Previewing && Plugin.Settings.AnimateIconSizes ? (selected ? 2f : itemScales[i]) : 1f;
 
-                _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _baseColor, _itemsAlpha[i], drawList);
+                _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _baseColor, _itemsAlpha[i], ShowTooltips, drawList);
             }
 
             ImGui.End();

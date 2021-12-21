@@ -89,10 +89,14 @@ namespace TPie.Config
                 ImGui.PushItemWidth(310 * _scale);
                 ImGui.DragFloat2("Items Size ##Ring_Info_ItemSize", ref Ring.ItemSize, 1, 10, 500);
 
-                ImGui.Checkbox("Draw Line", ref Ring.DrawLine);
+                ImGui.Checkbox("Line", ref Ring.DrawLine);
 
                 ImGui.SameLine();
-                ImGui.Checkbox("Draw Selection Background", ref Ring.DrawSelectionBackground);
+                ImGui.Checkbox("Selection Background", ref Ring.DrawSelectionBackground);
+
+                ImGui.SameLine();
+                ImGui.Checkbox("Tooltips", ref Ring.ShowTooltips);
+                DrawHelper.SetTooltip("This will show a tooltip with a description of an element when hovering on top of it.");
             }
             ImGui.EndChild();
 
@@ -123,9 +127,7 @@ namespace TPie.Config
                     // type
                     if (ImGui.TableSetColumnIndex(0))
                     {
-                        string type = UserFriendlyString(item.GetType().Name, "Element");
-
-                        if (ImGui.Selectable(type, _selectedIndex == i, ImGuiSelectableFlags.SpanAllColumns | ImGuiSelectableFlags.AllowItemOverlap, new Vector2(0, 24)))
+                        if (ImGui.Selectable(item.UserFriendlyName(), _selectedIndex == i, ImGuiSelectableFlags.SpanAllColumns | ImGuiSelectableFlags.AllowItemOverlap, new Vector2(0, 24)))
                         {
                             _selectedIndex = i;
                         }

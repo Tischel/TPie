@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using TPie.Helpers;
 
 namespace TPie.Models.Elements
@@ -14,7 +15,7 @@ namespace TPie.Models.Elements
         public uint IconID { get; set; }
         public ItemBorder Border { get; set; } = ItemBorder.Default();
 
-        public virtual void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
+        public virtual void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, bool tooltip, ImDrawListPtr drawList)
         {
             size = size * scale;
 
@@ -34,6 +35,11 @@ namespace TPie.Models.Elements
                 uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(Border.Color.X, Border.Color.Y, Border.Color.Z, alpha));
                 drawList.AddRect(position, position + size, c, Border.Radius * scale, ImDrawFlags.None, Border.Thickness * scale);
             }
+
+            if (tooltip && ImGui.IsMouseHoveringRect(position, position + size))
+            {
+                ImGui.SetTooltip(UserFriendlyName() + ": " + Description());
+            }
         }
 
         public abstract void ExecuteAction();
@@ -43,6 +49,19 @@ namespace TPie.Models.Elements
         public abstract string InvalidReason();
 
         public abstract string Description();
+
+        public string UserFriendlyName()
+        {
+            string str = GetType().Name.Replace("Element", "");
+
+            Regex? regex = new(@"
+                    (?<=[A-Z])(?=[A-Z][a-z]) |
+                    (?<=[^A-Z])(?=[A-Z]) |
+                    (?<=[A-Za-z])(?=[^A-Za-z])",
+                RegexOptions.IgnorePatternWhitespace);
+
+            return regex.Replace(str, " ");
+        }
     }
 
     internal class RingElementConverter : JsonConverter

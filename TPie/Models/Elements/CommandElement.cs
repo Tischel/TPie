@@ -38,9 +38,9 @@ namespace TPie.Models.Elements
             return Command.StartsWith("/");
         }
 
-        public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, ImDrawListPtr drawList)
+        public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, bool tooltip, ImDrawListPtr drawList)
         {
-            base.Draw(position, size, scale, selected, color, alpha, drawList);
+            base.Draw(position, size, scale, selected, color, alpha, tooltip, drawList);
 
             // name
             DrawHelper.DrawOutlinedText($"{Name}", position, true, scale, drawList);
