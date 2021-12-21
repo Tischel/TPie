@@ -27,5 +27,15 @@ namespace TPie.Models.Elements
             ImGui.DragInt("Border Thickness ##ItemBorder", ref Thickness, 0.1f, 0, 10);
             ImGui.DragInt("Border Radius ##ItemBorder", ref Radius, 0.1f, 0, 500);
         }
+
+        public ItemBorder Clone()
+        {
+            return new ItemBorder(Color, Thickness, Radius);
+        }
+
+        public static ItemBorder GlobalBorderSettingsCopy()
+        {
+            return Plugin.Settings?.GlobalBorderSettings.Clone() ?? Default();
+        }
     }
 }

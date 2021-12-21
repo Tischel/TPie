@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using TPie.Models;
+using TPie.Models.Elements;
 
 namespace TPie.Config
 {
@@ -31,6 +32,8 @@ namespace TPie.Config
 
         public bool KeybindPassthrough = false;
         public bool KeybindToggleMode = false;
+
+        public ItemBorder GlobalBorderSettings = ItemBorder.Default();
 
         public void AddRing(Ring ring)
         {

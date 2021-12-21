@@ -1,5 +1,7 @@
 # 1.0.0.0
 - Added a rotation setting for rings.
+- Added a setting to show tooltips when hovering over ring elements.
+- Added global border settings for ring elements.
 
 # 0.3.0.0
 - Added a new type of element to execute the user-defined game macros.

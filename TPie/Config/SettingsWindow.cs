@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using TPie.Helpers;
 using TPie.Models;
+using TPie.Models.Elements;
 
 namespace TPie.Config
 {
@@ -20,6 +21,8 @@ namespace TPie.Config
         private Vector2 RingWindowPos => _windowPos + new Vector2(410 * _scale, 0);
 
         private Ring? _removingRing = null;
+        private bool _applyingGlobalBorderSettings = false;
+
         private float _scale => ImGuiHelpers.GlobalScale;
 
         public SettingsWindow(string name) : base(name)
@@ -57,6 +60,13 @@ namespace TPie.Config
             if (ImGui.BeginTabItem("General ##TPie_Settings"))
             {
                 DrawGeneralTab();
+                ImGui.EndTabItem();
+            }
+
+            // Global Border Settings
+            if (ImGui.BeginTabItem("Global Border Settings ##TPie_Settings"))
+            {
+                DrawGlobalBorderSettingsTab();
                 ImGui.EndTabItem();
             }
 
@@ -171,6 +181,48 @@ namespace TPie.Config
                 DrawHelper.SetTooltip("In seconds");
             }
             ImGui.EndChild();
+        }
+
+        private void DrawGlobalBorderSettingsTab()
+        {
+            ImGui.Text("These are the default border settings that will be");
+            ImGui.Text("used when creating a new ring element.");
+            ImGui.NewLine();
+
+            ImGui.BeginChild("##GlobalBorderSettings", new Vector2(272 * _scale, 93 * _scale), true);
+            {
+                Settings.GlobalBorderSettings.Draw();
+            }
+            ImGui.EndChild();
+
+            ImGui.NewLine();
+            if (ImGui.Button("Apply to all existing elements", new Vector2(272, 30)))
+            {
+                _applyingGlobalBorderSettings = true;
+            }
+
+            if (_applyingGlobalBorderSettings)
+            {
+                var (didConfirm, didClose) = DrawHelper.DrawConfirmationModal("Apply?", "Are you sure you want to apply these border", "settings to all existing elements?", "There is no way to undo this!");
+
+                if (didConfirm)
+                {
+                    foreach (Ring ring in Settings.Rings)
+                    {
+                        foreach (RingElement element in ring.Items)
+                        {
+                            element.Border = ItemBorder.GlobalBorderSettingsCopy();
+                        }
+                    }
+
+                    Settings.Save(Settings);
+                }
+
+                if (didConfirm || didClose)
+                {
+                    _applyingGlobalBorderSettings = false;
+                }
+            }
         }
 
         private void DrawRingsTab()

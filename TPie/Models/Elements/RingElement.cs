@@ -13,7 +13,7 @@ namespace TPie.Models.Elements
     public abstract class RingElement
     {
         public uint IconID { get; set; }
-        public ItemBorder Border { get; set; } = ItemBorder.Default();
+        public ItemBorder Border { get; set; } = ItemBorder.GlobalBorderSettingsCopy();
 
         public virtual void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, bool tooltip, ImDrawListPtr drawList)
         {
