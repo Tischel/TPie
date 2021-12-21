@@ -1,3 +1,6 @@
+# 1.0.0.0
+- Added a rotation setting for rings.
+
 # 0.3.0.0
 - Added a new type of element to execute the user-defined game macros.
 - Old macro elements renamed to "Commmand". These will remain as single-lined text commands.

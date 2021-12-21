@@ -16,6 +16,7 @@ namespace TPie.Models
     {
         public string Name;
         public KeyBind KeyBind;
+        public float Rotation;
         public float Radius;
         public Vector2 ItemSize;
 
@@ -204,6 +205,7 @@ namespace TPie.Models
             Vector2[] itemPositions = new Vector2[count];
             float[] itemScales = new float[count];
 
+            float rotation = (float)(Rotation * (Math.PI / 180f));
             float minDistance = float.MaxValue;
             _selectedIndex = -1;
 
@@ -213,7 +215,7 @@ namespace TPie.Models
             {
                 if (index >= count) break;
 
-                double angle = a + _angleOffset;
+                double angle = a + _angleOffset + rotation;
                 float d = r * _itemsDistanceScales[index];
                 double x = center.X + d * Math.Cos(angle);
                 double y = center.Y + d * Math.Sin(angle);

@@ -80,8 +80,13 @@ namespace TPie.Config
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 4);
                 ImGui.Text("Keybind");
 
+                ImGui.PushItemWidth(128 * _scale);
                 ImGui.DragFloat("Radius ##Ring_Info_Radius", ref Ring.Radius, 1, 150, 500);
 
+                ImGui.SameLine();
+                ImGui.DragFloat("Rotation ##Ring_Info_Rotation", ref Ring.Rotation, .5f, -359, 359);
+
+                ImGui.PushItemWidth(310 * _scale);
                 ImGui.DragFloat2("Items Size ##Ring_Info_ItemSize", ref Ring.ItemSize, 1, 10, 500);
 
                 ImGui.Checkbox("Draw Line", ref Ring.DrawLine);
