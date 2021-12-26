@@ -1,6 +1,11 @@
 # 1.1.0.0
 - Added support for nested rings.
-- Toggle mode is now a setting for each keybind.
+    + Nested Rings are activated by hovering on them for a set amount of time.
+    + On Toggle Mode, Nested Rings can also be activated by clicking on them.
+    + Nested Rings are linked by name. If there are multiple rings with the same name, one will be picked "randomly".
+- Toggle Mode is now a keybind setting instead of a global one.
+- Actions now show the remaining charges when applicable.
+- Fixed actions cooldowns not calculating properly for actions with multiple charges.
 - Fixed crash that could happen when creating a new ring.
 
 # 1.0.0.0

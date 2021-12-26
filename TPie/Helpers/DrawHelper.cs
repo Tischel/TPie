@@ -60,9 +60,15 @@ namespace TPie.Helpers
             float endAngle = (float)Math.PI * 2f * -completion;
             float offset = (float)Math.PI / 2;
 
+            uint color = 0xCC000000;
+            if (CooldownHelper.GetMaxCharges(id) > 1 && CooldownHelper.GetCharges(id) > 0)
+            {
+                color = 0x66000000;
+            }
+
             ImGui.PushClipRect(position - size / 2, position + size / 2, false);
             drawList.PathArcTo(position, size.X / 2, endAngle - offset, -offset, 50);
-            drawList.PathStroke(0xCC000000, ImDrawFlags.None, size.X);
+            drawList.PathStroke(color, ImDrawFlags.None, size.X);
             ImGui.PopClipRect();
 
             // text

@@ -93,6 +93,18 @@ namespace TPie.Models.Elements
             if (Plugin.Settings.ShowCooldowns)
             {
                 DrawHelper.DrawCooldown(ActionType.Spell, ActionID, position, size, scale, drawList);
+
+                if (CooldownHelper.GetMaxCharges(ActionID) > 1)
+                {
+                    int charges = CooldownHelper.GetCharges(ActionID);
+                    string text = $"{charges}";
+                    Vector2 textPos = position + (size / 2f) - new Vector2(4 * scale, 6 * scale);
+
+                    uint redColor = 0xFF0149C6;
+                    uint fillColor = charges == 0 ? redColor : 0xFFFFFFFF;
+                    uint outlineColor = charges == 0 ? 0xFFFFFFFF : redColor;
+                    DrawHelper.DrawOutlinedText(text, textPos, true, scale, fillColor, outlineColor, drawList);
+                }
             }
         }
     }
