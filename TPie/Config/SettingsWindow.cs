@@ -136,10 +136,6 @@ namespace TPie.Config
             {
                 ImGui.Checkbox("Keybind Passthrough", ref Settings.KeybindPassthrough);
                 DrawHelper.SetTooltip("When enabled, TPie wont prevent the game from receiving a key press asssigned for a ring.");
-
-                ImGui.SameLine();
-                ImGui.Checkbox("Toggle Mode", ref Settings.KeybindToggleMode);
-                DrawHelper.SetTooltip("When enabled, keybinds will behave as a toggle instead of \"press and hold\".\nOn this mode, once an item is selected, you can either press the keybind again or just click to activate it.");
             }
             ImGui.EndChild();
 
@@ -320,8 +316,7 @@ namespace TPie.Config
                     // keybind
                     if (ImGui.TableSetColumnIndex(2))
                     {
-                        ImGui.PushItemWidth(140 * _scale);
-                        if (ring.KeyBind.Draw(ring.Name))
+                        if (ring.KeyBind.Draw(ring.Name, 140 * _scale))
                         {
                             Plugin.Settings.ValidateKeyBind(ring);
                         }

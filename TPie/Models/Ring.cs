@@ -104,7 +104,7 @@ namespace TPie.Models
             KeyBind currentKeyBind = CurrentKeybind();
 
             // click to select in toggle mode
-            if (Plugin.Settings.KeybindToggleMode &&
+            if (currentKeyBind.Toggle &&
                 ImGui.GetIO().MouseClicked[0] &&
                 _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
             {
@@ -176,7 +176,7 @@ namespace TPie.Models
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
 
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
-            if (!Plugin.Settings.KeybindToggleMode)
+            if (CurrentKeybind().Toggle)
             {
                 flags |= ImGuiWindowFlags.NoInputs;
             }

@@ -12,6 +12,8 @@ namespace TPie.Models
         public bool Alt;
         public bool Shift;
 
+        public bool Toggle = false;
+
         private bool _waitingForRelease;
         private bool _active;
 
@@ -37,7 +39,7 @@ namespace TPie.Models
         {
             if (ChatHelper.Instance?.IsInputTextActive() == true || ImGui.GetIO().WantCaptureKeyboard)
             {
-                return Plugin.Settings.KeybindToggleMode ? _active : false;
+                return Toggle ? _active : false;
             }
 
             ImGuiIOPtr io = ImGui.GetIO();
@@ -57,7 +59,7 @@ namespace TPie.Models
                 catch { }
             }
 
-            if (Plugin.Settings.KeybindToggleMode)
+            if (Toggle)
             {
                 if (active && !_waitingForRelease)
                 {
@@ -81,10 +83,20 @@ namespace TPie.Models
             _waitingForRelease = false;
         }
 
-        public bool Draw(string id)
+        public bool Draw(string id, float width, bool drawToggleCheckbox = false)
         {
             ImGuiIOPtr io = ImGui.GetIO();
             string dispKey = ToString();
+
+            if (drawToggleCheckbox)
+            {
+                ImGui.Checkbox("Toggable", ref Toggle);
+                DrawHelper.SetTooltip("When enabled, this keybind will behave as a toggle instead of \"press and hold\".\nOn this mode, once an item is selected, you can either press the keybind again or just click to activate it.");
+                ImGui.SameLine();
+            }
+
+            float textWidth = drawToggleCheckbox ? width * 0.71f : width;
+            ImGui.PushItemWidth(textWidth);
 
             ImGui.InputText($"##{id}_Keybind", ref dispKey, 200, ImGuiInputTextFlags.ReadOnly);
             DrawHelper.SetTooltip("Backspace to clear");

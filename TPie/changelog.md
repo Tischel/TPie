@@ -1,5 +1,6 @@
 # 1.1.0.0
 - Added support for nested rings.
+- Toggle mode is now a setting for each keybind.
 - Fixed crash that could happen when creating a new ring.
 
 # 1.0.0.0

@@ -31,7 +31,6 @@ namespace TPie.Config
         public bool ShowRemainingItemCount = true;
 
         public bool KeybindPassthrough = false;
-        public bool KeybindToggleMode = false;
 
         public ItemBorder GlobalBorderSettings = ItemBorder.Default();
 
