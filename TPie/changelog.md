@@ -1,3 +1,6 @@
+# 1.1.0.1
+- Fixed ring elements not being clickable on toggle mode.
+
 # 1.1.0.0
 - Added support for nested rings.
     + Nested Rings are activated by hovering on them for a set amount of time.

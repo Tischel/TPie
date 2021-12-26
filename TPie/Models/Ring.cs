@@ -176,7 +176,7 @@ namespace TPie.Models
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
 
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
-            if (CurrentKeybind().Toggle)
+            if (!CurrentKeybind().Toggle)
             {
                 flags |= ImGuiWindowFlags.NoInputs;
             }
