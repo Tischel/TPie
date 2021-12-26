@@ -122,7 +122,8 @@ namespace TPie.Models
         {
             if (!Previewing && !IsActive)
             {
-                if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
+                if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 &&
+                    _validItems != null && _selectedIndex < _validItems.Count)
                 {
                     _validItems[_selectedIndex].ExecuteAction();
                 }
@@ -153,7 +154,7 @@ namespace TPie.Models
 
             if (_animState == AnimationState.Closed) return;
 
-            int count = _validItems.Count;
+            int count = _validItems?.Count ?? 0;
             Vector2 center = _center!.Value;
             Vector2 margin = new Vector2(40, 40);
             Vector2 radius = new Vector2(Radius);
@@ -260,15 +261,18 @@ namespace TPie.Models
                 }
             }
 
-            for (int i = 0; i < count; i++)
+            if (_validItems != null)
             {
-                bool selected =
-                    DrawSelectionBackground && !Previewing &&
-                    _animState == AnimationState.Opened && i == _selectedIndex;
+                for (int i = 0; i < count; i++)
+                {
+                    bool selected =
+                        DrawSelectionBackground && !Previewing &&
+                        _animState == AnimationState.Opened && i == _selectedIndex;
 
-                float scale = !Previewing && Plugin.Settings.AnimateIconSizes ? (selected ? 2f : itemScales[i]) : 1f;
+                    float scale = !Previewing && Plugin.Settings.AnimateIconSizes ? (selected ? 2f : itemScales[i]) : 1f;
 
-                _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _baseColor, _itemsAlpha[i], ShowTooltips, drawList);
+                    _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _baseColor, _itemsAlpha[i], ShowTooltips, drawList);
+                }
             }
 
             ImGui.End();
@@ -338,7 +342,7 @@ namespace TPie.Models
             if (!_animating) { return; }
 
             double now = ImGui.GetTime();
-            int count = _validItems.Count;
+            int count = _validItems?.Count ?? 0;
 
             float animDuration = Plugin.Settings.AnimationDuration;
             if (now > _animEndTime)
