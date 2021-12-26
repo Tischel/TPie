@@ -26,16 +26,30 @@ namespace TPie.Helpers
         {
             float total = GetRecastTime(type, actionId);
             float elapsed = ActionManager.Instance()->GetRecastTimeElapsed(type, GetSpellActionId(actionId));
-            ushort maxCharges = GetMaxCharges(actionId);
 
-            if (maxCharges > 1 && elapsed > total)
+            if (type == ActionType.Spell)
             {
-                elapsed -= total;
+                ushort maxCharges = GetMaxCharges(actionId);
+
+                if (maxCharges > 1 && elapsed > total)
+                {
+                    elapsed -= total;
+                }
             }
 
             return elapsed;
         }
 
-        public static float GetRecastTime(ActionType type, uint actionId) => ActionManager.Instance()->GetRecastTime(type, GetSpellActionId(actionId)) / GetMaxCharges(actionId);
+        public static float GetRecastTime(ActionType type, uint actionId)
+        {
+            float recast = ActionManager.Instance()->GetRecastTime(type, GetSpellActionId(actionId));
+
+            if (type == ActionType.Spell)
+            {
+                recast /= GetMaxCharges(actionId);
+            }
+
+            return recast;
+        }
     }
 }
