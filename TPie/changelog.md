@@ -1,3 +1,7 @@
+# 1.1.0.0
+- Added support for nested rings.
+- Fixed crash that could happen when creating a new ring.
+
 # 1.0.0.0
 - Added a rotation setting for rings.
 - Added a setting to show tooltips when hovering over ring elements.

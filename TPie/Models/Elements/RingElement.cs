@@ -138,6 +138,18 @@ namespace TPie.Models.Elements
                         element.Border = border;
                         return element;
                     }
+
+                    if (type.Contains("NestedRing"))
+                    {
+                        string ringName = jo.Value<string>("RingName") ?? "";
+                        float activationTime = jo.Value<float>("ActivationTime");
+                        activationTime = activationTime == 0 ? 1 : activationTime;
+                        uint iconId = jo.Value<uint>("IconID");
+
+                        NestedRingElement element = new NestedRingElement(ringName, activationTime, iconId);
+                        element.Border = border;
+                        return element;
+                    }
                 }
             }
             catch (Exception e)

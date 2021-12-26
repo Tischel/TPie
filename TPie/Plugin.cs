@@ -49,10 +49,10 @@ namespace TPie
         private static GearSetElementWindow _gearSetElementWindow = null!;
         private static CommandElementWindow _commandElementWindow = null!;
         private static GameMacroElementWindow _gameMacroElementWindow = null!;
+        private static NestedRingElementWindow _nestedRingElementWindow = null!;
         private static IconBrowserWindow _iconBrowserWindow = null!;
 
-        private Ring? _activeRing = null;
-        private int _activeRingIndex = 0;
+        public static RingsManager RingsManager = null!;
 
         public Plugin(
             ClientState clientState,
@@ -117,6 +117,8 @@ namespace TPie
             }
 
             CreateWindows();
+
+            RingsManager = new RingsManager();
         }
 
         public void Dispose()
@@ -144,6 +146,7 @@ namespace TPie
             _gearSetElementWindow = new GearSetElementWindow("Edit Gear Set");
             _commandElementWindow = new CommandElementWindow("Edit Command");
             _gameMacroElementWindow = new GameMacroElementWindow("Edit Game Macro");
+            _nestedRingElementWindow = new NestedRingElementWindow("Edit Nested Ring");
             _iconBrowserWindow = new IconBrowserWindow("Icon Picker");
 
             _windowSystem = new WindowSystem("TPie_Windows");
@@ -154,6 +157,7 @@ namespace TPie
             _windowSystem.AddWindow(_gearSetElementWindow);
             _windowSystem.AddWindow(_commandElementWindow);
             _windowSystem.AddWindow(_gameMacroElementWindow);
+            _windowSystem.AddWindow(_nestedRingElementWindow);
             _windowSystem.AddWindow(_iconBrowserWindow);
         }
 
@@ -199,6 +203,12 @@ namespace TPie
                 _gameMacroElementWindow.GameMacroElement = gameMacroElement;
             }
 
+            else if (element is NestedRingElement nestedRingElement)
+            {
+                window = _nestedRingElementWindow;
+                _nestedRingElementWindow.NestedRingElement = nestedRingElement;
+            }
+
             if (window != null)
             {
                 window.Ring = ring;
@@ -221,26 +231,7 @@ namespace TPie
             KeyboardHelper.Instance?.Update();
             ItemsHelper.Instance?.CalculateUsableItems();
 
-            if (_activeRing?.IsClosed() == true)
-            {
-                _activeRing = null;
-            }
-
-            _activeRing?.Update();
-
-            for (int i = 0; i < Rings.Count; i++)
-            {
-                if (_activeRing == null && Rings[i].Update())
-                {
-                    _activeRing = Rings[i];
-                    _activeRingIndex = i;
-                    break;
-                }
-                else if (Rings[i] != _activeRing)
-                {
-                    Rings[i].ForceClose();
-                }
-            }
+            RingsManager?.Update();
         }
 
         private void Draw()
@@ -249,15 +240,7 @@ namespace TPie
 
             _windowSystem?.Draw();
 
-            _activeRing?.Draw($"ring_{_activeRingIndex}");
-
-            for (int i = 0; i < Rings.Count; i++)
-            {
-                if (_activeRingIndex == i) continue;
-                if (!Rings[i].Previewing) continue;
-
-                Rings[i].Draw($"ring_{i}");
-            }
+            RingsManager?.Draw();
         }
 
         private void OpenConfigUi()

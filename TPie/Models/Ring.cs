@@ -1,13 +1,11 @@
 ﻿using Dalamud.Logging;
 using ImGuiNET;
 using ImGuiScene;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using TPie.Config;
-using TPie.Helpers;
 using TPie.Models.Elements;
 
 namespace TPie.Models
@@ -15,10 +13,12 @@ namespace TPie.Models
     public class Ring
     {
         public string Name;
-        public KeyBind KeyBind;
         public float Rotation;
         public float Radius;
         public Vector2 ItemSize;
+
+        public KeyBind KeyBind;
+        private KeyBind? _tmpKeyBind; // used for nested rings
 
         public bool DrawLine = true;
         public bool DrawSelectionBackground = true;
@@ -51,6 +51,7 @@ namespace TPie.Models
 
         private Vector2? _center = null;
         private int _selectedIndex = -1;
+        private double _selectionStartTime = -1;
 
         private AnimationState _animState = AnimationState.Closed;
         private bool _animating = false;
@@ -100,15 +101,17 @@ namespace TPie.Models
                 return true;
             }
 
+            KeyBind currentKeyBind = CurrentKeybind();
+
             // click to select in toggle mode
             if (Plugin.Settings.KeybindToggleMode &&
                 ImGui.GetIO().MouseClicked[0] &&
                 _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
             {
-                KeyBind.Deactivate();
+                currentKeyBind.Deactivate();
             }
 
-            if (!KeyBind.IsActive())
+            if (!currentKeyBind.IsActive())
             {
                 IsActive = false;
                 return false;
@@ -120,6 +123,11 @@ namespace TPie.Models
 
         public void Draw(string id)
         {
+            if (!Previewing && CheckNestedRingSelection())
+            {
+                return;
+            }
+
             if (!Previewing && !IsActive)
             {
                 if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 &&
@@ -209,6 +217,8 @@ namespace TPie.Models
 
             float rotation = (float)(Rotation * (Math.PI / 180f));
             float minDistance = float.MaxValue;
+
+            int previousSelection = _selectedIndex;
             _selectedIndex = -1;
 
             int index = 0;
@@ -275,9 +285,52 @@ namespace TPie.Models
                 }
             }
 
+            if (previousSelection != _selectedIndex && _selectedIndex >= 0)
+            {
+                _selectionStartTime = ImGui.GetTime();
+            }
+
             ImGui.End();
             ImGui.PopStyleVar();
         }
+
+        private bool CheckNestedRingSelection()
+        {
+            if (_selectedIndex < 0 || _selectedIndex >= _validItems.Count || _selectionStartTime == -1)
+            {
+                return false;
+            }
+
+            NestedRingElement? nestedRing = _validItems[_selectedIndex] as NestedRingElement;
+            if (nestedRing == null || nestedRing.Ring == null)
+            {
+                return false;
+            }
+
+            double now = ImGui.GetTime();
+            if (now - _selectionStartTime < nestedRing.ActivationTime)
+            {
+                return false;
+            }
+
+            nestedRing.Ring.SetTemporalKeybind(CurrentKeybind());
+            Plugin.RingsManager?.ForceRing(nestedRing.Ring);
+            _selectionStartTime = -1;
+
+            return true;
+        }
+
+        #region keybind
+        public void SetTemporalKeybind(KeyBind? keybind)
+        {
+            _tmpKeyBind = keybind;
+        }
+
+        private KeyBind CurrentKeybind()
+        {
+            return _tmpKeyBind ?? KeyBind;
+        }
+        #endregion
 
         #region anim
 
