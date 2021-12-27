@@ -1,4 +1,5 @@
 # 1.1.0.1
+- Nested Rings elements text can now be hidden.
 - Fixed ring elements not being clickable on toggle mode.
 
 # 1.1.0.0

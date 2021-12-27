@@ -9,15 +9,17 @@ namespace TPie.Models.Elements
     {
         public string RingName;
         public float ActivationTime;
+        public bool DrawText;
 
-        public NestedRingElement(string ringName, float activationTime, uint iconId)
+        public NestedRingElement(string ringName, float activationTime, bool drawText, uint iconId)
         {
             RingName = ringName;
             ActivationTime = activationTime;
+            DrawText = drawText;
             IconID = iconId;
         }
 
-        public NestedRingElement() : this("Ring Name", 0.5f, 66319) { }
+        public NestedRingElement() : this("Ring Name", 0.5f, true, 66319) { }
 
         public override string Description()
         {
@@ -45,7 +47,10 @@ namespace TPie.Models.Elements
             base.Draw(position, size, scale, selected, color, alpha, tooltip, drawList);
 
             // name
-            DrawHelper.DrawOutlinedText($"{RingName}", position, true, scale, drawList);
+            if (DrawText)
+            {
+                DrawHelper.DrawOutlinedText($"{RingName}", position, true, scale, drawList);
+            }
         }
     }
 }

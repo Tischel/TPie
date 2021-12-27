@@ -144,9 +144,10 @@ namespace TPie.Models.Elements
                         string ringName = jo.Value<string>("RingName") ?? "";
                         float activationTime = jo.Value<float>("ActivationTime");
                         activationTime = activationTime == 0 ? 1 : activationTime;
+                        bool drawText = jo.GetValue("DrawText") != null ? jo.Value<bool>("DrawText") : true;
                         uint iconId = jo.Value<uint>("IconID");
 
-                        NestedRingElement element = new NestedRingElement(ringName, activationTime, iconId);
+                        NestedRingElement element = new NestedRingElement(ringName, activationTime, drawText, iconId);
                         element.Border = border;
                         return element;
                     }

@@ -51,6 +51,7 @@ namespace TPie.Config
             }
 
             // activation time
+            ImGui.PushItemWidth(182 * _scale);
             ImGui.DragFloat("Activation Time ##NestedRing", ref NestedRingElement.ActivationTime, 0.1f, 0.2f, 5f);
             DrawHelper.SetTooltip("Determines how many seconds the element needs to be hovered on to activate the nested ring.");
 
@@ -110,8 +111,11 @@ namespace TPie.Config
                 }
             }
 
-            // border
+            // draw text
             ImGui.NewLine();
+            ImGui.Checkbox("Draw Text", ref NestedRingElement.DrawText);
+
+            // border
             NestedRingElement.Border.Draw();
         }
     }
