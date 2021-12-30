@@ -37,10 +37,10 @@ namespace TPie.Models.Elements
 
         public override bool IsValid()
         {
-            return Ring != null;
+            return GetRing() != null;
         }
 
-        public Ring? Ring => Plugin.Settings.Rings.FirstOrDefault(ring => ring.Name == RingName);
+        public Ring? GetRing() => Plugin.Settings.Rings.FirstOrDefault(ring => ring.Name == RingName);
 
         public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, bool tooltip, ImDrawListPtr drawList)
         {

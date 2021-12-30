@@ -302,7 +302,7 @@ namespace TPie.Models
             }
 
             NestedRingElement? nestedRing = _validItems[_selectedIndex] as NestedRingElement;
-            if (nestedRing == null || nestedRing.Ring == null)
+            if (nestedRing == null || nestedRing.GetRing() == null)
             {
                 return false;
             }
@@ -313,9 +313,13 @@ namespace TPie.Models
                 return false;
             }
 
-            nestedRing.Ring.SetTemporalKeybind(CurrentKeybind());
-            Plugin.RingsManager?.ForceRing(nestedRing.Ring);
-            _selectionStartTime = -1;
+            Ring? ring = nestedRing.GetRing();
+            if (ring != null)
+            {
+                ring.SetTemporalKeybind(CurrentKeybind());
+                Plugin.RingsManager?.ForceRing(ring);
+                _selectionStartTime = -1;
+            }
 
             return true;
         }
