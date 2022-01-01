@@ -76,6 +76,9 @@ namespace TPie.Helpers
 
         private static List<Keys> _supportedKeys = new List<Keys>()
         {
+            Keys.MButton,
+            Keys.XButton1,
+            Keys.XButton2,
             Keys.CapsLock,
             Keys.Space,
             Keys.PageUp,

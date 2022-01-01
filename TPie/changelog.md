@@ -1,3 +1,6 @@
+# 1.2.0.0
+- Added support for mouse wheel buttons to use as keybinds.
+
 # 1.1.0.2
 - Fixed save errors / crashes with nested rings.
 
