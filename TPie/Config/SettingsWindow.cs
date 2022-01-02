@@ -1,8 +1,12 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
+using Dalamud.Logging;
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using TPie.Helpers;
 using TPie.Models;
 using TPie.Models.Elements;
@@ -77,7 +81,47 @@ namespace TPie.Config
                 ImGui.EndTabItem();
             }
 
+            // donate button
+            ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(255f / 255f, 94f / 255f, 91f / 255f, 1f));
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(255f / 255f, 94f / 255f, 91f / 255f, .85f));
+
+            ImGui.SetCursorPos(new Vector2(280, 26));
+            if (ImGui.Button("Support on Ko-fi", new Vector2(104, 24)))
+            {
+                OpenUrl("https://ko-fi.com/Tischel");
+            }
+
+            ImGui.PopStyleColor(2);
+
             ImGui.EndTabBar();
+        }
+
+        public static void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                try
+                {
+                    // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                    if (RuntimeInformation.IsOSPlatform(osPlatform: OSPlatform.Windows))
+                    {
+                        url = url.Replace("&", "^&");
+                        Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        Process.Start("xdg-open", url);
+                    }
+                }
+                catch (Exception e)
+                {
+                    PluginLog.Error("Error trying to open url: " + e.Message);
+                }
+            }
         }
 
         private void DrawGeneralTab()
