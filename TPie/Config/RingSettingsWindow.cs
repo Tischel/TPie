@@ -108,11 +108,12 @@ namespace TPie.Config
                 ImGuiTableFlags.ScrollY |
                 ImGuiTableFlags.SizingFixedSame;
 
-            if (ImGui.BeginTable("##Item_Table", 3, flags, new Vector2(354 * _scale, 242 * _scale)))
+            if (ImGui.BeginTable("##Item_Table", 4, flags, new Vector2(354 * _scale, 242 * _scale)))
             {
                 ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthStretch, 22, 0);
-                ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthStretch, 7, 1);
-                ImGui.TableSetupColumn("Description", ImGuiTableColumnFlags.WidthStretch, 71, 2);
+                ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthStretch, 8, 1);
+                ImGui.TableSetupColumn("Description", ImGuiTableColumnFlags.WidthStretch, 46, 2);
+                ImGui.TableSetupColumn("Quick Action", ImGuiTableColumnFlags.WidthStretch, 24, 3);
 
                 ImGui.TableSetupScrollFreeze(0, 1);
                 ImGui.TableHeadersRow();
@@ -153,6 +154,18 @@ namespace TPie.Config
                         if (!valid)
                         {
                             DrawHelper.SetTooltip(item.InvalidReason());
+                        }
+                    }
+
+                    // quick action
+                    if (ImGui.TableSetColumnIndex(3))
+                    {
+                        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 25);
+
+                        bool active = Ring.QuickActionIndex == i;
+                        if (ImGui.Checkbox("", ref active))
+                        {
+                            Ring.QuickActionIndex = active ? i : -1;
                         }
                     }
                 }

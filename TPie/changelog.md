@@ -1,3 +1,9 @@
+# 1.2.0.0
+- Added quick actions for rings:
+    + Quick actions are placed on the center of a ring and can be executed even if the ring is not fully opened.
+    + If the keybind is held, any of the ring elements can be chosen, including the quick action in the center.
+    + On Toggle Mode, there's no way to activate a quick action without double tapping or tap & click.
+
 # 1.1.1.0
 - Added support for mouse wheel buttons to use as keybinds.
 

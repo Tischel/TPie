@@ -40,6 +40,20 @@ namespace TPie.Models
         private uint _lineColor;
 
         public List<RingElement> Items;
+        public int QuickActionIndex = -1;
+
+        private RingElement? QuickActionElement
+        {
+            get
+            {
+                if (QuickActionIndex < 0 || QuickActionIndex >= Items.Count) { return null; }
+
+                RingElement quickAction = Items[QuickActionIndex];
+                if (!quickAction.IsValid()) { return null; }
+
+                return quickAction;
+            }
+        }
 
         public bool Previewing { get; private set; } = false;
 
@@ -52,6 +66,7 @@ namespace TPie.Models
         private Vector2? _center = null;
         private int _selectedIndex = -1;
         private double _selectionStartTime = -1;
+        private bool quickActionSelected = false;
 
         private AnimationState _animState = AnimationState.Closed;
         private bool _animating = false;
@@ -88,7 +103,7 @@ namespace TPie.Models
         public bool Update()
         {
             HasInventoryItems = Items.FirstOrDefault(item => item is ItemElement) != null;
-            _validItems = Items.Where(o => o.IsValid()).ToList();
+            _validItems = Items.Where(o => o.IsValid() && o != QuickActionElement).ToList();
 
             if (_previousCount != _validItems.Count)
             {
@@ -106,7 +121,7 @@ namespace TPie.Models
             // click to select in toggle mode
             if (currentKeyBind.Toggle &&
                 ImGui.GetIO().MouseClicked[0] &&
-                _selectedIndex >= 0 && _selectedIndex < _validItems.Count)
+                ((_selectedIndex >= 0 && _selectedIndex < _validItems.Count) || quickActionSelected))
             {
                 currentKeyBind.Deactivate();
             }
@@ -130,6 +145,12 @@ namespace TPie.Models
 
             if (!Previewing && !IsActive)
             {
+                if (_animState == AnimationState.Opened || _animState == AnimationState.Opening &&
+                    _center != null && quickActionSelected)
+                {
+                    QuickActionElement?.ExecuteAction();
+                }
+
                 if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 &&
                     _validItems != null && _selectedIndex < _validItems.Count)
                 {
@@ -254,6 +275,7 @@ namespace TPie.Models
                 index++;
             }
 
+            // center and line
             uint color = !Previewing && _selectedIndex >= 0 ? _baseColor : _lineColor;
             if (DrawLine)
             {
@@ -271,6 +293,7 @@ namespace TPie.Models
                 }
             }
 
+            // items
             if (_validItems != null)
             {
                 for (int i = 0; i < count; i++)
@@ -283,6 +306,17 @@ namespace TPie.Models
 
                     _validItems[i].Draw(itemPositions[i], ItemSize, scale, selected, _baseColor, _itemsAlpha[i], ShowTooltips, drawList);
                 }
+            }
+
+            // quick action
+            if (QuickActionElement != null)
+            {
+                quickActionSelected = _selectedIndex == -1 && !Previewing && distanceToCenter <= ItemSize.Y * 2;
+                float alpha = _itemsAlpha.Length > 0 ? _itemsAlpha[0] : 1f;
+                uint selectionColor = alpha >= 1f ? _baseColor : 0;
+                float scale = !Previewing && Plugin.Settings.AnimateIconSizes && itemScales.Length > 0 && quickActionSelected ? 2f : 1f;
+
+                QuickActionElement.Draw(center, ItemSize, scale, quickActionSelected, selectionColor, alpha, ShowTooltips, drawList);
             }
 
             if (previousSelection != _selectedIndex && _selectedIndex >= 0)
