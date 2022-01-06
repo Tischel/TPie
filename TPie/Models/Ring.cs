@@ -187,7 +187,8 @@ namespace TPie.Models
             Vector2 center = _center!.Value;
             Vector2 margin = new Vector2(400, 400);
             Vector2 radius = new Vector2(Radius);
-            Vector2 pos = center - radius - margin;
+            Vector2 pos = ValidatedPosition(center - radius - margin);
+            Vector2 size = ValidatedSize(pos, radius * 2 + margin * 2);
 
             // create window
             ImGui.SetNextWindowPos(pos, Previewing ? ImGuiCond.Always : ImGuiCond.Appearing);
@@ -326,6 +327,18 @@ namespace TPie.Models
 
             ImGui.End();
             ImGui.PopStyleVar();
+        }
+
+        private Vector2 ValidatedPosition(Vector2 pos)
+        {
+            Vector2 screenSize = ImGui.GetMainViewport().Size;
+            return new Vector2(Math.Max(0, pos.X), Math.Min(screenSize.Y, pos.Y));
+        }
+
+        private Vector2 ValidatedSize(Vector2 pos, Vector2 size)
+        {
+            Vector2 endPos = ValidatedPosition(pos + size);
+            return endPos - pos;
         }
 
         private bool CheckNestedRingSelection()
