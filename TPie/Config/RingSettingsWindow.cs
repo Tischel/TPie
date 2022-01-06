@@ -160,12 +160,15 @@ namespace TPie.Config
                     // quick action
                     if (ImGui.TableSetColumnIndex(3))
                     {
-                        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 25);
-
-                        bool active = Ring.QuickActionIndex == i;
-                        if (ImGui.Checkbox("", ref active))
+                        if (item is not NestedRingElement)
                         {
-                            Ring.QuickActionIndex = active ? i : -1;
+                            ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 25);
+
+                            bool active = Ring.QuickActionIndex == i;
+                            if (ImGui.Checkbox("", ref active))
+                            {
+                                Ring.QuickActionIndex = active ? i : -1;
+                            }
                         }
                     }
                 }

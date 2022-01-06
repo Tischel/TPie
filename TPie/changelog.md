@@ -1,3 +1,6 @@
+# 1.2.0.1
+- Making it clearer that nested rings can't be used as quick actions (due to how nested rings are activated, it doesn't work well with quick actions).
+
 # 1.2.0.0
 - Added quick actions for rings:
     + Quick actions are placed on the center of a ring and can be executed even if the ring is not fully opened.
