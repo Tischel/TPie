@@ -1,5 +1,6 @@
 # 1.2.0.1
 - Making it clearer that nested rings can't be used as quick actions (due to how nested rings are activated, it doesn't work well with quick actions).
+- Fixed ring elements' labels cutting off.
 
 # 1.2.0.0
 - Added quick actions for rings:

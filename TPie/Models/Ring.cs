@@ -185,7 +185,7 @@ namespace TPie.Models
 
             int count = _validItems?.Count ?? 0;
             Vector2 center = _center!.Value;
-            Vector2 margin = new Vector2(40, 40);
+            Vector2 margin = new Vector2(400, 400);
             Vector2 radius = new Vector2(Radius);
             Vector2 pos = center - radius - margin;
 
