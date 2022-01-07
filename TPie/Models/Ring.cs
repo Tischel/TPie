@@ -1,4 +1,4 @@
-﻿using Dalamud.Logging;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using ImGuiScene;
 using System;
@@ -191,6 +191,8 @@ namespace TPie.Models
             Vector2 size = ValidatedSize(pos, radius * 2 + margin * 2);
 
             // create window
+            ImGuiHelpers.ForceNextWindowMainViewport();
+
             ImGui.SetNextWindowPos(pos, Previewing ? ImGuiCond.Always : ImGuiCond.Appearing);
             ImGui.SetNextWindowSize(radius * 2 + margin * 2, ImGuiCond.Always);
             ImGui.SetNextWindowBgAlpha(0);
