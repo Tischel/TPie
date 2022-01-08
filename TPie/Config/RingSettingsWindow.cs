@@ -53,9 +53,8 @@ namespace TPie.Config
             _windowPos = ImGui.GetWindowPos();
 
             // ring preview
-            Vector2 windowPos = ImGui.GetWindowPos();
             Vector2 margin = new Vector2(20 * _scale);
-            Vector2 ringCenter = windowPos + new Vector2(Size!.Value.X + Ring.Radius + margin.X, Size!.Value.Y / 2f);
+            Vector2 ringCenter = _windowPos + new Vector2(Size!.Value.X + Ring.Radius + margin.X, Size!.Value.Y / 2f);
             Ring.Preview(ringCenter);
 
             // info

@@ -119,7 +119,7 @@ namespace TPie.Models
             KeyBind currentKeyBind = CurrentKeybind();
 
             // click to select in toggle mode
-            if (currentKeyBind.Toggle &&
+            if (!Previewing && currentKeyBind.Toggle &&
                 ImGui.GetIO().MouseClicked[0] &&
                 ((_selectedIndex >= 0 && _selectedIndex < _validItems.Count) || _quickActionSelected))
             {
@@ -144,7 +144,7 @@ namespace TPie.Models
             }
 
             if (!Previewing && !IsActive)
-            {                
+            {
                 if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 &&
                     _validItems != null && _selectedIndex < _validItems.Count)
                 {
@@ -199,7 +199,7 @@ namespace TPie.Models
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
 
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
-            if (!CurrentKeybind().Toggle)
+            if (Previewing || !CurrentKeybind().Toggle)
             {
                 flags |= ImGuiWindowFlags.NoInputs;
             }
