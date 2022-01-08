@@ -84,7 +84,7 @@ namespace TPie
                 AssemblyLocation = Assembly.GetExecutingAssembly().Location;
             }
 
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.2.0.2";
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.2.0.3";
 
             Framework.Update += Update;
             UiBuilder.Draw += Draw;

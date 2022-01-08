@@ -1,3 +1,6 @@
+# 1.2.0.3
+- Fixed quick actions executing when they shouldn't.
+
 # 1.2.0.2
 - Fixed black square when opening a ring with Dalamud's multi-monitor setting enabled.
 

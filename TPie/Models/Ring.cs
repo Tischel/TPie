@@ -66,7 +66,7 @@ namespace TPie.Models
         private Vector2? _center = null;
         private int _selectedIndex = -1;
         private double _selectionStartTime = -1;
-        private bool quickActionSelected = false;
+        private bool _quickActionSelected = false;
 
         private AnimationState _animState = AnimationState.Closed;
         private bool _animating = false;
@@ -121,7 +121,7 @@ namespace TPie.Models
             // click to select in toggle mode
             if (currentKeyBind.Toggle &&
                 ImGui.GetIO().MouseClicked[0] &&
-                ((_selectedIndex >= 0 && _selectedIndex < _validItems.Count) || quickActionSelected))
+                ((_selectedIndex >= 0 && _selectedIndex < _validItems.Count) || _quickActionSelected))
             {
                 currentKeyBind.Deactivate();
             }
@@ -144,17 +144,16 @@ namespace TPie.Models
             }
 
             if (!Previewing && !IsActive)
-            {
-                if (_animState == AnimationState.Opened || _animState == AnimationState.Opening &&
-                    _center != null && quickActionSelected)
-                {
-                    QuickActionElement?.ExecuteAction();
-                }
-
+            {                
                 if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 &&
                     _validItems != null && _selectedIndex < _validItems.Count)
                 {
                     _validItems[_selectedIndex].ExecuteAction();
+                }
+                else if (_animState == AnimationState.Opened || _animState == AnimationState.Opening &&
+                    _center != null && _quickActionSelected)
+                {
+                    QuickActionElement?.ExecuteAction();
                 }
 
                 if (_animState != AnimationState.Closing && _animState != AnimationState.Closed)
@@ -314,12 +313,12 @@ namespace TPie.Models
             // quick action
             if (QuickActionElement != null)
             {
-                quickActionSelected = _selectedIndex == -1 && !Previewing && distanceToCenter <= ItemSize.Y * 2;
+                _quickActionSelected = _selectedIndex == -1 && !Previewing && distanceToCenter <= ItemSize.Y * 2;
                 float alpha = _itemsAlpha.Length > 0 ? _itemsAlpha[0] : 1f;
                 uint selectionColor = alpha >= 1f ? _baseColor : 0;
-                float scale = !Previewing && Plugin.Settings.AnimateIconSizes && itemScales.Length > 0 && quickActionSelected ? 2f : 1f;
+                float scale = !Previewing && Plugin.Settings.AnimateIconSizes && itemScales.Length > 0 && _quickActionSelected ? 2f : 1f;
 
-                QuickActionElement.Draw(center, ItemSize, scale, quickActionSelected, selectionColor, alpha, ShowTooltips, drawList);
+                QuickActionElement.Draw(center, ItemSize, scale, _quickActionSelected, selectionColor, alpha, ShowTooltips, drawList);
             }
 
             if (previousSelection != _selectedIndex && _selectedIndex >= 0)
