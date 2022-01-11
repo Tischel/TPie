@@ -55,7 +55,9 @@ namespace TPie.Config
             ImGui.DragFloat("Activation Time ##NestedRing", ref NestedRingElement.ActivationTime, 0.1f, 0.2f, 5f);
             DrawHelper.SetTooltip("Determines how many seconds the element needs to be hovered on to activate the nested ring.");
 
-            ImGui.NewLine();
+            // keep center
+            ImGui.Checkbox("Keep Previous Ring Center", ref NestedRingElement.KeepCenter);
+
             ImGui.NewLine();
 
             // icon id

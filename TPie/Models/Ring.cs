@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using TPie.Config;
 using TPie.Models.Elements;
 
@@ -367,10 +368,19 @@ namespace TPie.Models
                 ring.SetTemporalKeybind(CurrentKeybind());
                 Plugin.RingsManager?.ForceRing(ring);
                 _selectionStartTime = -1;
+
+                if (nestedRing.KeepCenter && _center.HasValue)
+                {
+                    SetCursorPos((int)_center.Value.X, (int)_center.Value.Y);
+                }
             }
 
             return true;
         }
+
+        [DllImport("user32.dll")]
+        private static extern bool SetCursorPos(int x, int y);
+
 
         #region keybind
         public void SetTemporalKeybind(KeyBind? keybind)

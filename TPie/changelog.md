@@ -1,3 +1,8 @@
+# 1.2.1.0
+- Added setting for nested rings to keep it centered with the previous ring. 
+    + This will move your cursor to the center automatically after activating a nested ring.
+    + Enabled by default.
+
 # 1.2.0.3
 - Fixed quick actions executing when they shouldn't.
 - Fixed ring settings window freezing when for rings with toggle mode activated.
