@@ -3,6 +3,7 @@ using ImGuiNET;
 using ImGuiScene;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -371,7 +372,19 @@ namespace TPie.Models
 
                 if (nestedRing.KeepCenter && _center.HasValue)
                 {
-                    SetCursorPos((int)_center.Value.X, (int)_center.Value.Y);
+
+                    Point _systemCurrentMousePos = CursorPosition.GetCursorPosition();
+                    Vector2 _mousePos = ImGui.GetMousePos();
+                    int _deltaX = (int)_mousePos.X - (int)_center.Value.X;
+                    int _deltaY = (int)_mousePos.Y - (int)_center.Value.Y;
+                    
+                    int _targetX = (int)_systemCurrentMousePos.X - _deltaX;
+                    int _targetY = (int)_systemCurrentMousePos.Y - _deltaY;
+                    
+                    SetCursorPos(_targetX, _targetY);
+
+                    
+                    
                 }
             }
 
@@ -381,6 +394,28 @@ namespace TPie.Models
         [DllImport("user32.dll")]
         private static extern bool SetCursorPos(int x, int y);
 
+        // Stolen from https://stackoverflow.com/a/47480353
+        internal static class CursorPosition
+        {
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PointInter
+            {
+                public int X;
+                public int Y;
+                public static explicit operator Point(PointInter point) => new Point(point.X, point.Y);
+            }
+
+            [DllImport("user32.dll")]
+            public static extern bool GetCursorPos(out PointInter lpPoint);
+
+            // For your convenience
+            public static Point GetCursorPosition()
+            {
+                PointInter lpPoint;
+                GetCursorPos(out lpPoint);
+                return (Point)lpPoint;
+            }
+        }
 
         #region keybind
         public void SetTemporalKeybind(KeyBind? keybind)
