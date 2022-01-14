@@ -1,3 +1,6 @@
+# 1.2.1.1
+- Fixed "Keep Previous Ring Center" not working properly in some multi-monitor situations.
+
 # 1.2.1.0
 - Added setting for nested rings to keep it centered with the previous ring. 
     + This will move your cursor to the center automatically after activating a nested ring.

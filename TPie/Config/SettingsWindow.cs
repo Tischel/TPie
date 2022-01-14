@@ -85,8 +85,8 @@ namespace TPie.Config
             ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(255f / 255f, 94f / 255f, 91f / 255f, 1f));
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(255f / 255f, 94f / 255f, 91f / 255f, .85f));
 
-            ImGui.SetCursorPos(new Vector2(280, 26));
-            if (ImGui.Button("Support on Ko-fi", new Vector2(104, 24)))
+            ImGui.SetCursorPos(new Vector2(280 * _scale, 26 * _scale));
+            if (ImGui.Button("Support on Ko-fi", new Vector2(104 * _scale, 24 * _scale)))
             {
                 OpenUrl("https://ko-fi.com/Tischel");
             }
