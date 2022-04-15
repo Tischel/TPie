@@ -1,3 +1,6 @@
+# 1.3.0.0
+- Updated for patch 6.1 support.
+
 # 1.2.1.1
 - Fixed "Keep Previous Ring Center" not working properly in some multi-monitor situations.
 
