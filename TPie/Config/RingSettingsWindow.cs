@@ -223,6 +223,7 @@ namespace TPie.Config
                 if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
                 {
                     var tmp = Ring.Items[_selectedIndex];
+                    bool moveQuickActionIndex = _selectedIndex == Ring.QuickActionIndex;
 
                     // circular?
                     if (_selectedIndex == 0)
@@ -237,6 +238,11 @@ namespace TPie.Config
                         Ring.Items[_selectedIndex - 1] = tmp;
                         _selectedIndex--;
                     }
+
+                    if (moveQuickActionIndex)
+                    {
+                        Ring.QuickActionIndex = _selectedIndex;
+                    }
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Move up");
@@ -249,6 +255,7 @@ namespace TPie.Config
                 if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
                 {
                     var tmp = Ring.Items[_selectedIndex];
+                    bool moveQuickActionIndex = _selectedIndex == Ring.QuickActionIndex;
 
                     // circular?
                     if (_selectedIndex == count - 1)
@@ -262,6 +269,11 @@ namespace TPie.Config
                         Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex + 1];
                         Ring.Items[_selectedIndex + 1] = tmp;
                         _selectedIndex++;
+                    }
+
+                    if (moveQuickActionIndex)
+                    {
+                        Ring.QuickActionIndex = _selectedIndex;
                     }
                 }
                 ImGui.PopFont();
