@@ -1,5 +1,7 @@
 # 1.3.1.0
 - Added buttons to move rings in the list.
+- Fixed quick action setting being transferred to another item when deleting or moving items.
+- Fixed quick actions showing a selection background when the setting is disabled.
 
 # 1.3.0.0
 - Updated for patch 6.1 support.

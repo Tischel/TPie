@@ -314,7 +314,7 @@ namespace TPie.Models
             // quick action
             if (QuickActionElement != null)
             {
-                _quickActionSelected = _selectedIndex == -1 && !Previewing && distanceToCenter <= ItemSize.Y * 2;
+                _quickActionSelected = DrawSelectionBackground && _selectedIndex == -1 && !Previewing && distanceToCenter <= ItemSize.Y * 2;
                 float alpha = _itemsAlpha.Length > 0 ? _itemsAlpha[0] : 1f;
                 uint selectionColor = alpha >= 1f ? _baseColor : 0;
                 float scale = !Previewing && Plugin.Settings.AnimateIconSizes && itemScales.Length > 0 && _quickActionSelected ? 2f : 1f;
