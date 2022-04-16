@@ -194,10 +194,7 @@ namespace TPie.Config
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Edit");
-            }
 
-            if (_selectedIndex >= 0)
-            {
                 ImGui.SetCursorPos(new Vector2(369 * _scale, 290 * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
@@ -213,71 +210,68 @@ namespace TPie.Config
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Delete");
-            }
 
-            int count = Ring.Items.Count;
-            if (count > 0)
-            {
-                ImGui.SetCursorPos(new Vector2(369 * _scale, 380 * _scale));
-                ImGui.PushFont(UiBuilder.IconFont);
-                if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
+                int count = Ring.Items.Count;
+                if (count > 0)
                 {
-                    var tmp = Ring.Items[_selectedIndex];
-                    bool moveQuickActionIndex = _selectedIndex == Ring.QuickActionIndex;
+                    ImGui.SetCursorPos(new Vector2(369 * _scale, 380 * _scale));
+                    ImGui.PushFont(UiBuilder.IconFont);
+                    if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
+                    {
+                        var tmp = Ring.Items[_selectedIndex];
+                        bool moveQuickActionIndex = _selectedIndex == Ring.QuickActionIndex;
 
-                    // circular?
-                    if (_selectedIndex == 0)
-                    {
-                        Ring.Items.Remove(tmp);
-                        Ring.Items.Add(tmp);
-                        _selectedIndex = count - 1;
-                    }
-                    else
-                    {
-                        Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex - 1];
-                        Ring.Items[_selectedIndex - 1] = tmp;
-                        _selectedIndex--;
-                    }
+                        // circular?
+                        if (_selectedIndex == 0)
+                        {
+                            Ring.Items.Remove(tmp);
+                            Ring.Items.Add(tmp);
+                            _selectedIndex = count - 1;
+                        }
+                        else
+                        {
+                            Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex - 1];
+                            Ring.Items[_selectedIndex - 1] = tmp;
+                            _selectedIndex--;
+                        }
 
-                    if (moveQuickActionIndex)
-                    {
-                        Ring.QuickActionIndex = _selectedIndex;
+                        if (moveQuickActionIndex)
+                        {
+                            Ring.QuickActionIndex = _selectedIndex;
+                        }
                     }
+                    ImGui.PopFont();
+                    DrawHelper.SetTooltip("Move up");
+
+                    ImGui.SetCursorPos(new Vector2(369 * _scale, 410 * _scale));
+                    ImGui.PushFont(UiBuilder.IconFont);
+                    if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
+                    {
+                        var tmp = Ring.Items[_selectedIndex];
+                        bool moveQuickActionIndex = _selectedIndex == Ring.QuickActionIndex;
+
+                        // circular?
+                        if (_selectedIndex == count - 1)
+                        {
+                            Ring.Items.Remove(tmp);
+                            Ring.Items.Insert(0, tmp);
+                            _selectedIndex = 0;
+                        }
+                        else
+                        {
+                            Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex + 1];
+                            Ring.Items[_selectedIndex + 1] = tmp;
+                            _selectedIndex++;
+                        }
+
+                        if (moveQuickActionIndex)
+                        {
+                            Ring.QuickActionIndex = _selectedIndex;
+                        }
+                    }
+                    ImGui.PopFont();
+                    DrawHelper.SetTooltip("Move down");
                 }
-                ImGui.PopFont();
-                DrawHelper.SetTooltip("Move up");
-            }
-
-            if (count > 0)
-            {
-                ImGui.SetCursorPos(new Vector2(369 * _scale, 410 * _scale));
-                ImGui.PushFont(UiBuilder.IconFont);
-                if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
-                {
-                    var tmp = Ring.Items[_selectedIndex];
-                    bool moveQuickActionIndex = _selectedIndex == Ring.QuickActionIndex;
-
-                    // circular?
-                    if (_selectedIndex == count - 1)
-                    {
-                        Ring.Items.Remove(tmp);
-                        Ring.Items.Insert(0, tmp);
-                        _selectedIndex = 0;
-                    }
-                    else
-                    {
-                        Ring.Items[_selectedIndex] = Ring.Items[_selectedIndex + 1];
-                        Ring.Items[_selectedIndex + 1] = tmp;
-                        _selectedIndex++;
-                    }
-
-                    if (moveQuickActionIndex)
-                    {
-                        Ring.QuickActionIndex = _selectedIndex;
-                    }
-                }
-                ImGui.PopFont();
-                DrawHelper.SetTooltip("Move down");
             }
 
             DrawAddItemMenu();
