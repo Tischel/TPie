@@ -203,6 +203,12 @@ namespace TPie.Config
                 if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
                 {
                     Ring.Items.RemoveAt(_selectedIndex);
+
+                    if (Ring.QuickActionIndex == _selectedIndex)
+                    {
+                        Ring.QuickActionIndex = -1;
+                    }
+
                     _selectedIndex = -1;
                 }
                 ImGui.PopFont();
