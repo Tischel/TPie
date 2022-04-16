@@ -70,7 +70,7 @@ namespace TPie.Config
                     Ring.Color = new Vector4(color.X, color.Y, color.Z, 1);
                 }
 
-                if (Ring.KeyBind.Draw(Ring.Name, 310 * _scale, true))
+                if (Ring.KeyBind.Draw(Ring.Name, 302 * _scale, true))
                 {
                     Plugin.Settings.ValidateKeyBind(Ring);
                 }

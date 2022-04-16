@@ -1,3 +1,6 @@
+# 1.3.1.0
+- Added buttons to move rings in the list.
+
 # 1.3.0.0
 - Updated for patch 6.1 support.
 

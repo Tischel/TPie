@@ -322,12 +322,13 @@ namespace TPie.Config
                 ImGuiTableFlags.SizingFixedSame;
 
             // rings
-            if (ImGui.BeginTable("##Rings_Table", 4, flags, new Vector2(384 * _scale, 354 * _scale)))
+            if (ImGui.BeginTable("##Rings_Table", 5, flags, new Vector2(384 * _scale, 354 * _scale)))
             {
-                ImGui.TableSetupColumn("Color", ImGuiTableColumnFlags.WidthStretch, 10, 0);
-                ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 26, 1);
-                ImGui.TableSetupColumn("Keybind", ImGuiTableColumnFlags.WidthStretch, 38, 2);
-                ImGui.TableSetupColumn("Actions", ImGuiTableColumnFlags.WidthStretch, 26, 3);
+                ImGui.TableSetupColumn("Color", ImGuiTableColumnFlags.WidthStretch, 8, 0);
+                ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 25, 1);
+                ImGui.TableSetupColumn("Keybind", ImGuiTableColumnFlags.WidthStretch, 29, 2);
+                ImGui.TableSetupColumn("Actions", ImGuiTableColumnFlags.WidthStretch, 24, 3);
+                ImGui.TableSetupColumn("Move", ImGuiTableColumnFlags.WidthStretch, 14, 4);
 
                 ImGui.TableSetupScrollFreeze(0, 1);
                 ImGui.TableHeadersRow();
@@ -342,7 +343,7 @@ namespace TPie.Config
                     // color
                     if (ImGui.TableSetColumnIndex(0))
                     {
-                        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 6);
+                        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 3 * _scale);
 
                         Vector3 color = new Vector3(ring.Color.X, ring.Color.Y, ring.Color.Z);
                         if (ImGui.ColorEdit3("", ref color, ImGuiColorEditFlags.NoInputs))
@@ -360,7 +361,7 @@ namespace TPie.Config
                     // keybind
                     if (ImGui.TableSetColumnIndex(2))
                     {
-                        if (ring.KeyBind.Draw(ring.Name, 140 * _scale))
+                        if (ring.KeyBind.Draw(ring.Name, 100 * _scale))
                         {
                             Plugin.Settings.ValidateKeyBind(ring);
                         }
@@ -369,7 +370,6 @@ namespace TPie.Config
                     // actions
                     if (ImGui.TableSetColumnIndex(3))
                     {
-
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
                         {
@@ -378,8 +378,8 @@ namespace TPie.Config
                         ImGui.PopFont();
                         DrawHelper.SetTooltip("Edit Elements");
 
-
                         ImGui.SameLine();
+                        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 3 * _scale);
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Upload.ToIconString()))
                         {
@@ -390,6 +390,7 @@ namespace TPie.Config
                         DrawHelper.SetTooltip("Export to clipboard");
 
                         ImGui.SameLine();
+                        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 3 * _scale);
                         ImGui.PushFont(UiBuilder.IconFont);
                         if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
                         {
@@ -397,6 +398,52 @@ namespace TPie.Config
                         }
                         ImGui.PopFont();
                         DrawHelper.SetTooltip("Delete");
+                    }
+
+                    // move
+                    if (ImGui.TableSetColumnIndex(4))
+                    {
+                        ImGui.PushFont(UiBuilder.IconFont);
+                        if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
+                        {
+                            Ring tmp = Rings[i];
+
+                            // circular?
+                            if (i == 0)
+                            {
+                                Rings.Remove(tmp);
+                                Rings.Add(tmp);
+                            }
+                            else
+                            {
+                                Rings[i] = Rings[i - 1];
+                                Rings[i - 1] = tmp;
+                            }
+                        }
+                        ImGui.PopFont();
+                        DrawHelper.SetTooltip("Move up");
+
+                        ImGui.SameLine();
+                        ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 3 * _scale);
+                        ImGui.PushFont(UiBuilder.IconFont);
+                        if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
+                        {
+                            Ring tmp = Rings[i];
+
+                            // circular?
+                            if (i == Rings.Count - 1)
+                            {
+                                Rings.Remove(tmp);
+                                Rings.Insert(0, tmp);
+                            }
+                            else
+                            {
+                                Rings[i] = Rings[i + 1];
+                                Rings[i + 1] = tmp;
+                            }
+                        }
+                        ImGui.PopFont();
+                        DrawHelper.SetTooltip("Move down");
                     }
                 }
 

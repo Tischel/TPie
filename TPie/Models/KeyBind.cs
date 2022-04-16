@@ -90,7 +90,7 @@ namespace TPie.Models
 
             if (drawToggleCheckbox)
             {
-                ImGui.Checkbox("Toggable", ref Toggle);
+                ImGui.Checkbox("Toggleable", ref Toggle);
                 DrawHelper.SetTooltip("When enabled, this keybind will behave as a toggle instead of \"press and hold\".\nOn this mode, once an item is selected, you can either press the keybind again or just click to activate it.");
                 ImGui.SameLine();
             }
