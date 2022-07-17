@@ -135,16 +135,23 @@ namespace TPie.Config
                     Settings.AppearAtCursor = true;
                 }
 
-                if (ImGui.RadioButton("Appear at set Position", !Settings.AppearAtCursor))
+                if (ImGui.RadioButton("Set Position", !Settings.AppearAtCursor))
                 {
                     Settings.AppearAtCursor = false;
                 }
                 DrawHelper.SetTooltip("(0,0) is the center of the screen");
 
-                ImGui.SameLine();
-                ImGui.PushItemWidth(140 * _scale);
-                ImGui.DragFloat2("##Position", ref Settings.CenterPositionOffset, 0.5f, -4000, 4000);
-                DrawHelper.SetTooltip("(0,0) is the center of the screen");
+                if (!Settings.AppearAtCursor)
+                {
+                    ImGui.SameLine();
+                    ImGui.PushItemWidth(140 * _scale);
+                    ImGui.DragFloat2("##Position", ref Settings.CenterPositionOffset, 0.5f, -4000, 4000);
+                    DrawHelper.SetTooltip("(0,0) is the center of the screen");
+
+                    ImGui.SameLine();
+                    ImGui.Checkbox("Center Cursor", ref Settings.AutoCenterCursor);
+                    DrawHelper.SetTooltip("Your cursor will automatically move to the center of the ring when activated.");
+                }
             }
             ImGui.EndChild();
 

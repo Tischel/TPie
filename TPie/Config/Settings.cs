@@ -16,6 +16,7 @@ namespace TPie.Config
 
         public bool AppearAtCursor = true;
         public Vector2 CenterPositionOffset = Vector2.Zero;
+        public bool AutoCenterCursor = false;
 
         public bool UseCustomFont = true;
         public int FontSize = 20;

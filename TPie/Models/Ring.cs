@@ -173,6 +173,12 @@ namespace TPie.Models
                     _center = Plugin.Settings.AppearAtCursor ?
                         mousePos :
                         ImGui.GetMainViewport().Size / 2f + Plugin.Settings.CenterPositionOffset;
+
+                    // move cursor?
+                    if (!Plugin.Settings.AppearAtCursor && Plugin.Settings.AutoCenterCursor)
+                    {
+                        CursorHelper.SetCursorPosition(_center.Value);
+                    }
                 }
 
                 SetAnimState(AnimationState.Opening);

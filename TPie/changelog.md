@@ -1,3 +1,6 @@
+# 1.3.2.0
+- Added setting to automatically move the cursor to the center of the rings when they have a fixed position.
+
 # 1.3.1.0
 - Added buttons to sort rings in the list.
 - Fixed quick action setting being transferred to another item when deleting or moving items.
