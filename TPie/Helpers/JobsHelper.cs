@@ -69,7 +69,7 @@ namespace TPie.Helpers
             switch (key)
             {
                 case 1: return true;
-                case 2: return jobId == JobIDs.GLD;
+                case 2: return jobId == JobIDs.GLA;
                 case 3: return jobId == JobIDs.PGL;
                 case 4: return jobId == JobIDs.MRD;
                 case 5: return jobId == JobIDs.LNC;
@@ -85,7 +85,7 @@ namespace TPie.Helpers
                 case 15: return jobId == JobIDs.ALC;
                 case 16: return jobId == JobIDs.CUL;
                 case 17: return jobId == JobIDs.MIN;
-                case 18: return jobId == JobIDs.BTN;
+                case 18: return jobId == JobIDs.BOT;
                 case 19: return jobId == JobIDs.FSH;
                 case 20: return jobId == JobIDs.PLD;
                 case 21: return jobId == JobIDs.MNK;
@@ -151,6 +151,97 @@ namespace TPie.Helpers
             return false;
         }
 
+        public static Dictionary<JobRoles, List<uint>> JobsByRole = new Dictionary<JobRoles, List<uint>>()
+        {
+            // tanks
+            [JobRoles.Tank] = new List<uint>() {
+                JobIDs.GLA,
+                JobIDs.MRD,
+                JobIDs.PLD,
+                JobIDs.WAR,
+                JobIDs.DRK,
+                JobIDs.GNB,
+            },
+
+            // healers
+            [JobRoles.Healer] = new List<uint>()
+            {
+                JobIDs.CNJ,
+                JobIDs.WHM,
+                JobIDs.SCH,
+                JobIDs.AST,
+                JobIDs.SGE
+            },
+
+            // melee dps
+            [JobRoles.DPSMelee] = new List<uint>() {
+                JobIDs.PGL,
+                JobIDs.LNC,
+                JobIDs.ROG,
+                JobIDs.MNK,
+                JobIDs.DRG,
+                JobIDs.NIN,
+                JobIDs.SAM,
+                JobIDs.RPR
+            },
+
+            // ranged phys dps
+            [JobRoles.DPSRanged] = new List<uint>()
+            {
+                JobIDs.ARC,
+                JobIDs.BRD,
+                JobIDs.MCH,
+                JobIDs.DNC,
+            },
+
+            // ranged magic dps
+            [JobRoles.DPSCaster] = new List<uint>()
+            {
+                JobIDs.THM,
+                JobIDs.ACN,
+                JobIDs.BLM,
+                JobIDs.SMN,
+                JobIDs.RDM,
+                JobIDs.BLU,
+            },
+
+            // crafters
+            [JobRoles.Crafter] = new List<uint>()
+            {
+                JobIDs.CRP,
+                JobIDs.BSM,
+                JobIDs.ARM,
+                JobIDs.GSM,
+                JobIDs.LTW,
+                JobIDs.WVR,
+                JobIDs.ALC,
+                JobIDs.CUL,
+            },
+
+            // gatherers
+            [JobRoles.Gatherer] = new List<uint>()
+            {
+                JobIDs.MIN,
+                JobIDs.BOT,
+                JobIDs.FSH,
+            },
+
+            // unknown
+            [JobRoles.Unknown] = new List<uint>()
+        };
+
+        public static Dictionary<JobRoles, string> RoleNames = new Dictionary<JobRoles, string>()
+        {
+            [JobRoles.Tank] = "Tank",
+            [JobRoles.Healer] = "Healer",
+            [JobRoles.DPSMelee] = "Melee",
+            [JobRoles.DPSRanged] = "Ranged",
+            [JobRoles.DPSCaster] = "Caster",
+            [JobRoles.Crafter] = "Crafter",
+            [JobRoles.Gatherer] = "Gatherer",
+            [JobRoles.Unknown] = "Unknown"
+        };
+
         public static Dictionary<uint, string> JobNames = new Dictionary<uint, string>()
         {
             [JobIDs.ACN] = "ACN",
@@ -163,7 +254,7 @@ namespace TPie.Helpers
             [JobIDs.BLU] = "BLU",
             [JobIDs.BRD] = "BRD",
             [JobIDs.BSM] = "BSM",
-            [JobIDs.BTN] = "BTN",
+            [JobIDs.BOT] = "BOT",
 
             [JobIDs.CNJ] = "CNJ",
             [JobIDs.CRP] = "CRP",
@@ -175,7 +266,7 @@ namespace TPie.Helpers
 
             [JobIDs.FSH] = "FSH",
 
-            [JobIDs.GLD] = "GLD",
+            [JobIDs.GLA] = "GLA",
             [JobIDs.GNB] = "GNB",
             [JobIDs.GSM] = "GSM",
 
@@ -211,9 +302,21 @@ namespace TPie.Helpers
         };
     }
 
+    public enum JobRoles
+    {
+        Tank = 0,
+        Healer = 1,
+        DPSMelee = 2,
+        DPSRanged = 3,
+        DPSCaster = 4,
+        Crafter = 5,
+        Gatherer = 6,
+        Unknown
+    }
+
     internal static class JobIDs
     {
-        public const uint GLD = 1;
+        public const uint GLA = 1;
         public const uint MRD = 3;
         public const uint PLD = 19;
         public const uint WAR = 21;
@@ -257,7 +360,7 @@ namespace TPie.Helpers
         public const uint CUL = 15;
 
         public const uint MIN = 16;
-        public const uint BTN = 17;
+        public const uint BOT = 17;
         public const uint FSH = 18;
     }
 }

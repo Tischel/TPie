@@ -1,5 +1,7 @@
-﻿using ImGuiNET;
-using System;
+﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using ImGuiNET;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using TPie.Helpers;
 
@@ -14,6 +16,9 @@ namespace TPie.Models
 
         public bool Toggle = false;
 
+        public HashSet<uint> Jobs;
+        public bool IsGlobal => Jobs.Count == 0 || Jobs.Count == JobsHelper.JobNames.Count;
+
         private bool _waitingForRelease;
         private bool _active;
 
@@ -23,6 +28,7 @@ namespace TPie.Models
             Alt = alt;
             Shift = shift;
             Key = key;
+            Jobs = new HashSet<uint>();
         }
 
         public override string ToString()
@@ -33,6 +39,22 @@ namespace TPie.Models
             string key = ((Keys)Key).ToString();
 
             return ctrl + alt + shift + key;
+        }
+
+        public string Description()
+        {
+            string toggleStringPrefix = Toggle ? "[" : "";
+            string toggleStringSufix = Toggle ? "]" : "";
+            string jobsString = "";
+
+            if (Jobs.Count > 0)
+            {
+                List<string> sortedJobs = Jobs.Select(jobId => JobsHelper.JobNames[jobId]).ToList();
+                sortedJobs.Sort();
+                jobsString = " (" + string.Join(", ", sortedJobs.ToArray()) + ")";
+            }
+
+            return toggleStringPrefix + ToString() + toggleStringSufix + jobsString;
         }
 
         public bool IsActive()
@@ -48,6 +70,13 @@ namespace TPie.Models
             bool shift = Shift ? io.KeyShift : !io.KeyShift;
             bool key = KeyboardHelper.Instance?.IsKeyPressed(Key) == true;
             bool active = ctrl && alt && shift && key;
+
+            // check job
+            PlayerCharacter? player = Plugin.ClientState.LocalPlayer;
+            if (player != null && Jobs.Count > 0)
+            {
+                active &= Jobs.Contains(player.ClassJob.Id);
+            }
 
             // block keybind for the game?
             if (active && !Plugin.Settings.KeybindPassthrough)
@@ -83,21 +112,12 @@ namespace TPie.Models
             _waitingForRelease = false;
         }
 
-        public bool Draw(string id, float width, bool drawToggleCheckbox = false)
+        public bool Draw(string id, float width)
         {
             ImGuiIOPtr io = ImGui.GetIO();
             string dispKey = ToString();
 
-            if (drawToggleCheckbox)
-            {
-                ImGui.Checkbox("Toggleable", ref Toggle);
-                DrawHelper.SetTooltip("When enabled, this keybind will behave as a toggle instead of \"press and hold\".\nOn this mode, once an item is selected, you can either press the keybind again or just click to activate it.");
-                ImGui.SameLine();
-            }
-
-            float textWidth = drawToggleCheckbox ? width * 0.71f : width;
-            ImGui.PushItemWidth(textWidth);
-
+            ImGui.PushItemWidth(width);
             ImGui.InputText($"##{id}_Keybind", ref dispKey, 200, ImGuiInputTextFlags.ReadOnly);
             DrawHelper.SetTooltip("Backspace to clear");
 
@@ -112,7 +132,6 @@ namespace TPie.Models
                     int keyPressed = KeyboardHelper.Instance?.GetKeyPressed() ?? 0;
                     if (keyPressed > 0)
                     {
-
                         Ctrl = io.KeyCtrl;
                         Alt = io.KeyAlt;
                         Shift = io.KeyShift;

@@ -51,6 +51,7 @@ namespace TPie
         private static GameMacroElementWindow _gameMacroElementWindow = null!;
         private static NestedRingElementWindow _nestedRingElementWindow = null!;
         private static IconBrowserWindow _iconBrowserWindow = null!;
+        private static KeyBindWindow _keyBindWindow = null!;
 
         public static RingsManager RingsManager = null!;
 
@@ -148,6 +149,7 @@ namespace TPie
             _gameMacroElementWindow = new GameMacroElementWindow("Edit Game Macro");
             _nestedRingElementWindow = new NestedRingElementWindow("Edit Nested Ring");
             _iconBrowserWindow = new IconBrowserWindow("Icon Picker");
+            _keyBindWindow = new KeyBindWindow("Edit Keybind");
 
             _windowSystem = new WindowSystem("TPie_Windows");
             _windowSystem.AddWindow(_settingsWindow);
@@ -159,6 +161,7 @@ namespace TPie
             _windowSystem.AddWindow(_gameMacroElementWindow);
             _windowSystem.AddWindow(_nestedRingElementWindow);
             _windowSystem.AddWindow(_iconBrowserWindow);
+            _windowSystem.AddWindow(_keyBindWindow);
         }
 
         public static void ShowRingSettingsWindow(Vector2 position, Ring ring)
@@ -222,6 +225,13 @@ namespace TPie
             _iconBrowserWindow._selectedId = selectedIconId;
             _iconBrowserWindow.OnSelect = onSelect;
             _iconBrowserWindow.IsOpen = true;
+        }
+
+        public static void ShowKeyBindWindow(Vector2 position, Ring ring)
+        {
+            _keyBindWindow.Ring = ring;
+            _keyBindWindow.Position = position;
+            _keyBindWindow.IsOpen = true;
         }
 
         private void Update(Framework framework)

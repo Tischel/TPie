@@ -368,9 +368,9 @@ namespace TPie.Config
                     // keybind
                     if (ImGui.TableSetColumnIndex(2))
                     {
-                        if (ring.KeyBind.Draw(ring.Name, 100 * _scale))
+                        if (ImGui.Button(ring.KeyBind.Description(), new Vector2(100, 24)))
                         {
-                            Plugin.Settings.ValidateKeyBind(ring);
+                            Plugin.ShowKeyBindWindow(ImGui.GetMousePos(), ring);
                         }
                     }
 

@@ -53,7 +53,20 @@ namespace TPie.Config
 
                 if (ring.KeyBind.Equals(prioritizedRing.KeyBind))
                 {
-                    ring.KeyBind.Reset();
+                    if (prioritizedRing.KeyBind.IsGlobal || ring.KeyBind.IsGlobal)
+                    {
+                        ring.KeyBind.Reset();
+                    }
+                    else
+                    {
+                        HashSet<uint> tmp = new HashSet<uint>(prioritizedRing.KeyBind.Jobs);
+                        tmp.IntersectWith(ring.KeyBind.Jobs);
+
+                        if (tmp.Count > 0)
+                        {
+                            ring.KeyBind.Reset();
+                        }
+                    }
                 }
             }
         }

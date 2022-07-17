@@ -70,9 +70,9 @@ namespace TPie.Config
                     Ring.Color = new Vector4(color.X, color.Y, color.Z, 1);
                 }
 
-                if (Ring.KeyBind.Draw(Ring.Name, 302 * _scale, true))
+                if (ImGui.Button(Ring.KeyBind.Description(), new Vector2(308 * _scale, 24)))
                 {
-                    Plugin.Settings.ValidateKeyBind(Ring);
+                    Plugin.ShowKeyBindWindow(ImGui.GetMousePos(), Ring);
                 }
 
                 ImGui.SameLine();

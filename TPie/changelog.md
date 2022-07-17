@@ -1,5 +1,8 @@
-# 1.3.2.0
+# 1.4.0.0
 - Added setting to automatically move the cursor to the center of the rings when they have a fixed position.
+- Keybinds can now be customized per job:
+    + This means you can use the same keybind for different rings as long as they are tied to different jobs.
+    + Added a new "Edit Keybind" window to support this new functionallity.
 
 # 1.3.1.0
 - Added buttons to sort rings in the list.
