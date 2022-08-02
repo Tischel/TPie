@@ -1,3 +1,6 @@
+# 1.5.0.0
+- Added support for Patch 6.2 and Dalamud Api7.
+
 # 1.4.0.0
 - Added setting to automatically move the cursor to the center of the rings when they have a fixed position.
 - Keybinds can now be customized per job:
