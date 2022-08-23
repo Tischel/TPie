@@ -38,7 +38,7 @@
 
 	<!-- Dalamud Configuration -->
 	<PropertyGroup>
-        <DalamudVersion>dev</DalamudVersion>
+        <DalamudVersion>6692d56</DalamudVersion>
         <DalamudLocal>../dalamud/</DalamudLocal>
         <DalamudLibPath>$(APPDATA)\XIVLauncher\addon\Hooks\$(DalamudVersion)\</DalamudLibPath>
 	</PropertyGroup>
@@ -97,6 +97,6 @@
 
 	<!-- NuGet Packages -->
 	<ItemGroup>
-		<PackageReference Include="DalamudPackager" Version="2.1.7" />
+		<PackageReference Include="DalamudPackager" Version="2.1.8" />
 	</ItemGroup>
 </Project>
