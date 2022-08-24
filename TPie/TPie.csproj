@@ -38,7 +38,7 @@
 
 	<!-- Dalamud Configuration -->
 	<PropertyGroup>
-        <DalamudVersion>6692d56</DalamudVersion>
+        <DalamudVersion>dev</DalamudVersion>
         <DalamudLocal>../dalamud/</DalamudLocal>
         <DalamudLibPath>$(APPDATA)\XIVLauncher\addon\Hooks\$(DalamudVersion)\</DalamudLibPath>
 	</PropertyGroup>
