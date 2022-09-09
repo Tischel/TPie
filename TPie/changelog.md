@@ -1,3 +1,6 @@
+# 1.6.0.0
+- Fixed ring preview overlapping with the settings window on high Dalamud Font Scales.
+
 # 1.5.0.0
 - Added support for Patch 6.2 and Dalamud Api7.
 
