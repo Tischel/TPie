@@ -113,6 +113,16 @@ namespace TPie.Config
                 }
             }
 
+            // draw text
+            ImGui.NewLine();
+            ImGui.Checkbox("Draw Text", ref CommandElement.DrawText);
+
+            if (CommandElement.DrawText)
+            {
+                ImGui.SameLine();
+                ImGui.Checkbox("Only When Selected", ref CommandElement.DrawTextOnlyWhenSelected);
+            }
+
             // border
             ImGui.NewLine();
             CommandElement.Border.Draw();

@@ -123,6 +123,16 @@ namespace TPie.Config
                 }
             }
 
+            // draw text
+            ImGui.NewLine();
+            ImGui.Checkbox("Draw Text", ref GameMacroElement.DrawText);
+
+            if (GameMacroElement.DrawText)
+            {
+                ImGui.SameLine();
+                ImGui.Checkbox("Only When Selected", ref GameMacroElement.DrawTextOnlyWhenSelected);
+            }
+
             // border
             ImGui.NewLine();
             GameMacroElement.Border.Draw();

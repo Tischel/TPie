@@ -1,4 +1,7 @@
 # 1.6.0.0
+- Added a "Draw Text" setting to Game Macro and Command items.
+- Added a "Draw Text Only When Selected" setting to Game Macro, Command and Gear Set items.
+- The Keybind Edit Window will now focus the input field automatically when opened.
 - Fixed ring preview overlapping with the settings window on high Dalamud Font Scales.
 
 # 1.5.0.0

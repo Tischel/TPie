@@ -8,15 +8,19 @@ namespace TPie.Models.Elements
     {
         public string Name;
         public string Command;
+        public bool DrawText;
+        public bool DrawTextOnlyWhenSelected;
 
-        public CommandElement(string name, string command, uint iconId)
+        public CommandElement(string name, string command, bool drawText, bool drawTextOnlyWhenSelected, uint iconId)
         {
             Name = name;
             Command = command;
+            DrawText = drawText;
+            DrawTextOnlyWhenSelected = drawTextOnlyWhenSelected;
             IconID = iconId;
         }
 
-        public CommandElement() : this("New Command", "", 66001) { }
+        public CommandElement() : this("New Command", "", true, false, 66001) { }
 
         public override string Description()
         {
@@ -43,7 +47,12 @@ namespace TPie.Models.Elements
             base.Draw(position, size, scale, selected, color, alpha, tooltip, drawList);
 
             // name
-            DrawHelper.DrawOutlinedText($"{Name}", position, true, scale, drawList);
+            if (!DrawText) { return; }
+
+            if (!DrawTextOnlyWhenSelected || (DrawTextOnlyWhenSelected && selected))
+            {
+                DrawHelper.DrawOutlinedText($"{Name}", position, true, scale, drawList);
+            }
         }
     }
 }

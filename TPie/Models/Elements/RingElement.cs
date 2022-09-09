@@ -109,9 +109,10 @@ namespace TPie.Models.Elements
                         bool useId = jo.GetValue("UseID") != null ? jo.Value<bool>("UseID") : true;
                         string name = jo.Value<string>("GearSetName") ?? "";
                         bool drawText = jo.GetValue("DrawText") != null ? jo.Value<bool>("DrawText") : true;
+                        bool drawTextOnlyWhenSelected = jo.GetValue("DrawTextOnlyWhenSelected") != null ? jo.Value<bool>("DrawTextOnlyWhenSelected") : false;
                         uint jobId = jo.Value<uint>("JobID");
-
-                        GearSetElement element = new GearSetElement(gearSetId, useId, name, drawText, jobId);
+                        
+                        GearSetElement element = new GearSetElement(gearSetId, useId, name, drawText, drawTextOnlyWhenSelected, jobId);
                         element.Border = border;
                         return element;
                     }
@@ -121,9 +122,11 @@ namespace TPie.Models.Elements
                         string name = jo.Value<string>("Name") ?? "";
                         int id = jo.Value<int>("Identifier");
                         bool shared = jo.GetValue("IsShared") != null ? jo.Value<bool>("IsShared") : false;
+                        bool drawText = jo.GetValue("DrawText") != null ? jo.Value<bool>("DrawText") : true;
+                        bool drawTextOnlyWhenSelected = jo.GetValue("DrawTextOnlyWhenSelected") != null ? jo.Value<bool>("DrawTextOnlyWhenSelected") : false;
                         uint iconId = jo.Value<uint>("IconID");
 
-                        GameMacroElement element = new GameMacroElement(name, id, shared, iconId);
+                        GameMacroElement element = new GameMacroElement(name, id, shared, drawText, drawTextOnlyWhenSelected, iconId);
                         element.Border = border;
                         return element;
                     }
@@ -132,9 +135,11 @@ namespace TPie.Models.Elements
                     {
                         string name = jo.Value<string>("Name") ?? "";
                         string command = jo.Value<string>("Command") ?? "";
+                        bool drawText = jo.GetValue("DrawText") != null ? jo.Value<bool>("DrawText") : true;
+                        bool drawTextOnlyWhenSelected = jo.GetValue("DrawTextOnlyWhenSelected") != null ? jo.Value<bool>("DrawTextOnlyWhenSelected") : false;
                         uint iconId = jo.Value<uint>("IconID");
 
-                        CommandElement element = new CommandElement(name, command, iconId);
+                        CommandElement element = new CommandElement(name, command, drawText, drawTextOnlyWhenSelected, iconId);
                         element.Border = border;
                         return element;
                     }

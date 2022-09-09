@@ -12,16 +12,20 @@ namespace TPie.Models.Elements
         public string Name;
         public int Identifier;
         public bool IsShared;
+        public bool DrawText;
+        public bool DrawTextOnlyWhenSelected;
 
-        public GameMacroElement(string name, int id, bool shared, uint iconId)
+        public GameMacroElement(string name, int id, bool shared, bool drawText, bool drawTextOnlyWhenSelected, uint iconId)
         {
             Name = name;
             Identifier = id;
             IsShared = shared;
+            DrawText = drawText;
+            DrawTextOnlyWhenSelected = drawTextOnlyWhenSelected;
             IconID = iconId;
         }
 
-        public GameMacroElement() : this("New Macro", 0, false, 66001) { }
+        public GameMacroElement() : this("New Macro", 0, false, true, false, 66001) { }
 
         public override string Description()
         {
@@ -64,7 +68,12 @@ namespace TPie.Models.Elements
             base.Draw(position, size, scale, selected, color, alpha, tooltip, drawList);
 
             // name
-            DrawHelper.DrawOutlinedText($"{Name}", position, true, scale, drawList);
+            if (!DrawText) { return; }
+
+            if (!DrawTextOnlyWhenSelected || (DrawTextOnlyWhenSelected && selected))
+            {
+                DrawHelper.DrawOutlinedText($"{Name}", position, true, scale, drawList);
+            }
         }
     }
 }
