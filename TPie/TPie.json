@@ -5,5 +5,5 @@
   "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items, Gear Sets or Macros.",
   "RepoUrl": "https://github.com/Tischel/TPie",
   "Tags": [ "UI" ],
-  "Changelog": "1.6.0.0\n- Added a \"Draw Text\" setting to Game Macro and Command items.\n- Added a \"Draw Text Only When Selected\" setting to Game Macro, Command and Gear Set items.\n- The Keybind Edit Window will now focus the input field automatically when opened.\n- Fixed ring preview overlapping with the settings window on high Dalamud Font Scales."
+  "Changelog": "1.6.0.0\n- Added Emote as a ring item:\n    + This is just a convenience feature to be able to add emotes without having to manually search for their icons.\n    + It will simply use the command for the selected emote.\n    + The plugin doesn't and won't know which emotes you have unlocked. Trying to use an unlocked emote won't work.\n\n- Added a \"Draw Text\" setting to Game Macro and Command items.\n- Added a \"Draw Text Only When Selected\" setting to Game Macro, Command and Gear Set items.\n- The Keybind Edit Window will now focus the input field automatically when opened.\n- Fixed ring preview overlapping with the settings window on high Dalamud Font Scales."
 }
