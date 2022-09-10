@@ -281,7 +281,7 @@ namespace TPie.Config
         {
             if (Ring == null) return;
 
-            ImGui.SetNextWindowSize(new(94 * _scale, 140 * _scale));
+            ImGui.SetNextWindowSize(new(94 * _scale, 150 * _scale));
 
             if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
             {
@@ -310,6 +310,11 @@ namespace TPie.Config
                 if (ImGui.Selectable("Game Macro"))
                 {
                     elementToAdd = new GameMacroElement();
+                }
+
+                if (ImGui.Selectable("Emote"))
+                {
+                    elementToAdd = new EmoteElement();
                 }
 
                 if (ImGui.Selectable("Nested Ring"))

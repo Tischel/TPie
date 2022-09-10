@@ -144,6 +144,19 @@ namespace TPie.Models.Elements
                         return element;
                     }
 
+                    if (type.Contains("EmoteElement"))
+                    {
+                        string name = jo.Value<string>("Name") ?? "";
+                        string command = jo.Value<string>("Command") ?? "";
+                        bool drawText = jo.GetValue("DrawText") != null ? jo.Value<bool>("DrawText") : true;
+                        bool drawTextOnlyWhenSelected = jo.GetValue("DrawTextOnlyWhenSelected") != null ? jo.Value<bool>("DrawTextOnlyWhenSelected") : false;
+                        uint iconId = jo.Value<uint>("IconID");
+
+                        EmoteElement element = new EmoteElement(name, command, drawText, drawTextOnlyWhenSelected, iconId);
+                        element.Border = border;
+                        return element;
+                    }
+
                     if (type.Contains("NestedRing"))
                     {
                         string ringName = jo.Value<string>("RingName") ?? "";
