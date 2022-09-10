@@ -4,14 +4,14 @@ using TPie.Helpers;
 
 namespace TPie.Models.Elements
 {
-    public class CommandElement : RingElement
+    public class EmoteElement : RingElement
     {
         public string Name;
         public string Command;
         public bool DrawText;
         public bool DrawTextOnlyWhenSelected;
 
-        public CommandElement(string name, string command, bool drawText, bool drawTextOnlyWhenSelected, uint iconId)
+        public EmoteElement(string name, string command, bool drawText, bool drawTextOnlyWhenSelected, uint iconId)
         {
             Name = name;
             Command = command;
@@ -20,10 +20,12 @@ namespace TPie.Models.Elements
             IconID = iconId;
         }
 
-        public CommandElement() : this("New Command", "", true, false, 66001) { }
+        public EmoteElement() : this("", "", false, false, 64062) { }
 
         public override string Description()
         {
+            if (Name == null || Name.Length == 0) { return "Emote"; }
+
             return $"{Name} ({Command})";
         }
 

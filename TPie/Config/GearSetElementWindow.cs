@@ -143,7 +143,14 @@ namespace TPie.Config
             ImGui.NewLine();
             ImGui.Checkbox("Draw Text", ref GearSetElement.DrawText);
 
+            if (GearSetElement.DrawText)
+            {
+                ImGui.SameLine();
+                ImGui.Checkbox("Only When Selected", ref GearSetElement.DrawTextOnlyWhenSelected);
+            }
+
             // border
+            ImGui.NewLine();
             GearSetElement.Border.Draw();
         }
     }

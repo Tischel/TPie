@@ -47,6 +47,7 @@ namespace TPie
         private static ActionElementWindow _actionElementWindow = null!;
         private static ItemElementWindow _itemElementWindow = null!;
         private static GearSetElementWindow _gearSetElementWindow = null!;
+        private static EmoteElementWindow _emoteElementWindow = null!;
         private static CommandElementWindow _commandElementWindow = null!;
         private static GameMacroElementWindow _gameMacroElementWindow = null!;
         private static NestedRingElementWindow _nestedRingElementWindow = null!;
@@ -85,7 +86,7 @@ namespace TPie
                 AssemblyLocation = Assembly.GetExecutingAssembly().Location;
             }
 
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.5.0.0";
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.6.0.0";
 
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
@@ -145,6 +146,7 @@ namespace TPie
             _actionElementWindow = new ActionElementWindow("Edit Action");
             _itemElementWindow = new ItemElementWindow("Edit Item");
             _gearSetElementWindow = new GearSetElementWindow("Edit Gear Set");
+            _emoteElementWindow = new EmoteElementWindow("Edit Emote");
             _commandElementWindow = new CommandElementWindow("Edit Command");
             _gameMacroElementWindow = new GameMacroElementWindow("Edit Game Macro");
             _nestedRingElementWindow = new NestedRingElementWindow("Edit Nested Ring");
@@ -157,6 +159,7 @@ namespace TPie
             _windowSystem.AddWindow(_actionElementWindow);
             _windowSystem.AddWindow(_itemElementWindow);
             _windowSystem.AddWindow(_gearSetElementWindow);
+            _windowSystem.AddWindow(_emoteElementWindow);
             _windowSystem.AddWindow(_commandElementWindow);
             _windowSystem.AddWindow(_gameMacroElementWindow);
             _windowSystem.AddWindow(_nestedRingElementWindow);
@@ -204,6 +207,12 @@ namespace TPie
             {
                 window = _gameMacroElementWindow;
                 _gameMacroElementWindow.GameMacroElement = gameMacroElement;
+            }
+
+            else if (element is EmoteElement emoteElement)
+            {
+                window = _emoteElementWindow;
+                _emoteElementWindow.EmoteElement = emoteElement;
             }
 
             else if (element is NestedRingElement nestedRingElement)

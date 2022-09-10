@@ -14,6 +14,7 @@ namespace TPie.Config
         private float _scale => ImGuiHelpers.GlobalScale;
         private int _selectedRole = 0;
         private string[] _roleNames;
+        private bool _needsFocus = false;
 
         public KeyBindWindow(string name) : base(name)
         {
@@ -36,6 +37,7 @@ namespace TPie.Config
 
         public override void OnOpen()
         {
+            _needsFocus = true;
         }
 
         public override void OnClose()
@@ -50,6 +52,12 @@ namespace TPie.Config
             // main
             ImGui.BeginChild("##KeyBind_Main", new Vector2(280 * _scale, 94 * _scale), true);
             {
+                if (_needsFocus)
+                {
+                    ImGui.SetKeyboardFocusHere(0);
+                    _needsFocus = false;
+                }
+
                 if (keyBind.Draw(Ring.Name, 250))
                 {
                     Plugin.Settings.ValidateKeyBind(Ring);

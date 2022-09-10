@@ -54,7 +54,7 @@ namespace TPie.Config
 
             // ring preview
             Vector2 margin = new Vector2(20 * _scale);
-            Vector2 ringCenter = _windowPos + new Vector2(Size!.Value.X + Ring.Radius + margin.X, Size!.Value.Y / 2f);
+            Vector2 ringCenter = _windowPos + new Vector2(Size!.Value.X * _scale + Ring.Radius + margin.X, Size!.Value.Y * _scale / 2f);
             Ring.Preview(ringCenter);
 
             // info
@@ -281,7 +281,7 @@ namespace TPie.Config
         {
             if (Ring == null) return;
 
-            ImGui.SetNextWindowSize(new(94 * _scale, 140 * _scale));
+            ImGui.SetNextWindowSize(new(94 * _scale, 150 * _scale));
 
             if (ImGui.BeginPopup("##TPie_Add_Item_Menu"))
             {
@@ -310,6 +310,11 @@ namespace TPie.Config
                 if (ImGui.Selectable("Game Macro"))
                 {
                     elementToAdd = new GameMacroElement();
+                }
+
+                if (ImGui.Selectable("Emote"))
+                {
+                    elementToAdd = new EmoteElement();
                 }
 
                 if (ImGui.Selectable("Nested Ring"))

@@ -11,6 +11,7 @@ namespace TPie.Models.Elements
         public bool UseID;
         public string GearSetName;
         public bool DrawText;
+        public bool DrawTextOnlyWhenSelected;
 
         private uint _jobId;
 
@@ -25,16 +26,17 @@ namespace TPie.Models.Elements
             }
         }
 
-        public GearSetElement(uint gearSetId, bool useId, string? name, bool drawText, uint jobId)
+        public GearSetElement(uint gearSetId, bool useId, string? name, bool drawText, bool drawTextOnlyWhenSelected, uint jobId)
         {
             GearSetID = gearSetId;
             UseID = useId;
             GearSetName = name ?? "";
             DrawText = drawText;
+            DrawTextOnlyWhenSelected = drawTextOnlyWhenSelected;
             JobID = jobId;
         }
 
-        public GearSetElement() : this(1, true, null, true, Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? JobIDs.GLA) { }
+        public GearSetElement() : this(1, true, null, true, false, Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? JobIDs.GLA) { }
 
         public override void ExecuteAction()
         {
@@ -69,7 +71,7 @@ namespace TPie.Models.Elements
 
                 return value == GearSetName ? value : $"{value} ({GearSetName})";
             }
-
+            
             return "";
         }
 
@@ -77,13 +79,15 @@ namespace TPie.Models.Elements
         {
             base.Draw(position, size, scale, selected, color, alpha, tooltip, drawList);
 
-            if (!DrawText) return;
+            if (!DrawText) { return; }
 
-            size = size * scale;
-
-            string text = UseID ? $"{GearSetID}" : $"{GearSetName}";
-            Vector2 textPos = UseID ? position + (size / 2f) - new Vector2(2 * scale) : position;
-            DrawHelper.DrawOutlinedText(text, textPos, true, scale, drawList);
+            if (!DrawTextOnlyWhenSelected || (DrawTextOnlyWhenSelected && selected))
+            {
+                size = size * scale;
+                string text = UseID ? $"{GearSetID}" : $"{GearSetName}";
+                Vector2 textPos = UseID ? position + (size / 2f) - new Vector2(2 * scale) : position;
+                DrawHelper.DrawOutlinedText(text, textPos, true, scale, drawList);
+            }
         }
     }
 }

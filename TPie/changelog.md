@@ -1,3 +1,14 @@
+# 1.6.0.0
+- Added Emote as a ring item:
+    + This is just a convenience feature to be able to add emotes without having to manually search for their icons.
+    + It will simply use the command for the selected emote.
+    + The plugin doesn't and won't know which emotes you have unlocked. Trying to use an unlocked emote won't work.
+    
+- Added a "Draw Text" setting to Game Macro and Command items.
+- Added a "Draw Text Only When Selected" setting to Game Macro, Command and Gear Set items.
+- The Keybind Edit Window will now focus the input field automatically when opened.
+- Fixed ring preview overlapping with the settings window on high Dalamud Font Scales.
+
 # 1.5.0.0
 - Added support for Patch 6.2 and Dalamud Api7.
 
