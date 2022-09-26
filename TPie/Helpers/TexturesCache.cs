@@ -127,7 +127,7 @@ namespace TPie.Helpers
 
         public TexturesCache()
         {
-            _penumbraPathResolver = Plugin.PluginInterface.GetIpcSubscriber<string, string>("Penumbra.ResolveDefaultPath");
+            _penumbraPathResolver = Plugin.PluginInterface.GetIpcSubscriber<string, string>("Penumbra.ResolveInterfacePath");
         }
 
         ~TexturesCache()

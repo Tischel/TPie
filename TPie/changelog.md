@@ -1,3 +1,6 @@
+# 1.6.1.0
+- Fixed TPie not working properly with Penumbra v0.5.8.0 and their new Interface Collection.
+
 # 1.6.0.0
 - Added Emote as a ring item:
     + This is just a convenience feature to be able to add emotes without having to manually search for their icons.
