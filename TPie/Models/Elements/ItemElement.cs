@@ -49,25 +49,16 @@ namespace TPie.Models.Elements
             return $"{Name}{hqString}{countString}";
         }
 
+        public override bool isHQ()
+        {
+            return HQ;
+        }
+
         public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, bool tooltip, ImDrawListPtr drawList)
         {
             base.Draw(position, size, scale, selected, color, alpha, tooltip, drawList);
 
             size = size * scale;
-
-            // hq icon
-            if (HQ)
-            {
-                TextureWrap? hqIcon = Plugin.TexturesCache.HQIcon;
-                if (hqIcon != null)
-                {
-                    Vector2 iconSize = new Vector2(16 * scale);
-                    Vector2 iconPos = (position - size / 2f) + new Vector2(2 * scale);
-                    uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, alpha));
-
-                    drawList.AddImage(hqIcon.ImGuiHandle, iconPos, iconPos + iconSize, Vector2.Zero, Vector2.One, c);
-                }
-            }
 
             UsableItem? item = ItemsHelper.Instance?.GetUsableItem(ItemID, HQ);
             if (item == null) return;

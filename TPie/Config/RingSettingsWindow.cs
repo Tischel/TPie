@@ -136,7 +136,7 @@ namespace TPie.Config
                     // icon
                     if (ImGui.TableSetColumnIndex(1))
                     {
-                        TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(item.IconID);
+                        TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(item.IconID, item.isHQ());
                         if (texture != null)
                         {
                             ImGui.Image(texture.ImGuiHandle, new Vector2(24));

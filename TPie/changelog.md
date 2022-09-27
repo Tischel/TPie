@@ -1,3 +1,6 @@
+# 1.6.2.0
+- Fixed high quality icons for items.
+
 # 1.6.1.0
 - Fixed TPie not working properly with Penumbra v0.5.8.0 and their new Interface Collection.
 

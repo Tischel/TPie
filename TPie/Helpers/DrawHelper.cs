@@ -9,9 +9,9 @@ namespace TPie.Helpers
 {
     internal static class DrawHelper
     {
-        public static void DrawIcon(uint iconId, Vector2 position, Vector2 size, float alpha, ImDrawListPtr drawList)
+        public static void DrawIcon(uint iconId, bool hq, Vector2 position, Vector2 size, float alpha, ImDrawListPtr drawList)
         {
-            TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(iconId);
+            TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(iconId, hq);
             if (texture == null) return;
 
             uint color = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, alpha));

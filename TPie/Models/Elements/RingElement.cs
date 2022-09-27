@@ -28,7 +28,7 @@ namespace TPie.Models.Elements
             }
 
             position = position - size / 2f;
-            DrawHelper.DrawIcon(IconID, position, size, alpha, drawList);
+            DrawHelper.DrawIcon(IconID, isHQ(), position, size, alpha, drawList);
 
             if (Border.Thickness > 0)
             {
@@ -62,6 +62,8 @@ namespace TPie.Models.Elements
 
             return regex.Replace(str, " ");
         }
+
+        public virtual bool isHQ() => false;
     }
 
     internal class RingElementConverter : JsonConverter

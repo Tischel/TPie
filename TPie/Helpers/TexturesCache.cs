@@ -11,14 +11,14 @@ namespace TPie.Helpers
     {
         private Dictionary<uint, TextureWrap> _cache = new();
 
-        public TextureWrap? GetTexture<T>(uint rowId, uint stackCount = 0, bool hdIcon = true) where T : ExcelRow
+        public TextureWrap? GetTexture<T>(uint rowId, bool highQuality = false, uint stackCount = 0) where T : ExcelRow
         {
             var sheet = Plugin.DataManager.GetExcelSheet<T>();
 
-            return sheet == null ? null : GetTexture<T>(sheet.GetRow(rowId), stackCount, hdIcon);
+            return sheet == null ? null : GetTexture<T>(sheet.GetRow(rowId), highQuality, stackCount);
         }
 
-        public TextureWrap? GetTexture<T>(dynamic? row, uint stackCount = 0, bool hdIcon = true) where T : ExcelRow
+        public TextureWrap? GetTexture<T>(dynamic? row, bool highQuality = false, uint stackCount = 0) where T : ExcelRow
         {
             if (row == null)
             {
@@ -26,17 +26,17 @@ namespace TPie.Helpers
             }
 
             var iconId = row.Icon;
-            return GetTextureFromIconId(iconId, stackCount, hdIcon);
+            return GetTextureFromIconId(iconId, highQuality, stackCount);
         }
 
-        public TextureWrap? GetTextureFromIconId(uint iconId, uint stackCount = 0, bool hdIcon = true)
+        public TextureWrap? GetTextureFromIconId(uint iconId, bool highQuality = false, uint stackCount = 0)
         {
             if (_cache.TryGetValue(iconId + stackCount, out var texture))
             {
                 return texture;
             }
 
-            var newTexture = LoadTexture(iconId + stackCount, hdIcon);
+            var newTexture = LoadTexture(iconId + stackCount, highQuality);
             if (newTexture == null)
             {
                 return null;
@@ -47,10 +47,10 @@ namespace TPie.Helpers
             return newTexture;
         }
 
-        private unsafe TextureWrap? LoadTexture(uint id, bool hdIcon)
+        private unsafe TextureWrap? LoadTexture(uint id, bool highQuality)
         {
-            var hdString = hdIcon ? "_hr1" : "";
-            var path = $"ui/icon/{id / 1000 * 1000:000000}/{id:000000}{hdString}.tex";
+            var hqText = highQuality ? "hq/" : "";
+            var path = $"ui/icon/{id / 1000 * 1000:000000}/{hqText}{id:000000}_hr1.tex";
 
             try
             {
@@ -101,7 +101,6 @@ namespace TPie.Helpers
 
         #region plugin textures
         public TextureWrap? RingBackground;
-        public TextureWrap? HQIcon;
 
         public void LoadPluginTextures()
         {
@@ -111,12 +110,6 @@ namespace TPie.Helpers
                 if (File.Exists(ringBgPath))
                 {
                     RingBackground = Plugin.UiBuilder.LoadImage(ringBgPath);
-                }
-
-                string hqIconPath = Path.Combine(Path.GetDirectoryName(Plugin.AssemblyLocation) ?? "", "Media", "hq_icon.png");
-                if (File.Exists(hqIconPath))
-                {
-                    HQIcon = Plugin.UiBuilder.LoadImage(hqIconPath);
                 }
             }
             catch { }

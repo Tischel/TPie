@@ -95,7 +95,7 @@ namespace TPie.Config
                     ImGui.PopStyleColor();
 
                     // icon
-                    TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(data.IconID);
+                    TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(data.IconID, data.HQ);
                     if (texture != null)
                     {
                         ImGui.SameLine();
