@@ -1,3 +1,7 @@
+# 1.6.3.0
+- Added a filter to only show acquired emotes when searching.
+- Fixed some emotes not working.
+
 # 1.6.2.0
 - Fixed high quality icons for items.
 
