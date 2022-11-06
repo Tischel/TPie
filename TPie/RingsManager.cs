@@ -36,6 +36,7 @@ namespace TPie
                 if (clearTmpKeyBinds)
                 {
                     Rings[i].SetTemporalKeybind(null);
+                    Rings[i].SetTemporalGamepadBind(null);
                 }
 
                 if (_activeRing == null && Rings[i].Update())

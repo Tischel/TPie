@@ -70,7 +70,7 @@ namespace TPie.Config
                     Ring.Color = new Vector4(color.X, color.Y, color.Z, 1);
                 }
 
-                if (ImGui.Button(Ring.KeyBind.Description(), new Vector2(308 * _scale, 24)))
+                if (ImGui.Button(Ring.BindingDescription(), new Vector2(308 * _scale, 24)))
                 {
                     Plugin.ShowKeyBindWindow(ImGui.GetMousePos(), Ring);
                 }

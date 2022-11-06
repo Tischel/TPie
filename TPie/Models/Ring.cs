@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Game.ClientState.GamePad;
 using TPie.Config;
 using TPie.Helpers;
 using TPie.Models.Elements;
@@ -21,6 +22,9 @@ namespace TPie.Models
         public KeyBind KeyBind;
         private KeyBind? _tmpKeyBind; // used for nested rings
 
+        public GamepadBind GamepadBind;
+        private GamepadBind? _tmpGamepadBind; // used for nested rings
+        
         public bool DrawLine = true;
         public bool DrawSelectionBackground = true;
         public bool ShowTooltips = false;
@@ -77,15 +81,34 @@ namespace TPie.Models
         private float[] _itemsDistanceScales = null!;
         private float[] _itemsAlpha = null!;
 
-        public Ring(string name, Vector4 color, KeyBind keyBind, float radius, Vector2 itemSize)
+        public Ring(string name, Vector4 color, KeyBind keyBind, GamepadBind gamepadBind, float radius, Vector2 itemSize)
         {
             Name = name;
             Color = color;
             KeyBind = keyBind;
+            GamepadBind = gamepadBind ?? new GamepadBind((int)GamepadButtons.None);
             Radius = radius;
             ItemSize = itemSize;
 
             Items = new List<RingElement>();
+        }
+
+        public string BindingDescription()
+        {
+            string gamepadBind = GamepadBind.Description();
+            string keyBind = KeyBind.Description();
+
+            if (string.IsNullOrEmpty(gamepadBind) && string.IsNullOrEmpty(keyBind))
+            {
+                return "Unset";
+            }
+            
+            if (string.IsNullOrEmpty(gamepadBind) && string.IsNullOrEmpty(keyBind))
+            {
+                return gamepadBind+keyBind;
+            }
+
+            return gamepadBind + " | " + keyBind;
         }
 
         public void Preview(Vector2 position)
@@ -118,6 +141,7 @@ namespace TPie.Models
             }
 
             KeyBind currentKeyBind = CurrentKeybind();
+            GamepadBind currentGamepadBind = CurrentGamepadBind();
 
             // click to select in toggle mode
             if (!Previewing && currentKeyBind.Toggle &&
@@ -125,9 +149,10 @@ namespace TPie.Models
                 ((_selectedIndex >= 0 && _selectedIndex < _validItems.Count) || _quickActionSelected))
             {
                 currentKeyBind.Deactivate();
+                currentGamepadBind.Deactivate();
             }
 
-            if (!currentKeyBind.IsActive())
+            if (!currentKeyBind.IsActive() && !currentGamepadBind.IsActive())
             {
                 IsActive = false;
                 return false;
@@ -235,6 +260,13 @@ namespace TPie.Models
             // elements
             float r = Radius - ItemSize.Y;
             double step = (Math.PI * 2) / count;
+
+            // should we use controller input instead?
+            Vector2? di = ControllerAnalogInput();
+            if(di.HasValue)
+            {
+                mousePos = center + di.Value * 60;
+            }
 
             float distanceToCenter = (mousePos - center).Length();
             if (distanceToCenter > r)
@@ -372,6 +404,7 @@ namespace TPie.Models
             if (ring != null)
             {
                 ring.SetTemporalKeybind(CurrentKeybind());
+                ring.SetTemporalGamepadBind(CurrentGamepadBind());
                 Plugin.RingsManager?.ForceRing(ring);
                 _selectionStartTime = -1;
 
@@ -384,15 +417,49 @@ namespace TPie.Models
             return true;
         }
 
+        private Vector2? ControllerAnalogInput()
+        {
+            if(Plugin.GamepadState.RightStickRight 
+             + Plugin.GamepadState.RightStickLeft 
+             + Plugin.GamepadState.RightStickUp 
+             + Plugin.GamepadState.RightStickDown 
+             > 0.1f)//todo : replace with analog deadzone setting
+            {
+                Vector2 di = new Vector2(Plugin.GamepadState.RightStickRight, -Plugin.GamepadState.RightStickUp);
+                
+                if (Plugin.GamepadState.RightStickLeft > 0)
+                {
+                    di.X = -Plugin.GamepadState.RightStickLeft;
+                }
+                if (Plugin.GamepadState.RightStickDown > 0)
+                {
+                    di.Y = Plugin.GamepadState.RightStickDown;
+                }
+                
+                return di;
+            }
+
+            return null;
+        }
+
         #region keybind
         public void SetTemporalKeybind(KeyBind? keybind)
         {
             _tmpKeyBind = keybind;
         }
+        public void SetTemporalGamepadBind(GamepadBind? gamepadBind)
+        {
+            _tmpGamepadBind = gamepadBind;
+        }
 
         private KeyBind CurrentKeybind()
         {
             return _tmpKeyBind ?? KeyBind;
+        }
+
+        private GamepadBind CurrentGamepadBind()
+        {
+            return _tmpGamepadBind ?? GamepadBind;
         }
         #endregion
 

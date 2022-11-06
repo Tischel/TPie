@@ -68,6 +68,24 @@ namespace TPie.Config
                         }
                     }
                 }
+
+                if (ring.GamepadBind.Equals(prioritizedRing.GamepadBind))
+                {
+                    if (prioritizedRing.GamepadBind.IsGlobal || ring.GamepadBind.IsGlobal)
+                    {
+                        ring.GamepadBind.Reset();
+                    }
+                    else
+                    {
+                        HashSet<uint> tmp = new HashSet<uint>(prioritizedRing.GamepadBind.Jobs);
+                        tmp.IntersectWith(ring.GamepadBind.Jobs);
+
+                        if (tmp.Count > 0)
+                        {
+                            ring.GamepadBind.Reset();
+                        }
+                    }
+                }
             }
         }
 
