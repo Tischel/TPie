@@ -67,7 +67,7 @@ namespace TPie.Models
                 try
                 {
                     ImGuiIOPtr io = ImGui.GetIO();
-                    io.ConfigFlags |= ImGuiConfigFlags.NavEnableGamepad;
+                    //io.ConfigFlags |= ImGuiConfigFlags.NavEnableGamepad;
                 }
                 catch { }
             }
@@ -97,7 +97,7 @@ namespace TPie.Models
             try
             {
                 ImGuiIOPtr io = ImGui.GetIO();
-                io.ConfigFlags &= ~ImGuiConfigFlags.NavEnableGamepad;
+                //io.ConfigFlags &= ~ImGuiConfigFlags.NavEnableGamepad;
             }
             catch { }
         }
