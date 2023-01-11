@@ -18,7 +18,7 @@ namespace TPie.Helpers
         #region Singleton
         private ItemsHelper()
         {
-            _useItemPtr = Plugin.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B0 01 BA 13 00 00 00");
+            _useItemPtr = Plugin.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 89 7C 24 38");
 
             ExcelSheet<Item>? itemsSheet = Plugin.DataManager.GetExcelSheet<Item>();
             List<Item> validItems = itemsSheet?.Where(item => item.ItemAction.Row > 0).ToList() ?? new List<Item>();

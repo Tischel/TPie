@@ -1,3 +1,6 @@
+# 1.7.0.0
+- Added support for Patch 6.3 and Dalamud Api8.
+
 # 1.6.3.0
 - Added a filter to only show acquired emotes when searching.
 - Fixed some emotes not working.
