@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Dalamud.Game.ClientState.GamePad;
 using TPie.Helpers;
 using TPie.Models;
 using TPie.Models.Elements;
@@ -283,7 +284,7 @@ namespace TPie.Config
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Plus.ToIconString()))
                 {
-                    Ring newRing = new Ring($"Ring{Rings.Count + 1}", Vector4.One, new KeyBind(0), 150f, new Vector2(40));
+                    Ring newRing = new Ring($"Ring{Rings.Count + 1}", Vector4.One, new KeyBind(0), new GamepadBind((int)GamepadButtons.None), 150f, new Vector2(40));
                     Plugin.Settings.AddRing(newRing);
                 }
                 ImGui.PopFont();
@@ -368,7 +369,7 @@ namespace TPie.Config
                     // keybind
                     if (ImGui.TableSetColumnIndex(2))
                     {
-                        if (ImGui.Button(ring.KeyBind.Description(), new Vector2(100, 24)))
+                        if (ImGui.Button(ring.BindingDescription(), new Vector2(100, 24)))
                         {
                             Plugin.ShowKeyBindWindow(ImGui.GetMousePos(), ring);
                         }

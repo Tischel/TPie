@@ -19,7 +19,7 @@ namespace TPie.Config
         public KeyBindWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(300, 330);
+            Size = new Vector2(300, 390);
 
             PositionCondition = ImGuiCond.Appearing;
 
@@ -48,9 +48,10 @@ namespace TPie.Config
         {
             if (Ring == null) return;
             KeyBind keyBind = Ring.KeyBind;
+            GamepadBind gamepadBind = Ring.GamepadBind;
 
             // main
-            ImGui.BeginChild("##KeyBind_Main", new Vector2(280 * _scale, 94 * _scale), true);
+            ImGui.BeginChild("##KeyBind_Main", new Vector2(280 * _scale, 154 * _scale), true);
             {
                 if (_needsFocus)
                 {
@@ -66,12 +67,22 @@ namespace TPie.Config
                 ImGui.Checkbox("Toggleable", ref keyBind.Toggle);
                 DrawHelper.SetTooltip("When enabled, this keybind will behave as a toggle instead of \"press and hold\".\nOn this mode, once an item is selected, you can either press the keybind again or just click to activate it.");
 
+                
+                if (gamepadBind.Draw(Ring.Name, 250))
+                {
+                    Plugin.Settings.ValidateKeyBind(Ring);
+                }
+
+                ImGui.Checkbox("Gamepad Toggleable", ref gamepadBind.Toggle);
+                DrawHelper.SetTooltip("When enabled, this Gamepad bind will behave as a toggle instead of \"press and hold\".\nOn this mode, once an item is selected, you must press the keybind again to activate it.");
+
                 bool isGlobal = keyBind.IsGlobal;
                 if (ImGui.Checkbox("Use for all jobs", ref isGlobal))
                 {
                     if (isGlobal)
                     {
                         keyBind.Jobs.Clear();
+                        gamepadBind.Jobs.Clear();
                     }
 
                     Plugin.Settings.ValidateKeyBind(Ring);
@@ -94,6 +105,7 @@ namespace TPie.Config
         {
             if (Ring == null) return;
             KeyBind keyBind = Ring.KeyBind;
+            GamepadBind gamepadBind = Ring.GamepadBind;
 
             List<uint> roleJobs = JobsHelper.JobsByRole[role];
             bool hasAll = true;
@@ -114,10 +126,12 @@ namespace TPie.Config
                     if (hasAll)
                     {
                         keyBind.Jobs.Add(job);
+                        gamepadBind.Jobs.Add(job);
                     }
                     else
                     {
                         keyBind.Jobs.Remove(job);
+                        gamepadBind.Jobs.Remove(job);
                     }
                 }
 
@@ -139,10 +153,12 @@ namespace TPie.Config
                     if (hasJob)
                     {
                         keyBind.Jobs.Add(job);
+                        gamepadBind.Jobs.Add(job);
                     }
                     else
                     {
                         keyBind.Jobs.Remove(job);
+                        gamepadBind.Jobs.Remove(job);
                     }
 
                     Plugin.Settings.ValidateKeyBind(Ring);

@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
+using Dalamud.Game.ClientState.GamePad;
 using TPie.Config;
 using TPie.Helpers;
 using TPie.Models;
@@ -30,6 +31,7 @@ namespace TPie
         public static SigScanner SigScanner { get; private set; } = null!;
         public static UiBuilder UiBuilder { get; private set; } = null!;
         public static KeyState KeyState { get; private set; } = null!;
+        public static GamepadState GamepadState { get; private set; } = null!;
 
         public static TexturesCache TexturesCache { get; private set; } = null!;
 
@@ -64,7 +66,8 @@ namespace TPie
             Framework framework,
             GameGui gameGui,
             SigScanner sigScanner,
-            KeyState keyState
+            KeyState keyState,
+            GamepadState gamepadState
         )
         {
             ClientState = clientState;
@@ -76,6 +79,8 @@ namespace TPie
             SigScanner = sigScanner;
             UiBuilder = PluginInterface.UiBuilder;
             KeyState = keyState;
+            GamepadState = gamepadState;
+            
 
             if (pluginInterface.AssemblyLocation.DirectoryName != null)
             {
