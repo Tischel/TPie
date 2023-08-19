@@ -1,6 +1,7 @@
 # 1.7.1.0
 - Added support for the Wotsit plugin:
-    + You can search for rings by name to go directly to their settings.
+    + You can search for rings with by name to go directly to its settings.
+    + Only rings with a name will work.
 
 - Added a Quick Settings shortcut:
     + Double right-clicking while a ring is opened will open the settings windows for that ring:

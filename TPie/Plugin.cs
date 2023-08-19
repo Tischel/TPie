@@ -108,6 +108,7 @@ namespace TPie
             KeyboardHelper.Initialize();
             JobsHelper.Initialize();
             ItemsHelper.Initialize();
+            WotsitHelper.Initialize();
 
             TexturesCache = new TexturesCache();
             TexturesCache.LoadPluginTextures();
@@ -122,6 +123,7 @@ namespace TPie
             CreateWindows();
 
             RingsManager = new RingsManager();
+            WotsitHelper.Instance?.Update();
         }
 
         public void Dispose()
@@ -299,6 +301,7 @@ namespace TPie
             KeyboardHelper.Instance?.Dispose();
             JobsHelper.Instance?.Dispose();
             ItemsHelper.Instance?.Dispose();
+            WotsitHelper.Instance?.Dispose();
             TexturesCache.Dispose();
 
             _windowSystem.RemoveAllWindows();

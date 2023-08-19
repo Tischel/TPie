@@ -468,6 +468,7 @@ namespace TPie.Config
                 if (didConfirm)
                 {
                     Rings.Remove(_removingRing);
+                    WotsitHelper.Instance?.Update();
                 }
 
                 if (didConfirm || didClose)

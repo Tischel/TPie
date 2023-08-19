@@ -62,7 +62,10 @@ namespace TPie.Config
             {
                 ImGui.PushItemWidth(310 * _scale);
 
-                ImGui.InputText("Name ##Ring_Info_Name", ref Ring.Name, 100);
+                if (ImGui.InputText("Name ##Ring_Info_Name", ref Ring.Name, 100))
+                {
+                    WotsitHelper.Instance?.Update();
+                }
 
                 Vector3 color = new Vector3(Ring.Color.X, Ring.Color.Y, Ring.Color.Z);
                 if (ImGui.ColorEdit3("Color ##Ring_Info_Color", ref color))

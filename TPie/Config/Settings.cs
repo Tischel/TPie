@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using TPie.Helpers;
 using TPie.Models;
 using TPie.Models.Elements;
 
@@ -44,6 +45,8 @@ namespace TPie.Config
             }
 
             Rings.Add(ring);
+
+            WotsitHelper.Instance?.Update();
         }
 
         public void ValidateKeyBind(Ring prioritizedRing)
