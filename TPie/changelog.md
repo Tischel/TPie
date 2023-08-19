@@ -1,3 +1,6 @@
+# 1.7.1.1
+- Fixed crash if Wotsit is not installed.
+
 # 1.7.1.0
 - Added support for the Wotsit plugin:
     + You can search for rings with by name to go directly to its settings.
