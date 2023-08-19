@@ -130,6 +130,7 @@ namespace TPie.Config
                         if (ImGui.Selectable(item.UserFriendlyName(), _selectedIndex == i, ImGuiSelectableFlags.SpanAllColumns | ImGuiSelectableFlags.AllowItemOverlap, new Vector2(0, 24)))
                         {
                             _selectedIndex = i;
+                            ShowEditItemWindow();
                         }
                     }
 

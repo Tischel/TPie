@@ -189,6 +189,14 @@ namespace TPie
         {
             RingElementWindow? window = null;
 
+            _actionElementWindow.IsOpen = false;
+            _itemElementWindow.IsOpen = false;
+            _gearSetElementWindow.IsOpen = false;
+            _commandElementWindow.IsOpen = false;
+            _gameMacroElementWindow.IsOpen = false;
+            _emoteElementWindow.IsOpen = false;
+            _nestedRingElementWindow.IsOpen = false;
+
             // action
             if (element is ActionElement actionElement)
             {
