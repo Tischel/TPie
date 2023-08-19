@@ -2,8 +2,8 @@
   "Name": "TPie",
   "Author": "Tischel",
   "Punchline": "Customizable ring-shaped hotbars",
-  "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items, Gear Sets or Macros.",
+  "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items, Gear Sets, Macros and more...",
   "RepoUrl": "https://github.com/Tischel/TPie",
   "Tags": [ "UI" ],
-  "Changelog": "1.7.0.0\n- Added support for Patch 6.3 and Dalamud Api8."
+  "Changelog": "1.7.1.0\n\n- Added support for the Wotsit plugin:\n    + You can search for rings with by name to go directly to its settings.\n    + Only rings with a name will work.\n\n- Added a Quick Settings shortcut:\n    + Double right-clicking while a ring is opened will open the settings windows for that ring:\n    + This can be disabled in the general settings.\n\n- Improved interactions when editing ring items:\n    + Selecting a different ring item when the edit window is opened will refresh the window with the newly selected item."
 }
