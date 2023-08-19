@@ -206,7 +206,7 @@ namespace TPie.Models
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
 
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
-            if (Previewing || !CurrentKeybind().Toggle)
+            if (Previewing || (!Plugin.Settings.EnableQuickSettings && !CurrentKeybind().Toggle))
             {
                 flags |= ImGuiWindowFlags.NoInputs;
             }
@@ -216,6 +216,12 @@ namespace TPie.Models
                 ImGui.End();
                 ImGui.PopStyleVar();
                 return;
+            }
+
+            // quick settings
+            if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Right))
+            {
+                Plugin.ShowRingSettingsWindowInCursor(this);
             }
 
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();

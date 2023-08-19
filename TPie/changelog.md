@@ -1,3 +1,14 @@
+# 1.7.1.0
+- Added support for the Wotsit plugin:
+    + You can search for rings by name to go directly to their settings.
+
+- Added a Quick Settings shortcut:
+    + Double right-clicking while a ring is opened will open the settings windows for that ring:
+    + This can be disabled in the general settings.
+
+- Improved interactions when editing ring items:
+    + Selecting a different ring item when the edit window is opened will refresh the window with the newly selected item.
+
 # 1.7.0.0
 - Added support for Patch 6.3 and Dalamud Api8.
 

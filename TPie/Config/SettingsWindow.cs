@@ -187,6 +187,10 @@ namespace TPie.Config
             {
                 ImGui.Checkbox("Keybind Passthrough", ref Settings.KeybindPassthrough);
                 DrawHelper.SetTooltip("When enabled, TPie wont prevent the game from receiving a key press asssigned for a ring.");
+
+                ImGui.SameLine();
+                ImGui.Checkbox("Enable Quick Settings", ref Settings.EnableQuickSettings);
+                DrawHelper.SetTooltip("When enabled, double right-clicking when a ring is opened will open the settings for that ring.");
             }
             ImGui.EndChild();
 

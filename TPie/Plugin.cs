@@ -7,6 +7,7 @@ using Dalamud.Game.Gui;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -86,7 +87,7 @@ namespace TPie
                 AssemblyLocation = Assembly.GetExecutingAssembly().Location;
             }
 
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.6.3.0";
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.7.1.0";
 
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
@@ -165,6 +166,16 @@ namespace TPie
             _windowSystem.AddWindow(_nestedRingElementWindow);
             _windowSystem.AddWindow(_iconBrowserWindow);
             _windowSystem.AddWindow(_keyBindWindow);
+        }
+
+        public static void ShowRingSettingsWindowInCursor(Ring ring)
+        {
+            Vector2 margin = new Vector2(20 * ImGuiHelpers.GlobalScale);
+            Vector2 windowSize = (_ringSettingsWindow.Size ?? Vector2.Zero) * ImGuiHelpers.GlobalScale;
+            Vector2 cursor = ImGui.GetMousePos();
+            Vector2 windowPos = new Vector2(cursor.X - ring.Radius - margin.X - windowSize.X, cursor.Y - windowSize.Y / 2f);
+
+            ShowRingSettingsWindow(windowPos, ring);
         }
 
         public static void ShowRingSettingsWindow(Vector2 position, Ring ring)
