@@ -1,6 +1,7 @@
 ﻿using Dalamud.Interface;
+using Dalamud.Interface.Internal;
+using DelvUI.Helpers;
 using ImGuiNET;
-using ImGuiScene;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using TPie.Helpers;
@@ -105,7 +106,7 @@ namespace TPie.Config
             // icon
             if (NestedRingElement.IconID > 0)
             {
-                TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(NestedRingElement.IconID);
+                IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(NestedRingElement.IconID);
                 if (texture != null)
                 {
                     ImGui.SetCursorPosX(110 * _scale);

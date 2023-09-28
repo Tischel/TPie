@@ -1,3 +1,6 @@
+# 1.8.0.0
+- Added support for patch 6.5 and Dalamud API 9.
+
 # 1.7.1.1
 - Fixed crash if Wotsit is not installed.
 

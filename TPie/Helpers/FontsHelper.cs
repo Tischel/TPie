@@ -28,7 +28,7 @@ namespace TPie.Helpers
             }
             catch (Exception e)
             {
-                PluginLog.Error("Font failed to load: " + e.Message);
+                Plugin.Logger.Error("Font failed to load: " + e.Message);
             }
         }
 

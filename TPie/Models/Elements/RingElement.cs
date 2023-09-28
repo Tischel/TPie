@@ -176,7 +176,7 @@ namespace TPie.Models.Elements
             }
             catch (Exception e)
             {
-                PluginLog.Error(e.Message);
+                Plugin.Logger.Error(e.Message);
             }
 
             return new ActionElement(0);

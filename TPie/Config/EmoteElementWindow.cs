@@ -1,4 +1,6 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game.UI;
+﻿using Dalamud.Interface.Internal;
+using DelvUI.Helpers;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel;
@@ -92,7 +94,7 @@ namespace TPie.Config
                     ImGui.PopStyleColor();
 
                     // icon
-                    TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(data.Icon);
+                    IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(data.Icon);
                     if (texture != null)
                     {
                         ImGui.SameLine();

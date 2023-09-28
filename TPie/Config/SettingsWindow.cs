@@ -1,4 +1,5 @@
 ﻿using Dalamud.Interface;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Logging;
 using ImGuiNET;
@@ -119,7 +120,7 @@ namespace TPie.Config
                 }
                 catch (Exception e)
                 {
-                    PluginLog.Error("Error trying to open url: " + e.Message);
+                    Plugin.Logger.Error("Error trying to open url: " + e.Message);
                 }
             }
         }

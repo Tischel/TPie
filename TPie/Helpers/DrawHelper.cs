@@ -1,8 +1,8 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
+﻿using Dalamud.Interface.Internal;
+using DelvUI.Helpers;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using ImGuiNET;
-using ImGuiScene;
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace TPie.Helpers
@@ -11,7 +11,7 @@ namespace TPie.Helpers
     {
         public static void DrawIcon(uint iconId, bool hq, Vector2 position, Vector2 size, float alpha, ImDrawListPtr drawList)
         {
-            TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(iconId, hq);
+            IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(iconId, hq);
             if (texture == null) return;
 
             uint color = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, alpha));

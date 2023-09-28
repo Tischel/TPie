@@ -1,7 +1,9 @@
 ﻿using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using TPie.Helpers;
 using Macro = FFXIVClientStructs.FFXIV.Client.UI.Misc.RaptureMacroModule.Macro;
 
@@ -38,18 +40,19 @@ namespace TPie.Models.Elements
         {
             if (Identifier < 0 || Identifier > 99) return null;
 
-            return IsShared ? RaptureMacroModule.Instance->Shared[Identifier] : RaptureMacroModule.Instance->Individual[Identifier];
+            uint set = (uint)(IsShared ? 1 : 0);
+            return RaptureMacroModule.Instance()->GetMacro(set, (uint)Identifier);
         }
 
         public override unsafe void ExecuteAction()
         {
             // already executing macro?
-            if (RaptureShellModule.Instance->MacroLocked || RaptureShellModule.Instance->MacroCurrentLine >= 0) return;
+            if (RaptureShellModule.Instance()->MacroLocked || RaptureShellModule.Instance()->MacroCurrentLine >= 0) return;
 
             Macro* macro = GetGameMacro();
             if (macro != null)
             {
-                RaptureShellModule.Instance->ExecuteMacro(macro);
+                RaptureShellModule.Instance()->ExecuteMacro(macro);
             }
         }
 

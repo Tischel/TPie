@@ -1,6 +1,7 @@
-﻿using Dalamud.Interface;
+﻿using Dalamud.Interface.Internal;
+using Dalamud.Interface.Utility;
+using DelvUI.Helpers;
 using ImGuiNET;
-using ImGuiScene;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -229,7 +230,7 @@ namespace TPie.Models
             // bg
             if (Plugin.Settings.DrawRingBackground)
             {
-                TextureWrap? bg = Plugin.TexturesCache.RingBackground;
+                IDalamudTextureWrap? bg = Plugin.RingBackground;
                 if (bg != null)
                 {
                     Vector2 bgSize = new Vector2(Radius * 1.3f);

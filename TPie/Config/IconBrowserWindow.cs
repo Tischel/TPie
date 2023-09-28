@@ -1,7 +1,8 @@
-﻿using Dalamud.Interface;
+﻿using Dalamud.Interface.Internal;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
+using DelvUI.Helpers;
 using ImGuiNET;
-using ImGuiScene;
 using Lumina.Data.Files;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
@@ -9,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using TPie.Helpers;
 using Action = Lumina.Excel.GeneratedSheets.Action;
 
 namespace TPie.Config
@@ -24,7 +24,6 @@ namespace TPie.Config
         private string _searchTerm = "";
         private HashSet<uint> _searchResults = new HashSet<uint>();
 
-        private TexturesCache _cache = new TexturesCache();
         private BrowsableIcons _browsableIcons = new BrowsableIcons();
 
         public uint? _selectedId = null;
@@ -42,9 +41,7 @@ namespace TPie.Config
 
         public override void OnClose()
         {
-            _cache.Clear();
         }
-
 
         public override void Draw()
         {
@@ -198,7 +195,7 @@ namespace TPie.Config
                         if (i >= count) break;
                         uint iconId = icons.ElementAt(i);
 
-                        TextureWrap? texture = _cache.GetTextureFromIconId(iconId) ?? _cache.GetTextureFromIconId(61502);
+                        IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(iconId) ?? TexturesHelper.GetTextureFromIconId(61502);
                         if (texture != null)
                         {
                             if (!first)

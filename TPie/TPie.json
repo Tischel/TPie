@@ -5,5 +5,5 @@
   "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items, Gear Sets, Macros and more...",
   "RepoUrl": "https://github.com/Tischel/TPie",
   "Tags": [ "UI" ],
-  "Changelog": "1.7.1.1\n\n- Fixed crash if Wotsit is not installed."
+  "Changelog": "# 1.8.0.0\n\n- Added support for patch 6.5 and Dalamud API 9."
 }

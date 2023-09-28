@@ -1,4 +1,6 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Interface.Internal;
+using DelvUI.Helpers;
+using ImGuiNET;
 using ImGuiScene;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,7 +130,7 @@ namespace TPie.Config
                     }
 
                     // icon
-                    TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(62800 + jobID);
+                    IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(62800 + jobID);
                     if (texture != null)
                     {
                         ImGui.SameLine();

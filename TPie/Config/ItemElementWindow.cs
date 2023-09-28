@@ -1,5 +1,6 @@
-﻿using ImGuiNET;
-using ImGuiScene;
+﻿using Dalamud.Interface.Internal;
+using DelvUI.Helpers;
+using ImGuiNET;
 using Lumina.Excel;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,7 +96,7 @@ namespace TPie.Config
                     ImGui.PopStyleColor();
 
                     // icon
-                    TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(data.IconID, data.HQ);
+                    IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(data.IconID, data.HQ);
                     if (texture != null)
                     {
                         ImGui.SameLine();

@@ -1,7 +1,9 @@
 ﻿using Dalamud.Interface;
+using Dalamud.Interface.Internal;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
+using DelvUI.Helpers;
 using ImGuiNET;
-using ImGuiScene;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using TPie.Helpers;
@@ -140,7 +142,7 @@ namespace TPie.Config
                     // icon
                     if (ImGui.TableSetColumnIndex(1))
                     {
-                        TextureWrap? texture = Plugin.TexturesCache.GetTextureFromIconId(item.IconID, item.isHQ());
+                        IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(item.IconID, item.isHQ());
                         if (texture != null)
                         {
                             ImGui.Image(texture.ImGuiHandle, new Vector2(24));
