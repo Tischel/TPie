@@ -58,7 +58,7 @@ namespace TPie.Models
 
         public bool IsActive()
         {
-            if (ChatHelper.Instance?.IsInputTextActive() == true || ImGui.GetIO().WantCaptureKeyboard)
+            if (ChatHelper.IsInputTextActive() == true || ImGui.GetIO().WantCaptureKeyboard)
             {
                 return Toggle ? _active : false;
             }

@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,7 +12,6 @@ namespace TPie.Helpers
         private ChatHelper()
         {
             _chatModulePtr = Plugin.SigScanner.ScanText("48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 45 84 C9");
-            _inputTextActive = *(IntPtr*)((IntPtr)AtkStage.GetSingleton() + 0x28) + 0x188E;
         }
 
         public static void Initialize() { Instance = new ChatHelper(); }
@@ -41,11 +41,19 @@ namespace TPie.Helpers
         #endregion
 
         private IntPtr _chatModulePtr;
-        private IntPtr _inputTextActive = IntPtr.Zero;
 
-        public bool IsInputTextActive()
+        public static unsafe bool IsInputTextActive()
         {
-            return _inputTextActive != IntPtr.Zero && *(bool*)_inputTextActive;
+            Framework* framework = Framework.Instance();
+            if (framework == null) { return false; }
+
+            UIModule* module = framework->GetUiModule();
+            if (module == null) { return false; }
+
+            RaptureAtkModule* atkModule = module->GetRaptureAtkModule();
+            if (atkModule == null) { return false; }
+
+            return atkModule->AtkModule.IsTextInputActive();
         }
 
         public static void SendChatMessage(string message)
