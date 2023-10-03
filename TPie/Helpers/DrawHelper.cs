@@ -62,7 +62,7 @@ namespace TPie.Helpers
 
             uint color = 0xCC000000;
 
-            if (type == ActionType.Spell && CooldownHelper.GetMaxCharges(id) > 1 && CooldownHelper.GetCharges(id) > 0)
+            if (type == ActionType.Action && CooldownHelper.GetMaxCharges(id) > 1 && CooldownHelper.GetCharges(id) > 0)
             {
                 color = 0x66000000;
             }

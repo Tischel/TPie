@@ -11,14 +11,14 @@ namespace TPie.Helpers
 
         public static int GetCharges(uint actionId)
         {
-            float elapsed = ActionManager.Instance()->GetRecastTimeElapsed(ActionType.Spell, GetSpellActionId(actionId));
+            float elapsed = ActionManager.Instance()->GetRecastTimeElapsed(ActionType.Action, GetSpellActionId(actionId));
             ushort maxCharges = GetMaxCharges(actionId);
             if (maxCharges <= 1)
             {
                 return elapsed == 0 ? 1 : 0;
             }
 
-            float recastTime = GetRecastTime(ActionType.Spell, actionId);
+            float recastTime = GetRecastTime(ActionType.Action, actionId);
             return recastTime == 0 ? maxCharges : (int)(elapsed / recastTime);
         }
 
@@ -27,7 +27,7 @@ namespace TPie.Helpers
             float total = GetRecastTime(type, actionId);
             float elapsed = ActionManager.Instance()->GetRecastTimeElapsed(type, GetSpellActionId(actionId));
 
-            if (type == ActionType.Spell)
+            if (type == ActionType.Action)
             {
                 ushort maxCharges = GetMaxCharges(actionId);
 
@@ -44,7 +44,7 @@ namespace TPie.Helpers
         {
             float recast = ActionManager.Instance()->GetRecastTime(type, GetSpellActionId(actionId));
 
-            if (type == ActionType.Spell)
+            if (type == ActionType.Action)
             {
                 recast /= GetMaxCharges(actionId);
             }

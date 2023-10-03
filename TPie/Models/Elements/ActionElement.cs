@@ -92,7 +92,7 @@ namespace TPie.Models.Elements
 
             if (Plugin.Settings.ShowCooldowns)
             {
-                DrawHelper.DrawCooldown(ActionType.Spell, ActionID, position, size, scale, drawList);
+                DrawHelper.DrawCooldown(ActionType.Action, ActionID, position, size, scale, drawList);
 
                 if (CooldownHelper.GetMaxCharges(ActionID) > 1)
                 {
