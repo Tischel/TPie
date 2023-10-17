@@ -46,7 +46,7 @@ namespace TPie.Models.Elements
             }
             else
             {
-                ChatHelper.SendChatMessage($"/gs change {GearSetName}");
+                ChatHelper.SendChatMessage($"/gs change \"{GearSetName}\"");
             }
         }
 

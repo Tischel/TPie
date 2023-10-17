@@ -1,3 +1,6 @@
+# 1.8.0.1
+- Fixed various issues related to Gear Set elements.
+
 # 1.8.0.0
 - Added support for patch 6.5 and Dalamud API 9.
 

@@ -21,6 +21,7 @@ namespace TPie.Config
             {
                 _gearSetElement = value;
                 _inputText = value != null ? $"{value.GearSetID}" : "";
+                _nameInputText = value?.GearSetName ?? "";
 
                 if (value != null && value.JobID > 0 &&
                     JobsHelper.JobNames.TryGetValue(value.JobID, out string? jobName) && jobName != null)
