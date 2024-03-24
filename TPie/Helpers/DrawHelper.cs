@@ -26,29 +26,34 @@ namespace TPie.Helpers
         {
             FontsHelper.PushFont(scale);
 
-            if (centered)
+            try
             {
-                Vector2 size = ImGui.CalcTextSize(text);
-                pos = pos - size / 2f;
-            }
+                if (centered)
+                {
+                    Vector2 size = ImGui.CalcTextSize(text);
+                    pos = pos - size / 2f;
+                }
 
-            // outline
-            for (int i = 1; i < thickness + 1; i++)
+                // outline
+                for (int i = 1; i < thickness + 1; i++)
+                {
+                    drawList.AddText(new Vector2(pos.X - i, pos.Y + i), outlineColor, text);
+                    drawList.AddText(new Vector2(pos.X, pos.Y + i), outlineColor, text);
+                    drawList.AddText(new Vector2(pos.X + i, pos.Y + i), outlineColor, text);
+                    drawList.AddText(new Vector2(pos.X - i, pos.Y), outlineColor, text);
+                    drawList.AddText(new Vector2(pos.X + i, pos.Y), outlineColor, text);
+                    drawList.AddText(new Vector2(pos.X - i, pos.Y - i), outlineColor, text);
+                    drawList.AddText(new Vector2(pos.X, pos.Y - i), outlineColor, text);
+                    drawList.AddText(new Vector2(pos.X + i, pos.Y - i), outlineColor, text);
+                }
+
+                // text
+                drawList.AddText(new Vector2(pos.X, pos.Y), color, text);
+            } 
+            finally 
             {
-                drawList.AddText(new Vector2(pos.X - i, pos.Y + i), outlineColor, text);
-                drawList.AddText(new Vector2(pos.X, pos.Y + i), outlineColor, text);
-                drawList.AddText(new Vector2(pos.X + i, pos.Y + i), outlineColor, text);
-                drawList.AddText(new Vector2(pos.X - i, pos.Y), outlineColor, text);
-                drawList.AddText(new Vector2(pos.X + i, pos.Y), outlineColor, text);
-                drawList.AddText(new Vector2(pos.X - i, pos.Y - i), outlineColor, text);
-                drawList.AddText(new Vector2(pos.X, pos.Y - i), outlineColor, text);
-                drawList.AddText(new Vector2(pos.X + i, pos.Y - i), outlineColor, text);
+                FontsHelper.PopFont();
             }
-
-            // text
-            drawList.AddText(new Vector2(pos.X, pos.Y), color, text);
-
-            FontsHelper.PopFont();
         }
 
         public static void DrawCooldown(ActionType type, uint id, Vector2 position, Vector2 size, float scale, ImDrawListPtr drawList)

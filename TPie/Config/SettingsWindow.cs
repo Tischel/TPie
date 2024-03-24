@@ -175,7 +175,7 @@ namespace TPie.Config
                     if (ImGui.Combo("Size", ref fontIndex, _fontSizes, _fontSizes.Length))
                     {
                         Settings.FontSize = fontIndex + 14;
-                        Plugin.UiBuilder.RebuildFonts();
+                        FontsHelper.LoadFont();
                     }
                 }
             }

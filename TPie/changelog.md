@@ -1,3 +1,6 @@
+# 1.8.1.0
+- Added support for the "new" Dalamund Fonts API.
+
 # 1.8.0.1
 - Fixed various issues related to Gear Set elements.
 

@@ -95,11 +95,10 @@ namespace TPie
                 AssemblyLocation = Assembly.GetExecutingAssembly().Location;
             }
 
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.7.1.1";
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.8.1.0";
 
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
-            UiBuilder.BuildFonts += BuildFont;
             UiBuilder.OpenConfigUi += OpenConfigUi;
 
             CommandManager.AddHandler(
@@ -122,10 +121,7 @@ namespace TPie
 
             Settings = Settings.Load();
 
-            if (!FontsHelper.DefaultFontBuilt)
-            {
-                UiBuilder.RebuildFonts();
-            }
+            FontsHelper.LoadFont();
 
             CreateWindows();
 
@@ -150,11 +146,6 @@ namespace TPie
                 }
             }
             catch { }
-        }
-
-        private void BuildFont()
-        {
-            FontsHelper.LoadFont();
         }
 
         private void PluginCommand(string command, string arguments)
@@ -329,8 +320,9 @@ namespace TPie
 
             Framework.Update -= Update;
             UiBuilder.Draw -= Draw;
-            UiBuilder.BuildFonts -= BuildFont;
             UiBuilder.OpenConfigUi -= OpenConfigUi;
+
+            FontsHelper.ClearFont();
             UiBuilder.RebuildFonts();
         }
     }

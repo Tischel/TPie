@@ -1,16 +1,24 @@
-﻿using Dalamud.Logging;
+﻿using Dalamud.Interface.ManagedFontAtlas;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.IO;
+using static Dalamud.Interface.Utility.Raii.ImRaii;
 
 namespace TPie.Helpers
 {
     internal static class FontsHelper
     {
         public static bool DefaultFontBuilt { get; private set; }
-        public static ImFontPtr DefaultFont { get; private set; } = null;
+        public static IFontHandle? DefaultFont { get; private set; } = null!;
 
         private static bool _fontPushed = false;
+
+        public static void ClearFont()
+        {
+            DefaultFont?.Dispose();
+            DefaultFont = null;
+        }
 
         public static unsafe void LoadFont()
         {
@@ -20,11 +28,22 @@ namespace TPie.Helpers
 
             try
             {
-                DefaultFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(path, Plugin.Settings.FontSize);
-                if ((IntPtr)DefaultFont.NativePtr != IntPtr.Zero)
-                {
-                    DefaultFontBuilt = true;
-                }
+                DefaultFont = Plugin.UiBuilder.FontAtlas.NewDelegateFontHandle
+                (
+                    e => e.OnPreBuild
+                    (
+                        tk => tk.AddFontFromFile
+                        (
+                            path,
+                            new SafeFontConfig
+                            {
+                                SizePx = Plugin.Settings.FontSize
+                            }
+                        )
+                    )
+                );
+
+                DefaultFontBuilt = true;
             }
             catch (Exception e)
             {
@@ -34,32 +53,26 @@ namespace TPie.Helpers
 
         public static void PushFont(float scale)
         {
-            if (DefaultFontBuilt && Plugin.Settings.UseCustomFont)
+            _fontPushed = false;
+            ImGui.SetWindowFontScale(scale);
+
+            if (!DefaultFontBuilt || !Plugin.Settings.UseCustomFont)
             {
-                DefaultFont.Scale = scale;
-                ImGui.PushFont(DefaultFont);
-                _fontPushed = true;
                 return;
             }
-            else
-            {
-                ImGui.SetWindowFontScale(scale);
-            }
 
-            _fontPushed = false;
+            DefaultFont?.Push();
+            _fontPushed = true;            
         }
 
         public static void PopFont()
         {
+            ImGui.SetWindowFontScale(1);
+
             if (_fontPushed)
             {
-                ImGui.PopFont();
-                DefaultFont.Scale = 1;
+                DefaultFont?.Pop();
                 _fontPushed = false;
-            }
-            else
-            {
-                ImGui.SetWindowFontScale(1);
             }
         }
     }
