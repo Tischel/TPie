@@ -34,6 +34,7 @@ namespace TPie.Config
 
         public bool KeybindPassthrough = false;
         public bool EnableQuickSettings = true;
+        public bool EnableEscapeKeybind = true;
 
         public ItemBorder GlobalBorderSettings = ItemBorder.Default();
 

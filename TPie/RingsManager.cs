@@ -1,5 +1,7 @@
 ﻿using Dalamud.Logging;
 using System.Collections.Generic;
+using TPie.Config;
+using TPie.Helpers;
 using TPie.Models;
 
 namespace TPie
@@ -29,7 +31,19 @@ namespace TPie
             }
             _skipNextClosedCheck = false;
 
-            _activeRing?.Update();
+            if (_activeRing != null)
+            {
+                if (Plugin.Settings.EnableEscapeKeybind && 
+                    _activeRing.KeyBind.Toggle &&
+                    KeyboardHelper.Instance.IsEscapePressed())
+                {
+                    _activeRing.KeyBind.Deactivate();
+                }
+                else
+                {
+                    _activeRing?.Update();
+                }
+            }
 
             for (int i = 0; i < Rings.Count; i++)
             {

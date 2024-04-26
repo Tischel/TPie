@@ -55,6 +55,13 @@ namespace TPie.Helpers
             return _keyStates[key] > 1;
         }
 
+        public bool IsEscapePressed()
+        {
+            if (!IsGameFocused()) return false;
+
+            return _keyStates[(int)Keys.Escape] > 1;
+        }
+
         public int GetKeyPressed()
         {
             if (!IsGameFocused()) return 0;

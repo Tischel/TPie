@@ -33,7 +33,7 @@ namespace TPie.Config
         public SettingsWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(400, 464);
+            Size = new Vector2(400, 470);
 
             _fontSizes = new string[40 - 13];
             for (int i = 14; i <= 40; i++)
@@ -184,7 +184,7 @@ namespace TPie.Config
             // keybinds
             ImGui.Spacing();
             ImGui.Text("Keybinds");
-            ImGui.BeginChild("##Keybinds", new Vector2(384 * _scale, 40 * _scale), true);
+            ImGui.BeginChild("##Keybinds", new Vector2(384 * _scale, 64 * _scale), true);
             {
                 ImGui.Checkbox("Keybind Passthrough", ref Settings.KeybindPassthrough);
                 DrawHelper.SetTooltip("When enabled, TPie wont prevent the game from receiving a key press asssigned for a ring.");
@@ -192,13 +192,16 @@ namespace TPie.Config
                 ImGui.SameLine();
                 ImGui.Checkbox("Enable Quick Settings", ref Settings.EnableQuickSettings);
                 DrawHelper.SetTooltip("When enabled, double right-clicking when a ring is opened will open the settings for that ring.");
+
+                ImGui.Checkbox("Enable Escape key to close rings", ref Settings.EnableQuickSettings);
+                DrawHelper.SetTooltip("When enabled, pressing the Escape key while a ring with a toggable keybind is opened will immediately close it.");
             }
             ImGui.EndChild();
 
             // style
             ImGui.Spacing();
             ImGui.Text("Style");
-            ImGui.BeginChild("##Style", new Vector2(384 * _scale, 70 * _scale), true);
+            ImGui.BeginChild("##Style", new Vector2(384 * _scale, 64 * _scale), true);
             {
                 ImGui.Checkbox("Draw Rings Background", ref Settings.DrawRingBackground);
 
@@ -334,7 +337,7 @@ namespace TPie.Config
                 ImGuiTableFlags.SizingFixedSame;
 
             // rings
-            if (ImGui.BeginTable("##Rings_Table", 5, flags, new Vector2(384 * _scale, 354 * _scale)))
+            if (ImGui.BeginTable("##Rings_Table", 5, flags, new Vector2(384 * _scale, 366 * _scale)))
             {
                 ImGui.TableSetupColumn("Color", ImGuiTableColumnFlags.WidthStretch, 8, 0);
                 ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 25, 1);

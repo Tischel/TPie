@@ -35,7 +35,7 @@ namespace TPie.Config
         public RingSettingsWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(400, 464);
+            Size = new Vector2(400, 470);
 
             PositionCondition = ImGuiCond.Appearing;
         }
@@ -59,8 +59,10 @@ namespace TPie.Config
             Vector2 ringCenter = _windowPos + new Vector2(Size!.Value.X * _scale + Ring.Radius + margin.X, Size!.Value.Y * _scale / 2f);
             Ring.Preview(ringCenter);
 
+            float infoHeight = Ring.KeyBind.Toggle ? 190 : 164;
+
             // info
-            ImGui.BeginChild("##Ring_Info", new Vector2(384 * _scale, 178 * _scale), true);
+            ImGui.BeginChild("##Ring_Info", new Vector2(384 * _scale, infoHeight * _scale), true);
             {
                 ImGui.PushItemWidth(310 * _scale);
 
@@ -101,6 +103,12 @@ namespace TPie.Config
                 ImGui.SameLine();
                 ImGui.Checkbox("Tooltips", ref Ring.ShowTooltips);
                 DrawHelper.SetTooltip("This will show a tooltip with a description of an element when hovering on top of it.");
+
+                if (Ring.KeyBind.Toggle)
+                {
+                    ImGui.Checkbox("Only execute actions on click", ref Ring.PreventActionOnClose);
+                    DrawHelper.SetTooltip("When enabled, hovering on a item and closing the ring will not execute the hovered action.");
+                }
             }
             ImGui.EndChild();
 
@@ -112,7 +120,9 @@ namespace TPie.Config
                 ImGuiTableFlags.ScrollY |
                 ImGuiTableFlags.SizingFixedSame;
 
-            if (ImGui.BeginTable("##Item_Table", 4, flags, new Vector2(354 * _scale, 242 * _scale)))
+            float tableHeight = Ring.KeyBind.Toggle ? 242 : 268;
+
+            if (ImGui.BeginTable("##Item_Table", 4, flags, new Vector2(354 * _scale, tableHeight * _scale)))
             {
                 ImGui.TableSetupColumn("Type", ImGuiTableColumnFlags.WidthStretch, 22, 0);
                 ImGui.TableSetupColumn("Icon", ImGuiTableColumnFlags.WidthStretch, 8, 1);
@@ -181,7 +191,9 @@ namespace TPie.Config
                 ImGui.EndTable();
             }
 
-            ImGui.SetCursorPos(new Vector2(369 * _scale, 230 * _scale));
+            float buttonsStartY = Ring.KeyBind.Toggle ? infoHeight + 50 : infoHeight + 66;
+
+            ImGui.SetCursorPos(new Vector2(369 * _scale, buttonsStartY * _scale));
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.Button(FontAwesomeIcon.Plus.ToIconString()))
             {
@@ -192,7 +204,7 @@ namespace TPie.Config
 
             if (_selectedIndex >= 0)
             {
-                ImGui.SetCursorPos(new Vector2(369 * _scale, 260 * _scale));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, (buttonsStartY + 30) * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Pen.ToIconString()))
                 {
@@ -201,7 +213,7 @@ namespace TPie.Config
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Edit");
 
-                ImGui.SetCursorPos(new Vector2(369 * _scale, 290 * _scale));
+                ImGui.SetCursorPos(new Vector2(369 * _scale, (buttonsStartY + 60) * _scale));
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
                 {
@@ -220,7 +232,7 @@ namespace TPie.Config
                 int count = Ring.Items.Count;
                 if (count > 0)
                 {
-                    ImGui.SetCursorPos(new Vector2(369 * _scale, 380 * _scale));
+                    ImGui.SetCursorPos(new Vector2(369 * _scale, (buttonsStartY + 150) * _scale));
                     ImGui.PushFont(UiBuilder.IconFont);
                     if (ImGui.Button(FontAwesomeIcon.ArrowUp.ToIconString()))
                     {
@@ -249,7 +261,7 @@ namespace TPie.Config
                     ImGui.PopFont();
                     DrawHelper.SetTooltip("Move up");
 
-                    ImGui.SetCursorPos(new Vector2(369 * _scale, 410 * _scale));
+                    ImGui.SetCursorPos(new Vector2(369 * _scale, (buttonsStartY + 180) * _scale));
                     ImGui.PushFont(UiBuilder.IconFont);
                     if (ImGui.Button(FontAwesomeIcon.ArrowDown.ToIconString()))
                     {

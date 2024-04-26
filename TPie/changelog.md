@@ -1,3 +1,7 @@
+# 1.8.2.0
+- The Escape key can now be used to close a ring with a toggable keybind.
+- Added a setting for rings with toggable keybinds to not execute the hovered action when closed.
+
 # 1.8.1.0
 - Added support for the "new" Dalamund Fonts API.
 

@@ -1,5 +1,6 @@
 ﻿using Dalamud.Interface.Internal;
 using Dalamud.Interface.Utility;
+using Dalamud.Logging;
 using DelvUI.Helpers;
 using ImGuiNET;
 using System;
@@ -25,6 +26,7 @@ namespace TPie.Models
         public bool DrawLine = true;
         public bool DrawSelectionBackground = true;
         public bool ShowTooltips = false;
+        public bool PreventActionOnClose = false;
 
         private Vector4 _color = Vector4.One;
         public Vector4 Color
@@ -69,6 +71,7 @@ namespace TPie.Models
         private int _selectedIndex = -1;
         private double _selectionStartTime = -1;
         private bool _quickActionSelected = false;
+        private bool _canExecuteAction = true;
 
         private AnimationState _animState = AnimationState.Closed;
         private bool _animating = false;
@@ -121,10 +124,12 @@ namespace TPie.Models
             KeyBind currentKeyBind = CurrentKeybind();
 
             // click to select in toggle mode
-            if (!Previewing && currentKeyBind.Toggle &&
+            if (!Previewing && 
+                currentKeyBind.Toggle &&
                 ImGui.GetIO().MouseClicked[0] &&
                 ((_selectedIndex >= 0 && _selectedIndex < _validItems.Count) || _quickActionSelected))
             {
+                _canExecuteAction = true;
                 currentKeyBind.Deactivate();
             }
 
@@ -133,6 +138,8 @@ namespace TPie.Models
                 IsActive = false;
                 return false;
             }
+
+            _canExecuteAction = !KeyBind.Toggle || !PreventActionOnClose;
 
             IsActive = _validItems.Count > 0;
             return IsActive;
@@ -147,15 +154,22 @@ namespace TPie.Models
 
             if (!Previewing && !IsActive)
             {
-                if (_animState == AnimationState.Opened && _center != null && _selectedIndex >= 0 &&
-                    _validItems != null && _selectedIndex < _validItems.Count)
+                if (_canExecuteAction)
                 {
-                    _validItems[_selectedIndex].ExecuteAction();
-                }
-                else if (_animState == AnimationState.Opened || _animState == AnimationState.Opening &&
-                    _center != null && _quickActionSelected)
-                {
-                    QuickActionElement?.ExecuteAction();
+                    if (_animState == AnimationState.Opened &&
+                        _center != null &&
+                        _selectedIndex >= 0 &&
+                        _validItems != null &&
+                        _selectedIndex < _validItems.Count)
+                    {
+                        _validItems[_selectedIndex].ExecuteAction();
+                    }
+                    else if ((_animState == AnimationState.Opened || _animState == AnimationState.Opening) &&
+                        _center != null &&
+                        _quickActionSelected)
+                    {
+                        QuickActionElement?.ExecuteAction();
+                    }
                 }
 
                 if (_animState != AnimationState.Closing && _animState != AnimationState.Closed)
