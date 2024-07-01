@@ -59,10 +59,7 @@ namespace TPie.Helpers
             return ActionsForJobId(jobId).Any(row => row.RowId == actionId);
         }
 
-        private static int CompareActionsByName(LuminaAction a, LuminaAction b)
-        {
-            return a.Name.ToString().CompareTo(b.Name.ToString());
-        }
+        private static int CompareActionsByName(LuminaAction a, LuminaAction b) => String.Compare(a.Name.ToString(), b.Name.ToString(), StringComparison.Ordinal);
 
         public bool ClassJobCategoryContainsJob(uint key, uint jobId)
         {
@@ -99,6 +96,8 @@ namespace TPie.Helpers
                 case 29: return jobId == JobIDs.SCH;
                 case 38: return jobId == JobIDs.PLD;
                 case 41: return jobId == JobIDs.MNK;
+                case 42: return jobId == JobIDs.VPR;
+                case 43: return jobId == JobIDs.PCT;
                 case 44: return jobId == JobIDs.WAR;
                 case 47: return jobId == JobIDs.DRG;
                 case 50: return jobId == JobIDs.BRD;
@@ -126,21 +125,21 @@ namespace TPie.Helpers
                 case 111: return jobId == JobIDs.SAM;
                 case 112: return jobId == JobIDs.RDM;
                 case 113: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
-                case 114: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR;
+                case 114: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR;
                 case 115: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
-                case 116: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU;
+                case 116: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU || jobId == JobIDs.PCT;
                 case 117: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST || jobId == JobIDs.SGE;
-                case 118: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR;
+                case 118: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR;
                 case 121: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
-                case 122: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM;
+                case 122: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.VPR;
                 case 123: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
                 case 125: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST || jobId == JobIDs.SGE;
                 case 129: return jobId == JobIDs.BLU;
                 case 133: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST || jobId == JobIDs.SGE;
                 case 134: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
                 case 139: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
-                case 147: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU;
-                case 148: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR;
+                case 147: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU || jobId == JobIDs.PCT;
+                case 148: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR;
                 case 149: return jobId == JobIDs.GNB;
                 case 150: return jobId == JobIDs.DNC;
                 case 160: return jobId == JobIDs.SCH;
@@ -182,7 +181,8 @@ namespace TPie.Helpers
                 JobIDs.DRG,
                 JobIDs.NIN,
                 JobIDs.SAM,
-                JobIDs.RPR
+                JobIDs.RPR,
+                JobIDs.VPR
             },
 
             // ranged phys dps
@@ -203,6 +203,7 @@ namespace TPie.Helpers
                 JobIDs.SMN,
                 JobIDs.RDM,
                 JobIDs.BLU,
+                JobIDs.PCT,
             },
 
             // crafters
@@ -299,6 +300,9 @@ namespace TPie.Helpers
             [JobIDs.WVR] = "WVR",
 
             [JobIDs.WHM] = "WHM",
+            
+            [JobIDs.VPR] = "VPR",
+            [JobIDs.PCT] = "PCT",
         };
     }
 
@@ -362,7 +366,7 @@ namespace TPie.Helpers
         public const uint MIN = 16;
         public const uint BOT = 17;
         public const uint FSH = 18;
-        public const uint VPR = 42;
-        public const uint PCT = 43;
+        public const uint VPR = 41;
+        public const uint PCT = 42;
     }
 }
