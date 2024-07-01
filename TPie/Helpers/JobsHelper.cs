@@ -362,5 +362,7 @@ namespace TPie.Helpers
         public const uint MIN = 16;
         public const uint BOT = 17;
         public const uint FSH = 18;
+        public const uint VPR = 42;
+        public const uint PCT = 43;
     }
 }

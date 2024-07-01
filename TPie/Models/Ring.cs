@@ -5,8 +5,11 @@ using DelvUI.Helpers;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Interface;
+using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Config;
 using TPie.Helpers;
 using TPie.Models.Elements;
@@ -244,12 +247,13 @@ namespace TPie.Models
             // bg
             if (Plugin.Settings.DrawRingBackground)
             {
-                IDalamudTextureWrap? bg = Plugin.RingBackground;
+                UldWrapper? bg = Plugin.RingBackground;
                 if (bg != null)
                 {
+                    string ringBgPath = Path.Combine(Path.GetDirectoryName(Plugin.AssemblyLocation) ?? "", "Media", "ring_bg.png");
                     Vector2 bgSize = new Vector2(Radius * 1.3f);
                     uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, (float)_animProgress));
-                    drawList.AddImage(bg.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One, c);
+                    drawList.AddImage(bg.LoadTexturePart(ringBgPath,1)!.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One, c);
                 }
             }
 

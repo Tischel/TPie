@@ -1,4 +1,7 @@
-﻿using Dalamud.Interface.Internal;
+﻿using Dalamud.Game;
+using Dalamud.Interface.Internal;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Lumina.Excel;
 using TPie;
 using static Dalamud.Plugin.Services.ITextureProvider;
@@ -24,15 +27,20 @@ namespace DelvUI.Helpers
             return GetTextureFromIconId(iconId, highQuality, stackCount, hdIcon);
         }
 
-        public static IDalamudTextureWrap? GetTextureFromIconId(uint iconId, bool highQuality = false, uint stackCount = 0, bool hdIcon = true)
+        public static ISharedImmediateTexture GetTextureFromIconId(uint iconId, bool highQuality = false, uint stackCount = 0, bool hdIcon = true)
         {
-            IconFlags flags = highQuality ? IconFlags.ItemHighQuality : (hdIcon ? IconFlags.HiRes : IconFlags.None);
-            return Plugin.TextureProvider.GetIcon(iconId + stackCount, hdIcon ? IconFlags.HiRes : IconFlags.None);
+            GameIconLookup gameIconLookup = new GameIconLookup
+            {
+                IconId = iconId,
+                ItemHq = hdIcon,
+            };
+
+            return Plugin.TextureProvider.GetFromGameIcon(gameIconLookup);
         }
 
-        public static IDalamudTextureWrap? GetTextureFromPath(string path)
+        public static ISharedImmediateTexture GetTextureFromPath(string path)
         {
-            return Plugin.TextureProvider.GetTextureFromGame(path);
+            return Plugin.TextureProvider.GetFromFile(path);
         }
     }
 }

@@ -13,12 +13,11 @@ namespace TPie.Helpers
     internal class ItemsHelper
     {
         private delegate void UseItem(IntPtr agent, uint itemId, uint unk1, uint unk2, short unk3);
-        private delegate uint GetActionID(uint unk, uint itemId);
 
         #region Singleton
         private ItemsHelper()
         {
-            _useItemPtr = Plugin.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 89 7C 24 38");
+            _useItemPtr = Plugin.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 4C 89 74 24 ??");
 
             ExcelSheet<Item>? itemsSheet = Plugin.DataManager.GetExcelSheet<Item>();
             List<Item> validItems = itemsSheet?.Where(item => item.ItemAction.Row > 0).ToList() ?? new List<Item>();
@@ -91,9 +90,9 @@ namespace TPie.Helpers
 
                             if (item->Quantity == 0) continue;
 
-                            bool hq = (item->Flags & InventoryItem.ItemFlags.HQ) != 0;
+                            bool hq = (item->Flags & InventoryItem.ItemFlags.HighQuality) != 0;
                             string hqString = hq ? "_1" : "_0";
-                            string key = $"{item->ItemID}{hqString}";
+                            string key = $"{item->ItemId}{hqString}";
 
                             if (UsableItems.TryGetValue(key, out UsableItem? usableItem) && usableItem != null)
                             {
@@ -101,11 +100,11 @@ namespace TPie.Helpers
                             }
                             else
                             {
-                                if (_usableItems.TryGetValue(item->ItemID, out Item? itemData) && itemData != null)
+                                if (_usableItems.TryGetValue(item->ItemId, out Item? itemData) && itemData != null)
                                 {
                                     UsableItems.Add(key, new UsableItem(itemData, hq, item->Quantity));
                                 }
-                                else if (_usableEventItems.TryGetValue(item->ItemID, out EventItem? eventItemData) && eventItemData != null)
+                                else if (_usableEventItems.TryGetValue(item->ItemId, out EventItem? eventItemData) && eventItemData != null)
                                 {
                                     UsableItems.Add(key, new UsableItem(eventItemData, hq, item->Quantity));
                                 }
@@ -141,7 +140,7 @@ namespace TPie.Helpers
             if (_useItemPtr == IntPtr.Zero) return;
 
             AgentModule* agentModule = (AgentModule*)Plugin.GameGui.GetUIModule();
-            IntPtr agent = (IntPtr)agentModule->GetAgentByInternalID(10);
+            IntPtr agent = (IntPtr)agentModule->GetAgentByInternalId((AgentId)10);
 
             UseItem usetItemDelegate = Marshal.GetDelegateForFunctionPointer<UseItem>(_useItemPtr);
             usetItemDelegate(agent, itemId, 999, 0, 0);

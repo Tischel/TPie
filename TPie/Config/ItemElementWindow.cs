@@ -5,6 +5,8 @@ using Lumina.Excel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Helpers;
 using TPie.Models.Elements;
 using LuminaItem = Lumina.Excel.GeneratedSheets.Item;
@@ -96,12 +98,12 @@ namespace TPie.Config
                     ImGui.PopStyleColor();
 
                     // icon
-                    IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(data.IconID, data.HQ);
+                    ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(data.IconID, data.HQ);
                     if (texture != null)
                     {
                         ImGui.SameLine();
                         ImGui.SetCursorPosX(10 * _scale);
-                        ImGui.Image(texture.ImGuiHandle, new Vector2(24 * _scale));
+                        ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(24 * _scale));
                     }
                 }
             }

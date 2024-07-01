@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Helpers;
 using TPie.Models.Elements;
 
@@ -131,12 +133,12 @@ namespace TPie.Config
                     }
 
                     // icon
-                    IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(62800 + jobID);
+                    ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(62800 + jobID);
                     if (texture != null)
                     {
                         ImGui.SameLine();
                         ImGui.SetCursorPosX(10 * _scale);
-                        ImGui.Image(texture.ImGuiHandle, new Vector2(24 * _scale));
+                        ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(24 * _scale));
                     }
                 }
             }

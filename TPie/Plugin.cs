@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
+using Dalamud.Interface.ManagedFontAtlas;
+using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Config;
 using TPie.Helpers;
 using TPie.Models;
@@ -23,7 +25,7 @@ namespace TPie
     {
         public static IClientState ClientState { get; private set; } = null!;
         public static ICommandManager CommandManager { get; private set; } = null!;
-        public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
+        public static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
         public static IDataManager DataManager { get; private set; } = null!;
         public static IFramework Framework { get; private set; } = null!;
         public static IGameGui GameGui { get; private set; } = null!;
@@ -57,12 +59,12 @@ namespace TPie
 
         public static RingsManager RingsManager = null!;
 
-        public static IDalamudTextureWrap? RingBackground;
+        public static UldWrapper? RingBackground;
 
         public Plugin(
             IClientState clientState,
             ICommandManager commandManager,
-            DalamudPluginInterface pluginInterface,
+            IDalamudPluginInterface pluginInterface,
             IDataManager dataManager,
             IFramework framework,
             IGameGui gameGui,
@@ -81,7 +83,7 @@ namespace TPie
             GameGui = gameGui;
             SigScanner = sigScanner;
             GameInteropProvider = gameInteropProvider;
-            UiBuilder = PluginInterface.UiBuilder;
+            UiBuilder = (UiBuilder)PluginInterface.UiBuilder;
             KeyState = keyState;
             Logger = logger;
             TextureProvider = textureProvider;
@@ -142,7 +144,7 @@ namespace TPie
                 string ringBgPath = Path.Combine(Path.GetDirectoryName(AssemblyLocation) ?? "", "Media", "ring_bg.png");
                 if (File.Exists(ringBgPath))
                 {
-                    RingBackground = UiBuilder.LoadImage(ringBgPath);
+                    RingBackground = UiBuilder.LoadUld(ringBgPath);
                 }
             }
             catch { }
@@ -323,7 +325,7 @@ namespace TPie
             UiBuilder.OpenConfigUi -= OpenConfigUi;
 
             FontsHelper.ClearFont();
-            UiBuilder.RebuildFonts();
+            UiBuilder.CreateFontAtlas(FontAtlasAutoRebuildMode.Async, false, null);
         }
     }
 }

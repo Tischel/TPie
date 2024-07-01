@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Action = Lumina.Excel.GeneratedSheets.Action;
 
 namespace TPie.Config
@@ -195,7 +197,7 @@ namespace TPie.Config
                         if (i >= count) break;
                         uint iconId = icons.ElementAt(i);
 
-                        IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(iconId) ?? TexturesHelper.GetTextureFromIconId(61502);
+                        ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(iconId) ?? TexturesHelper.GetTextureFromIconId(61502);
                         if (texture != null)
                         {
                             if (!first)
@@ -217,7 +219,7 @@ namespace TPie.Config
                             }
 
                             ImGui.SetCursorPos(cursorPos);
-                            ImGui.Image(texture.ImGuiHandle, IconSize * _scale);
+                            ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, IconSize * _scale);
                         }
 
                         if (ImGui.IsItemHovered())
