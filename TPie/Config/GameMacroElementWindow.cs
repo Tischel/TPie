@@ -4,6 +4,8 @@ using DelvUI.Helpers;
 using ImGuiNET;
 using System.Numerics;
 using System.Text.RegularExpressions;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Helpers;
 using TPie.Models.Elements;
 
@@ -116,11 +118,11 @@ namespace TPie.Config
             // icon
             if (GameMacroElement.IconID > 0)
             {
-                IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(GameMacroElement.IconID);
+                ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(GameMacroElement.IconID);
                 if (texture != null)
                 {
                     ImGui.SetCursorPosX(110 * _scale);
-                    ImGui.Image(texture.ImGuiHandle, new Vector2(80 * _scale));
+                    ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(80 * _scale));
                 }
             }
 

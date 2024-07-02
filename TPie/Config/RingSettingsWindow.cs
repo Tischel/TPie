@@ -6,6 +6,8 @@ using DelvUI.Helpers;
 using ImGuiNET;
 using System.Numerics;
 using System.Text.RegularExpressions;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Helpers;
 using TPie.Models;
 using TPie.Models.Elements;
@@ -152,10 +154,10 @@ namespace TPie.Config
                     // icon
                     if (ImGui.TableSetColumnIndex(1))
                     {
-                        IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(item.IconID, item.isHQ());
+                        ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(item.IconID, item.isHQ());
                         if (texture != null)
                         {
-                            ImGui.Image(texture.ImGuiHandle, new Vector2(24));
+                            ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(24));
                         }
                     }
 

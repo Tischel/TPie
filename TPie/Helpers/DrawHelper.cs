@@ -4,6 +4,8 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using ImGuiNET;
 using System;
 using System.Numerics;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 
 namespace TPie.Helpers
 {
@@ -11,11 +13,11 @@ namespace TPie.Helpers
     {
         public static void DrawIcon(uint iconId, bool hq, Vector2 position, Vector2 size, float alpha, ImDrawListPtr drawList)
         {
-            IDalamudTextureWrap? texture = TexturesHelper.GetTextureFromIconId(iconId, hq);
+            ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(iconId, hq);
             if (texture == null) return;
 
             uint color = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, alpha));
-            drawList.AddImage(texture.ImGuiHandle, position, position + size, Vector2.Zero, Vector2.One, color);
+            drawList.AddImage(texture.GetWrapOrEmpty().ImGuiHandle, position, position + size, Vector2.Zero, Vector2.One, color);
         }
 
         public static void DrawOutlinedText(string text, Vector2 pos, bool centered, float scale, ImDrawListPtr drawList, int thickness = 1)
