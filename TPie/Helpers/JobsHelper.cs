@@ -284,6 +284,7 @@ namespace TPie.Helpers
 
             [JobIDs.NIN] = "NIN",
 
+            [JobIDs.PCT] = "PCT",
             [JobIDs.PGL] = "PGL",
 
             [JobIDs.RDM] = "RDM",
@@ -297,12 +298,11 @@ namespace TPie.Helpers
 
             [JobIDs.THM] = "THM",
 
+            [JobIDs.VPR] = "VPR",
+
             [JobIDs.WVR] = "WVR",
 
             [JobIDs.WHM] = "WHM",
-            
-            [JobIDs.VPR] = "VPR",
-            [JobIDs.PCT] = "PCT",
         };
     }
 
@@ -341,6 +341,7 @@ namespace TPie.Helpers
         public const uint NIN = 30;
         public const uint SAM = 34;
         public const uint RPR = 39;
+        public const uint VPR = 41;
 
         public const uint ARC = 5;
         public const uint BRD = 23;
@@ -353,6 +354,7 @@ namespace TPie.Helpers
         public const uint SMN = 27;
         public const uint RDM = 35;
         public const uint BLU = 36;
+        public const uint PCT = 42;
 
         public const uint CRP = 8;
         public const uint BSM = 9;
@@ -366,7 +368,5 @@ namespace TPie.Helpers
         public const uint MIN = 16;
         public const uint BOT = 17;
         public const uint FSH = 18;
-        public const uint VPR = 41;
-        public const uint PCT = 42;
     }
 }
