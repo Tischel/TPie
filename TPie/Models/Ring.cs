@@ -1,15 +1,10 @@
-﻿using Dalamud.Interface.Internal;
+﻿using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
-using Dalamud.Logging;
-using DelvUI.Helpers;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Interface;
-using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Config;
 using TPie.Helpers;
 using TPie.Models.Elements;
@@ -127,7 +122,7 @@ namespace TPie.Models
             KeyBind currentKeyBind = CurrentKeybind();
 
             // click to select in toggle mode
-            if (!Previewing && 
+            if (!Previewing &&
                 currentKeyBind.Toggle &&
                 ImGui.GetIO().MouseClicked[0] &&
                 ((_selectedIndex >= 0 && _selectedIndex < _validItems.Count) || _quickActionSelected))
@@ -247,13 +242,12 @@ namespace TPie.Models
             // bg
             if (Plugin.Settings.DrawRingBackground)
             {
-                UldWrapper? bg = Plugin.RingBackground;
+                IDalamudTextureWrap? bg = Plugin.RingBackground?.GetWrapOrDefault();
                 if (bg != null)
                 {
-                    string ringBgPath = Path.Combine(Path.GetDirectoryName(Plugin.AssemblyLocation) ?? "", "Media", "ring_bg.png");
                     Vector2 bgSize = new Vector2(Radius * 1.3f);
                     uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, (float)_animProgress));
-                    drawList.AddImage(bg.LoadTexturePart(ringBgPath,1)!.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One, c);
+                    drawList.AddImage(bg.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One, c);
                 }
             }
 

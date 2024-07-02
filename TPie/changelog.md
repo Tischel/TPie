@@ -1,3 +1,6 @@
+# 1.9.0.0
+- Added support for Dawntrail and Dalamud API 10.
+
 # 1.8.2.0
 - The Escape key can now be used to close a ring with a toggable keybind.
 - Added a setting for rings with toggable keybinds to not execute the hovered action when closed.

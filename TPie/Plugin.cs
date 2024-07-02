@@ -1,7 +1,8 @@
 ﻿using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.Interface;
-using Dalamud.Interface.Internal;
+using Dalamud.Interface.ManagedFontAtlas;
+using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
@@ -12,8 +13,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
-using Dalamud.Interface.ManagedFontAtlas;
-using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Config;
 using TPie.Helpers;
 using TPie.Models;
@@ -59,7 +58,7 @@ namespace TPie
 
         public static RingsManager RingsManager = null!;
 
-        public static UldWrapper? RingBackground;
+        public static ISharedImmediateTexture? RingBackground;
 
         public Plugin(
             IClientState clientState,
@@ -97,7 +96,7 @@ namespace TPie
                 AssemblyLocation = Assembly.GetExecutingAssembly().Location;
             }
 
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.8.2.0";
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.9.0.0";
 
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
@@ -144,7 +143,7 @@ namespace TPie
                 string ringBgPath = Path.Combine(Path.GetDirectoryName(AssemblyLocation) ?? "", "Media", "ring_bg.png");
                 if (File.Exists(ringBgPath))
                 {
-                    RingBackground = UiBuilder.LoadUld(ringBgPath);
+                    RingBackground = TextureProvider.GetFromFile(ringBgPath);
                 }
             }
             catch { }
