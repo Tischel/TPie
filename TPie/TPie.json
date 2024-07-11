@@ -5,5 +5,5 @@
   "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items, Gear Sets, Macros and more...",
   "RepoUrl": "https://github.com/Tischel/TPie",
   "Tags": [ "UI" ],
-  "Changelog": "# 1.9.0.0\n\n- Added support for Dawntrail and Dalamud API 10."
+  "Changelog": "# 1.9.1.0\n\n- Added setting to Nested Ring Elements so they can be activated by clicking instead of hovering."
 }

@@ -53,10 +53,24 @@ namespace TPie.Config
                 NestedRingElement.RingName = _inputText;
             }
 
-            // activation time
-            ImGui.PushItemWidth(182 * _scale);
-            ImGui.DragFloat("Activation Time ##NestedRing", ref NestedRingElement.ActivationTime, 0.1f, 0.2f, 5f);
-            DrawHelper.SetTooltip("Determines how many seconds the element needs to be hovered on to activate the nested ring.");
+            // activation
+            if (ImGui.RadioButton("Click to Activate", NestedRingElement.ClickToActivate))
+            {
+                NestedRingElement.ClickToActivate = true;
+            }
+
+            ImGui.SameLine();
+            if (ImGui.RadioButton("Hover to Activate", !NestedRingElement.ClickToActivate))
+            {
+                NestedRingElement.ClickToActivate = false;
+            }
+
+            if (!NestedRingElement.ClickToActivate)
+            {
+                ImGui.PushItemWidth(182 * _scale);
+                ImGui.DragFloat("Activation Time ##NestedRing", ref NestedRingElement.ActivationTime, 0.1f, 0.2f, 5f);
+                DrawHelper.SetTooltip("Determines how many seconds the element needs to be hovered on to activate the nested ring.");
+            }
 
             // keep center
             ImGui.Checkbox("Keep Previous Ring Center", ref NestedRingElement.KeepCenter);

@@ -1,3 +1,6 @@
+# 1.9.1.0
+- Added setting to Nested Ring Elements so they can be activated by clicking instead of hovering.
+
 # 1.9.0.0
 - Added support for Dawntrail and Dalamud API 10.
 

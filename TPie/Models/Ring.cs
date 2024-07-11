@@ -381,10 +381,20 @@ namespace TPie.Models
                 return false;
             }
 
-            double now = ImGui.GetTime();
-            if (now - _selectionStartTime < nestedRing.ActivationTime)
+            if (!nestedRing.ClickToActivate)
             {
-                return false;
+                double now = ImGui.GetTime();
+                if (now - _selectionStartTime < nestedRing.ActivationTime)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (!ImGui.GetIO().MouseClicked[0])
+                {
+                    return false;
+                }
             }
 
             Ring? ring = nestedRing.GetRing();

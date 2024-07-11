@@ -166,9 +166,10 @@ namespace TPie.Models.Elements
                         activationTime = activationTime == 0 ? 1 : activationTime;
                         bool drawText = jo.GetValue("DrawText") != null ? jo.Value<bool>("DrawText") : true;
                         bool keepCenter = jo.GetValue("KeepCenter") != null ? jo.Value<bool>("KeepCenter") : true;
+                        bool clickToActivate = jo.GetValue("ClickToActivate") != null ? jo.Value<bool>("ClickToActivate") : false;
                         uint iconId = jo.Value<uint>("IconID");
 
-                        NestedRingElement element = new NestedRingElement(ringName, activationTime, drawText, keepCenter, iconId);
+                        NestedRingElement element = new NestedRingElement(ringName, activationTime, drawText, keepCenter, clickToActivate, iconId);
                         element.Border = border;
                         return element;
                     }

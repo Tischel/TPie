@@ -11,17 +11,19 @@ namespace TPie.Models.Elements
         public float ActivationTime;
         public bool DrawText;
         public bool KeepCenter;
+        public bool ClickToActivate;
 
-        public NestedRingElement(string ringName, float activationTime, bool drawText, bool keepCenter, uint iconId)
+        public NestedRingElement(string ringName, float activationTime, bool drawText, bool keepCenter, bool clickToActivate, uint iconId)
         {
             RingName = ringName;
             ActivationTime = activationTime;
             DrawText = drawText;
             KeepCenter = keepCenter;
+            ClickToActivate = clickToActivate;
             IconID = iconId;
         }
 
-        public NestedRingElement() : this("Ring Name", 0.5f, true, true, 66319) { }
+        public NestedRingElement() : this("Ring Name", 0.5f, true, true, false, 66319) { }
 
         public override string Description()
         {
