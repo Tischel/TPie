@@ -98,7 +98,7 @@ namespace TPie.Config
                     ImGui.PopStyleColor();
 
                     // icon
-                    ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(data.IconID, data.HQ);
+                    ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(data.IconID, data.HQ);
                     if (texture != null)
                     {
                         ImGui.SameLine();

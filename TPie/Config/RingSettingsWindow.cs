@@ -154,7 +154,7 @@ namespace TPie.Config
                     // icon
                     if (ImGui.TableSetColumnIndex(1))
                     {
-                        ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(item.IconID, item.isHQ());
+                        ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(item.IconID, item.isHQ());
                         if (texture != null)
                         {
                             ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(24));

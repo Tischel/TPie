@@ -133,7 +133,7 @@ namespace TPie.Config
                     }
 
                     // icon
-                    ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(62800 + jobID);
+                    ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(62800 + jobID);
                     if (texture != null)
                     {
                         ImGui.SameLine();

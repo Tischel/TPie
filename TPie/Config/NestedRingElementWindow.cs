@@ -122,7 +122,7 @@ namespace TPie.Config
             // icon
             if (NestedRingElement.IconID > 0)
             {
-                ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(NestedRingElement.IconID);
+                ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(NestedRingElement.IconID);
                 if (texture != null)
                 {
                     ImGui.SetCursorPosX(110 * _scale);

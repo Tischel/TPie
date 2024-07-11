@@ -13,7 +13,7 @@ namespace TPie.Helpers
     {
         public static void DrawIcon(uint iconId, bool hq, Vector2 position, Vector2 size, float alpha, ImDrawListPtr drawList)
         {
-            ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(iconId, hq);
+            ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(iconId, hq);
             if (texture == null) return;
 
             uint color = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, alpha));

@@ -108,7 +108,7 @@ namespace TPie.Config
             // icon
             if (CommandElement.IconID > 0)
             {
-                ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(CommandElement.IconID);
+                ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(CommandElement.IconID);
                 if (texture != null)
                 {
                     ImGui.SetCursorPosX(110 * _scale);

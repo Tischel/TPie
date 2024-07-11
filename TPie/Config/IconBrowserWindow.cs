@@ -197,7 +197,7 @@ namespace TPie.Config
                         if (i >= count) break;
                         uint iconId = icons.ElementAt(i);
 
-                        ISharedImmediateTexture texture = TexturesHelper.GetTextureFromIconId(iconId) ?? TexturesHelper.GetTextureFromIconId(61502);
+                        ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(iconId) ?? TexturesHelper.GetTextureFromIconId(61502);
                         if (texture != null)
                         {
                             if (!first)
