@@ -1,18 +1,16 @@
-﻿using Dalamud.Interface.Internal;
+﻿using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using DelvUI.Helpers;
 using ImGuiNET;
 using Lumina.Data.Files;
 using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Interface.Textures;
-using Dalamud.Interface.Textures.TextureWraps;
-using Action = Lumina.Excel.GeneratedSheets.Action;
+using Action = Lumina.Excel.Sheets.Action;
 
 namespace TPie.Config
 {

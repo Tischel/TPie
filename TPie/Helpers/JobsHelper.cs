@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
+using LuminaAction = Lumina.Excel.Sheets.Action;
 
 namespace TPie.Helpers
 {
@@ -51,7 +51,7 @@ namespace TPie.Helpers
 
         public List<LuminaAction> ActionsForJobId(uint jobId)
         {
-            return _playerActions.Where(row => ClassJobCategoryContainsJob(row.ClassJobCategory.Row, jobId)).ToList();
+            return _playerActions.Where(row => ClassJobCategoryContainsJob(row.ClassJobCategory.RowId, jobId)).ToList();
         }
 
         public bool IsActionValid(uint jobId, uint actionId)

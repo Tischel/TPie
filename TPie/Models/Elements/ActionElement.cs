@@ -1,12 +1,12 @@
 ﻿using FFXIVClientStructs.FFXIV.Client.Game;
 using ImGuiNET;
 using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System.Numerics;
 using System.Reflection;
 using TPie.Helpers;
-using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
+using LuminaAction = Lumina.Excel.Sheets.Action;
 
 namespace TPie.Models.Elements
 {
@@ -48,30 +48,30 @@ namespace TPie.Models.Elements
 
         public override void ExecuteAction()
         {
-            if (Data != null)
+            if (Data.HasValue)
             {
-                ChatHelper.SendChatMessage($"/ac \"{Data.Name}\"");
+                ChatHelper.SendChatMessage($"/ac \"{Data.Value.Name}\"");
             }
         }
 
         public override bool IsValid()
         {
-            if (_actionId == 0) return false;
+            if (_actionId == 0 || !Data.HasValue) return false;
 
-            uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Id ?? 0;
+            uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Value.JobIndex ?? 0;
             if (jobId <= 0) return false;
 
-            ClassJobCategory? classJobCategory = Data?.ClassJobCategory.Value;
-            if (classJobCategory == null) return false;
+            ClassJobCategory? classJobCategory = Data.Value.ClassJobCategory.Value;
+            if (!classJobCategory.HasValue) return false;
 
-            PropertyInfo? property = classJobCategory.GetType().GetProperty(JobsHelper.JobNames[jobId]);
-            bool? value = (bool?)property?.GetValue(classJobCategory);
+            PropertyInfo? property = classJobCategory.Value.GetType().GetProperty(JobsHelper.JobNames[jobId]);
+            bool? value = (bool?)property?.GetValue(classJobCategory.Value);
             if (value.HasValue)
             {
                 return value.Value;
             }
 
-            return classJobCategory.Name == "All Classes" || classJobCategory.Name.ToString().Contains(JobsHelper.JobNames[jobId]);
+            return classJobCategory.Value.Name == "All Classes" || classJobCategory.Value.Name.ToString().Contains(JobsHelper.JobNames[jobId]);
         }
 
         public override string InvalidReason()
@@ -81,7 +81,7 @@ namespace TPie.Models.Elements
 
         public override string Description()
         {
-            return Data?.Name ?? "";
+            return Data.HasValue ? Data.Value.Name.ToString() : "";
         }
 
         public override void Draw(Vector2 position, Vector2 size, float scale, bool selected, uint color, float alpha, bool tooltip, ImDrawListPtr drawList)

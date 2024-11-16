@@ -1,16 +1,14 @@
-﻿using Dalamud.Interface.Internal;
+﻿using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
 using ImGuiNET;
 using Lumina.Excel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Interface.Textures;
-using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Helpers;
 using TPie.Models.Elements;
-using LuminaItem = Lumina.Excel.GeneratedSheets.Item;
-using LuminaKeyItem = Lumina.Excel.GeneratedSheets.EventItem;
+using LuminaItem = Lumina.Excel.Sheets.Item;
+using LuminaKeyItem = Lumina.Excel.Sheets.EventItem;
 
 namespace TPie.Config
 {
@@ -130,16 +128,16 @@ namespace TPie.Config
             List<LuminaItem> searchResult = _itemsSheet.Where(row => row.Name.ToString().ToUpper().Contains(text)).ToList();
             foreach (LuminaItem row in searchResult)
             {
-                items.Add(new ItemSearchData(row.RowId, false, row.Name, row.Icon));
+                items.Add(new ItemSearchData(row.RowId, false, row.Name.ToString(), row.Icon));
 
                 if (row.CanBeHq)
                 {
-                    items.Add(new ItemSearchData(row.RowId, true, row.Name, row.Icon));
+                    items.Add(new ItemSearchData(row.RowId, true, row.Name.ToString(), row.Icon));
                 }
             }
 
             keyItems = _keyItemsSheet.Where(row => row.Name.ToString().ToUpper().Contains(text))
-                .Select(row => new ItemSearchData(row.RowId, false, row.Name, row.Icon))
+                .Select(row => new ItemSearchData(row.RowId, false, row.Name.ToString(), row.Icon))
                 .ToList();
 
             _searchResult.Clear();

@@ -1,8 +1,8 @@
-﻿using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Game;
+﻿using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +12,15 @@ namespace TPie.Helpers
 {
     internal class ItemsHelper
     {
-        private delegate void UseItem(IntPtr agent, uint itemId, uint unk1, uint unk2, short unk3);
-
         #region Singleton
         private ItemsHelper()
         {
-            _useItemPtr = Plugin.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 4C 89 74 24 ??");
-
             ExcelSheet<Item>? itemsSheet = Plugin.DataManager.GetExcelSheet<Item>();
-            List<Item> validItems = itemsSheet?.Where(item => item.ItemAction.Row > 0).ToList() ?? new List<Item>();
+            List<Item> validItems = itemsSheet?.Where(item => item.ItemAction.RowId > 0).ToList() ?? new List<Item>();
             _usableItems = validItems.ToDictionary(item => item.RowId);
 
             ExcelSheet<EventItem>? eventItemsSheet = Plugin.DataManager.GetExcelSheet<EventItem>();
-            List<EventItem> validEventItems = eventItemsSheet?.Where(item => item.Action.Row > 0).ToList() ?? new List<EventItem>();
+            List<EventItem> validEventItems = eventItemsSheet?.Where(item => item.Action.RowId > 0).ToList() ?? new List<EventItem>();
             _usableEventItems = validEventItems.ToDictionary(item => item.RowId);
         }
 
@@ -54,7 +50,6 @@ namespace TPie.Helpers
         }
         #endregion
 
-        private IntPtr _useItemPtr = IntPtr.Zero;
         private Dictionary<uint, Item> _usableItems;
         private Dictionary<uint, EventItem> _usableEventItems;
 
@@ -96,17 +91,17 @@ namespace TPie.Helpers
 
                             if (UsableItems.TryGetValue(key, out UsableItem? usableItem) && usableItem != null)
                             {
-                                usableItem.Count += item->Quantity;
+                                usableItem.Count += (uint)item->Quantity;
                             }
                             else
                             {
-                                if (_usableItems.TryGetValue(item->ItemId, out Item? itemData) && itemData != null)
+                                if (_usableItems.TryGetValue(item->ItemId, out Item itemData))
                                 {
-                                    UsableItems.Add(key, new UsableItem(itemData, hq, item->Quantity));
+                                    UsableItems.Add(key, new UsableItem(itemData, hq, (uint)item->Quantity));
                                 }
-                                else if (_usableEventItems.TryGetValue(item->ItemId, out EventItem? eventItemData) && eventItemData != null)
+                                else if (_usableEventItems.TryGetValue(item->ItemId, out EventItem eventItemData) )
                                 {
-                                    UsableItems.Add(key, new UsableItem(eventItemData, hq, item->Quantity));
+                                    UsableItems.Add(key, new UsableItem(eventItemData, hq, (uint)item->Quantity));
                                 }
                             }
                         }
@@ -137,13 +132,7 @@ namespace TPie.Helpers
 
         public unsafe void Use(uint itemId)
         {
-            if (_useItemPtr == IntPtr.Zero) return;
-
-            AgentModule* agentModule = (AgentModule*)Plugin.GameGui.GetUIModule();
-            IntPtr agent = (IntPtr)agentModule->GetAgentByInternalId((AgentId)10);
-
-            UseItem usetItemDelegate = Marshal.GetDelegateForFunctionPointer<UseItem>(_useItemPtr);
-            usetItemDelegate(agent, itemId, 999, 0, 0);
+            AgentInventoryContext.Instance()->UseItem(itemId, 4);
         }
     }
 
@@ -158,7 +147,7 @@ namespace TPie.Helpers
 
         public UsableItem(Item item, bool hq, uint count)
         {
-            Name = item.Name;
+            Name = item.Name.ToString();
             ID = item.RowId;
             IsHQ = hq;
             IconID = item.Icon;
@@ -168,7 +157,7 @@ namespace TPie.Helpers
 
         public UsableItem(EventItem item, bool hq, uint count)
         {
-            Name = item.Name;
+            Name = item.Name.ToString();
             ID = item.RowId;
             IsHQ = hq;
             IconID = item.Icon;

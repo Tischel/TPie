@@ -7,13 +7,13 @@ namespace DelvUI.Helpers
 {
     public class TexturesHelper
     {
-        public static IDalamudTextureWrap? GetTexture<T>(uint rowId, bool highQuality = false, uint stackCount = 0, bool hdIcon = true) where T : ExcelRow
+        public static IDalamudTextureWrap? GetTexture<T>(uint rowId, bool highQuality = false, uint stackCount = 0, bool hdIcon = true) where T : struct, IExcelRow<T>
         {
             var sheet = Plugin.DataManager.GetExcelSheet<T>();
             return sheet == null ? null : GetTexture<T>(sheet.GetRow(rowId), highQuality, stackCount, hdIcon);
         }
 
-        public static IDalamudTextureWrap? GetTexture<T>(dynamic? row, bool highQuality = false, uint stackCount = 0, bool hdIcon = true) where T : ExcelRow
+        public static IDalamudTextureWrap? GetTexture<T>(dynamic? row, bool highQuality = false, uint stackCount = 0, bool hdIcon = true) where T : struct, IExcelRow<T>
         {
             if (row == null)
             {

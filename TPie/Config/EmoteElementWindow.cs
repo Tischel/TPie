@@ -1,15 +1,12 @@
-﻿using Dalamud.Interface.Internal;
+﻿using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using ImGuiNET;
-using ImGuiScene;
 using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Interface.Textures;
-using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Models.Elements;
 
 namespace TPie.Config
@@ -88,8 +85,8 @@ namespace TPie.Config
                     // name
                     if (ImGui.Selectable($"\t\t\t{data.Name}", false, ImGuiSelectableFlags.None, new Vector2(0, 24)))
                     {
-                        EmoteElement.Name = data.Name;
-                        EmoteElement.Command = data.TextCommand.Value?.Command.ToString() ?? "";
+                        EmoteElement.Name = data.Name.ToString();
+                        EmoteElement.Command = data.TextCommand.Value.Command.ToString() ?? "";
                         EmoteElement.IconID = data.Icon;
                     }
 
@@ -135,7 +132,7 @@ namespace TPie.Config
             {
                 _searchResult = _sheet.Where(row => row.Name.ToString().ToUpper().Contains(text.ToUpper())).ToList();
             }
-            
+
             _searchResult.Sort((a, b) => a.Name.ToString().CompareTo(b.Name.ToString()));
         }
     }
