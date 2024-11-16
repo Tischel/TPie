@@ -1,16 +1,12 @@
-﻿using Dalamud.Interface.Internal;
+﻿using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
 using ImGuiNET;
-using ImGuiScene;
 using Lumina.Excel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Interface.Textures;
-using Dalamud.Interface.Textures.TextureWraps;
-using TPie.Helpers;
 using TPie.Models.Elements;
-using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
+using LuminaAction = Lumina.Excel.Sheets.Action;
 
 namespace TPie.Config
 {
@@ -26,10 +22,10 @@ namespace TPie.Config
                 _inputText = "";
                 _searchResult.Clear();
 
-                if (value?.Data != null)
+                if (value != null && value.Data.HasValue)
                 {
-                    _inputText = value.Data.Name.ToString();
-                    _searchResult.Add(value.Data);
+                    _inputText = value.Data.Value.Name.ToString();
+                    _searchResult.Add(value.Data.Value);
                 }
             }
         }

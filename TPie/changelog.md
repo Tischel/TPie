@@ -1,3 +1,6 @@
+# 1.10.0.0
+- Added support for Patch 7.1 and Dalamud API 11.
+
 # 1.9.1.0
 - Added setting to Nested Ring Elements so they can be activated by clicking instead of hovering.
 

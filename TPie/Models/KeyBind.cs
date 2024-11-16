@@ -74,7 +74,7 @@ namespace TPie.Models
             IPlayerCharacter? player = Plugin.ClientState.LocalPlayer;
             if (player != null && Jobs.Count > 0)
             {
-                active &= Jobs.Contains(player.ClassJob.Id);
+                active &= Jobs.Contains(player.ClassJob.RowId);
             }
 
             // block keybind for the game?
