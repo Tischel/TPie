@@ -1,3 +1,6 @@
+# 1.10.0.1
+- Fixed Action items not appearing in the rings when on certain jobs.
+
 # 1.10.0.0
 - Added support for Patch 7.1 and Dalamud API 11.
 

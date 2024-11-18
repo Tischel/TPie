@@ -58,7 +58,7 @@ namespace TPie.Models.Elements
         {
             if (_actionId == 0 || !Data.HasValue) return false;
 
-            uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Value.JobIndex ?? 0;
+            uint jobId = Plugin.ClientState.LocalPlayer?.ClassJob.Value.RowId ?? 0;
             if (jobId <= 0) return false;
 
             ClassJobCategory? classJobCategory = Data.Value.ClassJobCategory.Value;
