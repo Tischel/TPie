@@ -5,6 +5,7 @@ using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
+using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
@@ -34,6 +35,7 @@ namespace TPie
         public static IKeyState KeyState { get; private set; } = null!;
         public static IPluginLog Logger { get; private set; } = null!;
         public static ITextureProvider TextureProvider { get; private set; } = null!;
+        public static ITextureSubstitutionProvider TextureSubstitutionProvider { get; private set; } = null!;
 
         public static string AssemblyLocation { get; private set; } = "";
         public string Name => "TPie";
@@ -71,7 +73,8 @@ namespace TPie
             IGameInteropProvider gameInteropProvider,
             IKeyState keyState,
             IPluginLog logger,
-            ITextureProvider textureProvider
+            ITextureProvider textureProvider,
+            ITextureSubstitutionProvider textureSubstitutionProvider
         )
         {
             ClientState = clientState;
@@ -86,6 +89,7 @@ namespace TPie
             KeyState = keyState;
             Logger = logger;
             TextureProvider = textureProvider;
+            TextureSubstitutionProvider = textureSubstitutionProvider;
 
             if (pluginInterface.AssemblyLocation.DirectoryName != null)
             {

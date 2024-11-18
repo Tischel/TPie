@@ -28,12 +28,7 @@ namespace DelvUI.Helpers
         {
             try
             {
-                GameIconLookup gameIconLookup = new GameIconLookup
-                {
-                    IconId = iconId,
-                    ItemHq = hdIcon,
-                };
-
+                GameIconLookup gameIconLookup = new GameIconLookup(iconId, highQuality, true);
                 return Plugin.TextureProvider.GetFromGameIcon(gameIconLookup);
 
             }
