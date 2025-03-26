@@ -132,7 +132,7 @@ namespace TPie.Helpers
 
         public unsafe void Use(uint itemId)
         {
-            AgentInventoryContext.Instance()->UseItem(itemId, 4);
+            AgentInventoryContext.Instance()->UseItem(itemId, (InventoryType)4);
         }
     }
 
