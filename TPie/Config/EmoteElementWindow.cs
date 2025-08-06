@@ -1,7 +1,7 @@
 ﻿using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 using System.Collections.Generic;
@@ -98,7 +98,7 @@ namespace TPie.Config
                     {
                         ImGui.SameLine();
                         ImGui.SetCursorPosX(10 * _scale);
-                        ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(24 * _scale));
+                        ImGui.Image(texture.GetWrapOrEmpty().Handle, new Vector2(24 * _scale));
                     }
 
                 }

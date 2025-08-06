@@ -2,7 +2,7 @@
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using DelvUI.Helpers;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Lumina.Data.Files;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
@@ -178,7 +178,7 @@ namespace TPie.Config
             int count = icons.Count();
             int index = 0;
 
-            ImGuiListClipperPtr clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
+            ImGuiListClipperPtr clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper());
             clipper.Begin(count / _columns + 1, (IconSize.Y * _scale) + ImGui.GetStyle().ItemSpacing.Y);
 
             while (clipper.Step())
@@ -217,7 +217,7 @@ namespace TPie.Config
                             }
 
                             ImGui.SetCursorPos(cursorPos);
-                            ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, IconSize * _scale);
+                            ImGui.Image(texture.GetWrapOrEmpty().Handle, IconSize * _scale);
                         }
 
                         if (ImGui.IsItemHovered())

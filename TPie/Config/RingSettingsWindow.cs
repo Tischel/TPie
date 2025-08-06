@@ -3,7 +3,7 @@ using Dalamud.Interface.Internal;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using DelvUI.Helpers;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using Dalamud.Interface.Textures;
@@ -157,7 +157,7 @@ namespace TPie.Config
                         ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(item.IconID, item.isHQ());
                         if (texture != null)
                         {
-                            ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(24));
+                            ImGui.Image(texture.GetWrapOrEmpty().Handle, new Vector2(24));
                         }
                     }
 
