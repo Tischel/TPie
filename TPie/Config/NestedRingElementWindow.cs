@@ -1,7 +1,7 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Interface.Internal;
 using DelvUI.Helpers;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using Dalamud.Interface.Textures;
@@ -126,7 +126,7 @@ namespace TPie.Config
                 if (texture != null)
                 {
                     ImGui.SetCursorPosX(110 * _scale);
-                    ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(80 * _scale));
+                    ImGui.Image(texture.GetWrapOrEmpty().Handle, new Vector2(80 * _scale));
                 }
             }
 

@@ -1,6 +1,6 @@
 ﻿using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Lumina.Excel;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +101,7 @@ namespace TPie.Config
                     {
                         ImGui.SameLine();
                         ImGui.SetCursorPosX(10 * _scale);
-                        ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, new Vector2(24 * _scale));
+                        ImGui.Image(texture.GetWrapOrEmpty().Handle, new Vector2(24 * _scale));
                     }
                 }
             }

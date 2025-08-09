@@ -5,5 +5,5 @@
   "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items, Gear Sets, Macros and more...",
   "RepoUrl": "https://github.com/Tischel/TPie",
   "Tags": [ "UI" ],
-  "Changelog": "# 1.11.0.1\n\n- Added support for Patch 7.2 and Dalamud API 12."
+  "Changelog": "# 1.12.0.0\n\n- Added support for Patch 7.3 and Dalamud API 13."
 }

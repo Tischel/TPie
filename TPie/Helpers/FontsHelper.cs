@@ -1,6 +1,6 @@
 ﻿using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Logging;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.IO;
 using static Dalamud.Interface.Utility.Raii.ImRaii;

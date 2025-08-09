@@ -1,7 +1,7 @@
 ﻿using Dalamud.Interface.Internal;
 using DelvUI.Helpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Numerics;
 using Dalamud.Interface.Textures;
@@ -17,7 +17,7 @@ namespace TPie.Helpers
             if (texture == null) return;
 
             uint color = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, alpha));
-            drawList.AddImage(texture.GetWrapOrEmpty().ImGuiHandle, position, position + size, Vector2.Zero, Vector2.One, color);
+            drawList.AddImage(texture.GetWrapOrEmpty().Handle, position, position + size, Vector2.Zero, Vector2.One, color);
         }
 
         public static void DrawOutlinedText(string text, Vector2 pos, bool centered, float scale, ImDrawListPtr drawList, int thickness = 1)

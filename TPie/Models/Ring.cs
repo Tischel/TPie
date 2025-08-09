@@ -1,6 +1,6 @@
 ﻿using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -247,7 +247,7 @@ namespace TPie.Models
                 {
                     Vector2 bgSize = new Vector2(Radius * 1.3f);
                     uint c = ImGui.ColorConvertFloat4ToU32(new Vector4(1, 1, 1, (float)_animProgress));
-                    drawList.AddImage(bg.ImGuiHandle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One, c);
+                    drawList.AddImage(bg.Handle, center - bgSize, center + bgSize, Vector2.Zero, Vector2.One, c);
                 }
             }
 
