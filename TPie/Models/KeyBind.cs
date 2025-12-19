@@ -71,7 +71,7 @@ namespace TPie.Models
             bool active = ctrl && alt && shift && key;
 
             // check job
-            IPlayerCharacter? player = Plugin.ClientState.LocalPlayer;
+            IPlayerCharacter? player = Plugin.ObjectTable.LocalPlayer;
             if (player != null && Jobs.Count > 0)
             {
                 active &= Jobs.Contains(player.ClassJob.RowId);

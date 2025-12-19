@@ -1,13 +1,10 @@
-﻿using Dalamud.Interface.Internal;
+﻿using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
-using Dalamud.Bindings.ImGui;
-using ImGuiScene;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using Dalamud.Interface.Textures;
-using Dalamud.Interface.Textures.TextureWraps;
 using TPie.Helpers;
 using TPie.Models.Elements;
 

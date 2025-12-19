@@ -1,6 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
-using Dalamud.Bindings.ImGui;
-using ImGuiScene;
+﻿using Dalamud.Bindings.ImGui;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Numerics;
 using TPie.Helpers;
 
@@ -72,7 +71,7 @@ namespace TPie.Models.Elements
             // cooldown
             if (Plugin.Settings.ShowCooldowns)
             {
-                DrawHelper.DrawCooldown(item.IsKey ? ActionType.KeyItem : ActionType.Item, ItemID, position, size, scale, drawList);
+                DrawHelper.DrawCooldown(item.IsKey ? ActionType.EventItem : ActionType.Item, ItemID, position, size, scale, drawList);
             }
         }
     }

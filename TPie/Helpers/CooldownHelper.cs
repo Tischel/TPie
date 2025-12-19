@@ -7,7 +7,7 @@ namespace TPie.Helpers
     {
         public static uint GetSpellActionId(uint actionId) => ActionManager.Instance()->GetAdjustedActionId(actionId);
 
-        public static ushort GetMaxCharges(uint actionId) => Plugin.ClientState.LocalPlayer == null ? (ushort)1 : Math.Max((ushort)1, ActionManager.GetMaxCharges(actionId, Plugin.ClientState.LocalPlayer.Level));
+        public static ushort GetMaxCharges(uint actionId) => Plugin.ObjectTable.LocalPlayer == null ? (ushort)1 : Math.Max((ushort)1, ActionManager.GetMaxCharges(actionId, Plugin.ObjectTable.LocalPlayer.Level));
 
         public static int GetCharges(uint actionId)
         {

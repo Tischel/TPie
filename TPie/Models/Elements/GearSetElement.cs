@@ -36,7 +36,7 @@ namespace TPie.Models.Elements
             JobID = jobId;
         }
 
-        public GearSetElement() : this(1, true, null, true, false, Plugin.ClientState.LocalPlayer?.ClassJob.RowId ?? JobIDs.GLA) { }
+        public GearSetElement() : this(1, true, null, true, false, Plugin.ObjectTable.LocalPlayer?.ClassJob.RowId ?? JobIDs.GLA) { }
 
         public override void ExecuteAction()
         {

@@ -24,6 +24,7 @@ namespace TPie
     public class Plugin : IDalamudPlugin
     {
         public static IClientState ClientState { get; private set; } = null!;
+        public static IObjectTable ObjectTable { get; private set; } = null!;
         public static ICommandManager CommandManager { get; private set; } = null!;
         public static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
         public static IDataManager DataManager { get; private set; } = null!;
@@ -64,6 +65,7 @@ namespace TPie
 
         public Plugin(
             IClientState clientState,
+            IObjectTable objectTable,
             ICommandManager commandManager,
             IDalamudPluginInterface pluginInterface,
             IDataManager dataManager,
@@ -78,6 +80,7 @@ namespace TPie
         )
         {
             ClientState = clientState;
+            ObjectTable = objectTable;
             CommandManager = commandManager;
             PluginInterface = pluginInterface;
             DataManager = dataManager;
@@ -282,7 +285,7 @@ namespace TPie
 
         private void Update(IFramework framework)
         {
-            if (Settings == null || ClientState.LocalPlayer == null) return;
+            if (Settings == null || ObjectTable.LocalPlayer == null) return;
 
             KeyboardHelper.Instance?.Update();
             ItemsHelper.Instance?.CalculateUsableItems();
@@ -292,7 +295,7 @@ namespace TPie
 
         private void Draw()
         {
-            if (Settings == null || ClientState.LocalPlayer == null) return;
+            if (Settings == null || ObjectTable.LocalPlayer == null) return;
 
             _windowSystem?.Draw();
 
