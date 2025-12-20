@@ -1,6 +1,6 @@
-﻿using Dalamud.Interface.Textures.TextureWraps;
+﻿using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,6 +66,8 @@ namespace TPie.Models
         private int _previousCount = 0;
 
         private Vector2? _center = null;
+        private Vector2? _forcedCenter = null;
+
         private int _selectedIndex = -1;
         private double _selectionStartTime = -1;
         private bool _quickActionSelected = false;
@@ -183,14 +185,22 @@ namespace TPie.Models
             {
                 if (_animState == AnimationState.Closed)
                 {
-                    _center = Plugin.Settings.AppearAtCursor ?
-                        mousePos :
-                        ImGui.GetMainViewport().Size / 2f + Plugin.Settings.CenterPositionOffset;
-
-                    // move cursor?
-                    if (!Plugin.Settings.AppearAtCursor && Plugin.Settings.AutoCenterCursor)
+                    if (_forcedCenter.HasValue)
                     {
-                        CursorHelper.SetCursorPosition(_center.Value);
+                        _center = _forcedCenter.Value;
+                        _forcedCenter = null;
+                    } 
+                    else 
+                    { 
+                        _center = Plugin.Settings.AppearAtCursor ?
+                            mousePos :
+                            ImGui.GetMainViewport().Size / 2f + Plugin.Settings.CenterPositionOffset;
+
+                        // move cursor?
+                        if (!Plugin.Settings.AppearAtCursor && Plugin.Settings.AutoCenterCursor)
+                        {
+                            CursorHelper.SetCursorPosition(_center.Value);
+                        }
                     }
                 }
 
@@ -401,7 +411,9 @@ namespace TPie.Models
             if (ring != null)
             {
                 ring.SetTemporalKeybind(CurrentKeybind());
+
                 Plugin.RingsManager?.ForceRing(ring);
+                ring._forcedCenter = _center;
                 _selectionStartTime = -1;
 
                 if (nestedRing.KeepCenter && _center.HasValue)
