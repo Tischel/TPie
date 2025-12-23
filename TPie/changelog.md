@@ -1,3 +1,6 @@
+# 1.13.0.2
+- Fixed nested rings bug introduced in last version.
+
 # 1.13.0.1
 - Fixed Nested Ring "Keep Previous Ring Center" setting not working properly.
 

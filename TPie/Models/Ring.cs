@@ -413,11 +413,11 @@ namespace TPie.Models
                 ring.SetTemporalKeybind(CurrentKeybind());
 
                 Plugin.RingsManager?.ForceRing(ring);
-                ring._forcedCenter = _center;
                 _selectionStartTime = -1;
 
                 if (nestedRing.KeepCenter && _center.HasValue)
                 {
+                    ring._forcedCenter = _center;
                     CursorHelper.SetCursorPosition(_center.Value);
                 }
             }
