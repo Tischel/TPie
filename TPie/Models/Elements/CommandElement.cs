@@ -29,7 +29,7 @@ namespace TPie.Models.Elements
 
         public override void ExecuteAction()
         {
-            ChatHelper.SendChatMessage(Command);
+            Chat.ExecuteCommand(Command);
         }
 
         public override string InvalidReason()

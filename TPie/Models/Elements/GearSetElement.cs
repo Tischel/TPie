@@ -42,11 +42,11 @@ namespace TPie.Models.Elements
         {
             if (UseID)
             {
-                ChatHelper.SendChatMessage($"/gs change {GearSetID}");
+                Chat.ExecuteCommand($"/gs change {GearSetID}");
             }
             else
             {
-                ChatHelper.SendChatMessage($"/gs change \"{GearSetName}\"");
+                Chat.ExecuteCommand($"/gs change \"{GearSetName}\"");
             }
         }
 

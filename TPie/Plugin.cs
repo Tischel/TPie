@@ -119,7 +119,6 @@ namespace TPie
                 }
             );
 
-            ChatHelper.Initialize();
             KeyboardHelper.Initialize();
             JobsHelper.Initialize();
             ItemsHelper.Initialize();
@@ -316,7 +315,6 @@ namespace TPie
 
             Settings.Save(Settings);
 
-            ChatHelper.Instance?.Dispose();
             KeyboardHelper.Instance?.Dispose();
             JobsHelper.Instance?.Dispose();
             ItemsHelper.Instance?.Dispose();

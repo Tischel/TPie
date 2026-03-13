@@ -50,7 +50,7 @@ namespace TPie.Models.Elements
         {
             if (Data.HasValue)
             {
-                ChatHelper.SendChatMessage($"/ac \"{Data.Value.Name}\"");
+                Chat.ExecuteCommand($"/ac \"{Data.Value.Name}\"");
             }
         }
 
