@@ -14,6 +14,8 @@ namespace TPie
 
         private List<Ring> Rings => Plugin.Settings.Rings;
 
+        public bool IsRingActive => _activeRing is { IsActive: true } || _activeRing?.IsClosed() == false;
+
         public void ForceRing(Ring ring)
         {
             _activeRing = ring;
