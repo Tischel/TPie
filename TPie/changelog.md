@@ -1,3 +1,6 @@
+# 1.14.0.1
+- Added an IPC to see if a ring is active.
+
 # 1.14.0.0
 - Added support for Patch 7.5 and Dalamud API 15.
 
