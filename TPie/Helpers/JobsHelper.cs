@@ -182,7 +182,8 @@ namespace TPie.Helpers
                 JobIDs.NIN,
                 JobIDs.SAM,
                 JobIDs.RPR,
-                JobIDs.VPR
+                JobIDs.VPR,
+                JobIDs.BST
             },
 
             // ranged phys dps
@@ -255,6 +256,7 @@ namespace TPie.Helpers
             [JobIDs.BLU] = "BLU",
             [JobIDs.BRD] = "BRD",
             [JobIDs.BSM] = "BSM",
+            [JobIDs.BST] = "BST",
             [JobIDs.BOT] = "BOT",
 
             [JobIDs.CNJ] = "CNJ",
@@ -342,6 +344,7 @@ namespace TPie.Helpers
         public const uint SAM = 34;
         public const uint RPR = 39;
         public const uint VPR = 41;
+        public const uint BST = 43;
 
         public const uint ARC = 5;
         public const uint BRD = 23;

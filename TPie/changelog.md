@@ -1,3 +1,6 @@
+# 1.15.0.0
+- Fixing plugin errors with Beastmaster.
+
 # 1.14.1.0
 - Added an IPC to see if a ring is active.
 

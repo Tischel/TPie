@@ -5,5 +5,5 @@
   "Description": "Highly configurable hotbars that can be toggled with a keybind. They can be filled with Actions, Items, Gear Sets, Macros and more...",
   "RepoUrl": "https://github.com/Tischel/TPie",
   "Tags": [ "UI" ],
-  "Changelog": "# 1.14.1.0\n\n- Added an IPC to see if a ring is active."
+  "Changelog": "# 1.15.0.0\n- Fixing plugin errors with Beastmaster."
 }
