@@ -1,4 +1,4 @@
-﻿using Dalamud.Game;
+using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.Interface;
 using Dalamud.Interface.ManagedFontAtlas;
@@ -99,11 +99,11 @@ namespace TPie
 
             if (pluginInterface.AssemblyLocation.DirectoryName != null)
             {
-                AssemblyLocation = pluginInterface.AssemblyLocation.DirectoryName + "\\";
+                AssemblyLocation = pluginInterface.AssemblyLocation.DirectoryName;
             }
             else
             {
-                AssemblyLocation = Assembly.GetExecutingAssembly().Location;
+                AssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
             }
 
             Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.15.0.0";
@@ -111,6 +111,7 @@ namespace TPie
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
             UiBuilder.OpenConfigUi += OpenConfigUi;
+            UiBuilder.OpenMainUi += OpenMainUi;
 
             CommandManager.AddHandler(
                 "/tpie",
@@ -150,7 +151,7 @@ namespace TPie
         {
             try
             {
-                string ringBgPath = Path.Combine(Path.GetDirectoryName(AssemblyLocation) ?? "", "Media", "ring_bg.png");
+                string ringBgPath = Path.Combine(AssemblyLocation, "Media", "ring_bg.png");
                 if (File.Exists(ringBgPath))
                 {
                     RingBackground = TextureProvider.GetFromFile(ringBgPath);
@@ -310,6 +311,11 @@ namespace TPie
             _settingsWindow.IsOpen = true;
         }
 
+        private void OpenMainUi()
+        {
+            _settingsWindow.IsOpen = !_settingsWindow.IsOpen;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
@@ -332,6 +338,7 @@ namespace TPie
             Framework.Update -= Update;
             UiBuilder.Draw -= Draw;
             UiBuilder.OpenConfigUi -= OpenConfigUi;
+            UiBuilder.OpenMainUi -= OpenMainUi;
 
             FontsHelper.ClearFont();
             UiBuilder.CreateFontAtlas(FontAtlasAutoRebuildMode.Async, false, null);

@@ -1,4 +1,4 @@
-﻿using Dalamud.Plugin.Ipc;
+using Dalamud.Plugin.Ipc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
@@ -50,6 +50,12 @@ namespace TPie.Helpers
             {
                 return;
             }
+
+            try
+            {
+                _invoke.Unsubscribe(Invoke);
+            }
+            catch { }
 
             Instance = null!;
         }

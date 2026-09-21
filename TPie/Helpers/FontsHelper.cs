@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.ManagedFontAtlas;
+using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Logging;
 using Dalamud.Bindings.ImGui;
 using System;
@@ -24,7 +24,7 @@ namespace TPie.Helpers
         {
             DefaultFontBuilt = false;
 
-            string path = Path.Combine(Path.GetDirectoryName(Plugin.AssemblyLocation) ?? "", "Media", "Expressway.ttf");
+            string path = Path.Combine(Plugin.AssemblyLocation, "Media", "Expressway.ttf");
 
             try
             {
