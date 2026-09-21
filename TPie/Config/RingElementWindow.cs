@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
 using System.Numerics;
@@ -19,8 +19,15 @@ namespace TPie.Config
 
         public RingElementWindow(string name) : base(name)
         {
-            Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(300, 420);
+            Flags = ImGuiWindowFlags.NoCollapse;
+            Size = new Vector2(320, 440);
+            SizeCondition = ImGuiCond.FirstUseEver;
+
+            SizeConstraints = new WindowSizeConstraints
+            {
+                MinimumSize = new Vector2(280, 320),
+                MaximumSize = new Vector2(1000, 1200)
+            };
 
             PositionCondition = ImGuiCond.Appearing;
         }

@@ -1,4 +1,4 @@
-﻿using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
 using System.Collections.Generic;
@@ -75,11 +75,11 @@ namespace TPie.Config
                 ImGui.SetKeyboardFocusHere(0);
             }
 
-            ImGui.PushItemWidth(180 * _scale);
             FocusIfNeeded();
 
             if (GearSetElement.UseID)
             {
+                ImGui.SetNextItemWidth(-100 * _scale);
                 string str = _inputText;
                 if (ImGui.InputText("Gear Set Number ##GearSet", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
                 {
@@ -94,6 +94,7 @@ namespace TPie.Config
             }
             else
             {
+                ImGui.SetNextItemWidth(-100 * _scale);
                 if (ImGui.InputText("Gear Set Name ##GearSet", ref _nameInputText, 100))
                 {
                     GearSetElement.GearSetName = _nameInputText;
@@ -112,9 +113,10 @@ namespace TPie.Config
                 }
             }
 
+            ImGui.SetNextItemWidth(-100 * _scale);
             ImGui.InputText("Job ##Gear Set", ref _jobInputText, 100);
 
-            ImGui.BeginChild("##GearSets_List", new Vector2(284 * _scale, 130 * _scale), true);
+            ImGui.BeginChild("##GearSets_List", new Vector2(ImGui.GetContentRegionAvail().X, 130 * _scale), true);
             {
                 for (int i = 0; i < _jobIds.Length; i++)
                 {

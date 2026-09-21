@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface;
+using System;
+using Dalamud.Interface;
 using Dalamud.Interface.Internal;
 using DelvUI.Helpers;
 using Dalamud.Bindings.ImGui;
@@ -45,16 +46,16 @@ namespace TPie.Config
         {
             if (CommandElement == null) return;
 
-            ImGui.PushItemWidth(210 * _scale);
-
             // name
             FocusIfNeeded();
+            ImGui.SetNextItemWidth(-100 * _scale);
             if (ImGui.InputText("Name ##Command", ref _inputText, 100))
             {
                 CommandElement.Name = _inputText;
             }
 
             // command
+            ImGui.SetNextItemWidth(-100 * _scale);
             if (ImGui.InputText("Command ##Command", ref _commandInputText, 100))
             {
                 CommandElement.Command = _commandInputText;
@@ -64,7 +65,7 @@ namespace TPie.Config
             ImGui.NewLine();
 
             // icon id
-            ImGui.PushItemWidth(154 * _scale);
+            ImGui.SetNextItemWidth(-160 * _scale);
             string str = _iconInputText;
             if (ImGui.InputText("Icon ID ##Command", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
             {
@@ -82,7 +83,7 @@ namespace TPie.Config
 
             ImGui.SameLine();
             ImGui.PushFont(UiBuilder.IconFont);
-            if (ImGui.Button("\uf2f9"))
+            if (ImGui.Button(FontAwesomeIcon.Undo.ToIconString()))
             {
                 CommandElement.IconID = 66001;
                 _iconInputText = "66001";
@@ -111,7 +112,7 @@ namespace TPie.Config
                 ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(CommandElement.IconID);
                 if (texture != null)
                 {
-                    ImGui.SetCursorPosX(110 * _scale);
+                    ImGui.SetCursorPosX(Math.Max(0, (ImGui.GetContentRegionAvail().X - 80 * _scale) / 2));
                     ImGui.Image(texture.GetWrapOrEmpty().Handle, new Vector2(80 * _scale));
                 }
             }

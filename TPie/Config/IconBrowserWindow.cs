@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using DelvUI.Helpers;
@@ -31,10 +31,15 @@ namespace TPie.Config
 
         public IconBrowserWindow(string name) : base(name)
         {
-            Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
+            Flags = ImGuiWindowFlags.NoCollapse;
             Size = new Vector2(500, 500);
+            SizeCondition = ImGuiCond.FirstUseEver;
 
-            _columns = (int)(500 / (IconSize.X + ImGui.GetStyle().ItemSpacing.X));
+            SizeConstraints = new WindowSizeConstraints
+            {
+                MinimumSize = new Vector2(250, 250),
+                MaximumSize = new Vector2(2000, 2000)
+            };
 
             PositionCondition = ImGuiCond.Appearing;
         }
@@ -176,10 +181,14 @@ namespace TPie.Config
         private unsafe void DrawIconGrid(IEnumerable<uint> icons)
         {
             int count = icons.Count();
-            int index = 0;
+            if (count == 0) return;
 
+            float cellWidth = (IconSize.X * _scale) + ImGui.GetStyle().ItemSpacing.X;
+            _columns = Math.Max(1, (int)(ImGui.GetContentRegionAvail().X / cellWidth));
+
+            int totalRows = (count + _columns - 1) / _columns;
             ImGuiListClipperPtr clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper());
-            clipper.Begin(count / _columns + 1, (IconSize.Y * _scale) + ImGui.GetStyle().ItemSpacing.Y);
+            clipper.Begin(totalRows, (IconSize.Y * _scale) + ImGui.GetStyle().ItemSpacing.Y);
 
             while (clipper.Step())
             {
@@ -230,8 +239,6 @@ namespace TPie.Config
                                 OnSelect?.Invoke(iconId);
                             }
                         }
-
-                        index++;
                     }
                 }
             }
