@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,9 +64,13 @@ namespace TPie.Models
             }
 
             ImGuiIOPtr io = ImGui.GetIO();
-            bool ctrl = Ctrl ? io.KeyCtrl : !io.KeyCtrl;
-            bool alt = Alt ? io.KeyAlt : !io.KeyAlt;
-            bool shift = Shift ? io.KeyShift : !io.KeyShift;
+            bool isCtrlDown = (KeyboardHelper.GetAsyncKeyState((int)Keys.ControlKey) & 0x8000) != 0 || io.KeyCtrl;
+            bool isAltDown = (KeyboardHelper.GetAsyncKeyState((int)Keys.Menu) & 0x8000) != 0 || io.KeyAlt;
+            bool isShiftDown = (KeyboardHelper.GetAsyncKeyState((int)Keys.ShiftKey) & 0x8000) != 0 || io.KeyShift;
+
+            bool ctrl = Ctrl ? isCtrlDown : !isCtrlDown;
+            bool alt = Alt ? isAltDown : !isAltDown;
+            bool shift = Shift ? isShiftDown : !isShiftDown;
             bool key = KeyboardHelper.Instance?.IsKeyPressed(Key) == true;
             bool active = ctrl && alt && shift && key;
 
@@ -120,27 +124,30 @@ namespace TPie.Models
             ImGui.InputText($"##{id}_Keybind", ref dispKey, 200, ImGuiInputTextFlags.ReadOnly);
             DrawHelper.SetTooltip("Backspace to clear");
 
+            bool changed = false;
             if (ImGui.IsItemActive())
             {
                 if (KeyboardHelper.Instance?.IsKeyPressed((int)Keys.Back) == true)
                 {
                     Reset();
+                    changed = true;
                 }
                 else
                 {
                     int keyPressed = KeyboardHelper.Instance?.GetKeyPressed() ?? 0;
                     if (keyPressed > 0)
                     {
-                        Ctrl = io.KeyCtrl;
-                        Alt = io.KeyAlt;
-                        Shift = io.KeyShift;
+                        Ctrl = (KeyboardHelper.GetAsyncKeyState((int)Keys.ControlKey) & 0x8000) != 0 || io.KeyCtrl;
+                        Alt = (KeyboardHelper.GetAsyncKeyState((int)Keys.Menu) & 0x8000) != 0 || io.KeyAlt;
+                        Shift = (KeyboardHelper.GetAsyncKeyState((int)Keys.ShiftKey) & 0x8000) != 0 || io.KeyShift;
                         Key = keyPressed;
-                        return true;
+                        changed = true;
                     }
                 }
             }
 
-            return false;
+            ImGui.PopItemWidth();
+            return changed;
         }
 
         public void Reset()
