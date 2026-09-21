@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
 using Dalamud.Bindings.ImGui;
 using Lumina.Excel;
@@ -58,7 +58,7 @@ namespace TPie.Config
         {
             if (ItemElement == null) return;
 
-            ImGui.PushItemWidth(240 * _scale);
+            ImGui.SetNextItemWidth(-100 * _scale);
             if (ImGui.InputText("Name ##Item", ref _inputText, 100) || _needsSearch)
             {
                 SearchItems(_inputText);
@@ -72,7 +72,7 @@ namespace TPie.Config
             ImGui.SameLine();
             ImGui.Checkbox("High Quality", ref _hq);
 
-            ImGui.BeginChild("##Items_List", new Vector2(284 * _scale, 170 * _scale), true);
+            ImGui.BeginChild("##Items_List", new Vector2(ImGui.GetContentRegionAvail().X, 170 * _scale), true);
             {
                 foreach (ItemSearchData data in _searchResult)
                 {
@@ -119,6 +119,8 @@ namespace TPie.Config
                 _searchResult.Clear();
                 return;
             }
+
+            ItemsHelper.Instance?.CalculateUsableItems(true);
 
             List<ItemSearchData> items = new List<ItemSearchData>();
             List<ItemSearchData> keyItems = new List<ItemSearchData>();

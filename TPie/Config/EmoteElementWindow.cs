@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Dalamud.Bindings.ImGui;
@@ -52,7 +52,7 @@ namespace TPie.Config
         {
             if (EmoteElement == null) return;
 
-            ImGui.PushItemWidth(240 * _scale);
+            ImGui.SetNextItemWidth(-100 * _scale);
             if (ImGui.InputText("Name ##Emote", ref _inputText, 100) || _needsSearch)
             {
                 SearchEmotes(_inputText);
@@ -67,14 +67,15 @@ namespace TPie.Config
 
             FocusIfNeeded();
 
-            ImGui.BeginChild("##Items_List", new Vector2(284 * _scale, 170 * _scale), true);
+            ImGui.BeginChild("##Items_List", new Vector2(ImGui.GetContentRegionAvail().X, 170 * _scale), true);
             {
+                var uiState = UIState.Instance();
                 foreach (Emote data in _searchResult)
                 {
                     if (data.Icon == 0) { continue; }
 
                     // check if acquired
-                    bool unlocked = data.UnlockLink == 0 || UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(data.UnlockLink, 1);
+                    bool unlocked = data.UnlockLink == 0 || (uiState != null && uiState->IsUnlockLinkUnlockedOrQuestCompleted(data.UnlockLink, 1));
                     if (_acquired && !unlocked)
                     {
                         continue;
