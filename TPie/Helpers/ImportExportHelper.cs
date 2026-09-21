@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -38,23 +38,23 @@ namespace TPie.Helpers
             return decodedString;
         }
 
+        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        {
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+            TypeNameHandling = TypeNameHandling.Objects
+        };
+
         public static string GenerateExportString(Ring ring)
         {
             return GenerateExportString(new Ring[] { ring });
         }
         public static string GenerateExportString(ICollection<Ring> rings)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings
-            {
-                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
-                TypeNameHandling = TypeNameHandling.Objects
-            };
-
             string result = "";
 
             foreach (Ring ring in rings)
             {
-                string jsonString = JsonConvert.SerializeObject(ring, Formatting.Indented, settings);
+                string jsonString = JsonConvert.SerializeObject(ring, Formatting.Indented, SerializerSettings);
                 result += "|" + CompressAndBase64Encode(jsonString);
             }
 
@@ -80,10 +80,27 @@ namespace TPie.Helpers
                     var typeString = (string?)JObject.Parse(jsonString)["$type"];
                     if (typeString == null) continue;
 
-                    Type? type = Type.GetType(typeString);
-                    if (type == null || type != typeof(Ring)) continue;
+                    bool isRing = typeString.StartsWith("TPie.Models.Ring");
+                    if (!isRing)
+                    {
+                        Type? type = Type.GetType(typeString);
+                        if (type == typeof(Ring))
+                            isRing = true;
+                    }
+                    if (!isRing) continue;
 
-                    Ring? ring = JsonConvert.DeserializeObject<Ring>(jsonString);
+                    Ring? ring = null;
+                    try
+                    {
+                        ring = JsonConvert.DeserializeObject<Ring>(jsonString, SerializerSettings);
+                    }
+                    catch { }
+
+                    if (ring == null)
+                    {
+                        ring = JsonConvert.DeserializeObject<Ring>(jsonString);
+                    }
+
                     if (ring == null) continue;
 
                     result.Add(ring);

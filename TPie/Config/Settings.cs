@@ -1,4 +1,4 @@
-﻿using Dalamud.Logging;
+using Dalamud.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -99,7 +99,10 @@ namespace TPie.Config
             if (settings == null)
             {
                 settings = new Settings();
-                Save(settings);
+                if (!File.Exists(path))
+                {
+                    Save(settings);
+                }
             }
 
             return settings;
@@ -115,6 +118,15 @@ namespace TPie.Config
                     TypeNameHandling = TypeNameHandling.Objects
                 };
                 string jsonString = JsonConvert.SerializeObject(settings, Formatting.Indented, serializerSettings);
+
+                if (File.Exists(JsonPath))
+                {
+                    try
+                    {
+                        File.Copy(JsonPath, JsonPath + ".bak", true);
+                    }
+                    catch { }
+                }
 
                 File.WriteAllText(JsonPath, jsonString);
             }
