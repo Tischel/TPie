@@ -24,7 +24,9 @@ namespace TPie.Config
         private string _searchTerm = "";
         private HashSet<uint> _searchResults = new HashSet<uint>();
 
-        private BrowsableIcons _browsableIcons = new BrowsableIcons();
+        // Built the first time the browser opens rather than at plugin load.
+        private BrowsableIcons? _browsableIconsCache;
+        private BrowsableIcons _browsableIcons => _browsableIconsCache ??= new BrowsableIcons();
 
         public uint? _selectedId = null;
         public Action<uint>? OnSelect = null;
@@ -301,7 +303,7 @@ namespace TPie.Config
             try
             {
                 var path = $"ui/icon/{id / 1000 * 1000:000000}/{id:000000}_hr1.tex";
-                return Plugin.DataManager.GetFile<TexFile>(path) != null;
+                return Plugin.DataManager.FileExists(path);
             }
             catch
             {

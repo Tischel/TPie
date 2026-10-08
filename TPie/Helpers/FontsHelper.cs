@@ -22,6 +22,7 @@ namespace TPie.Helpers
 
         public static unsafe void LoadFont()
         {
+            ClearFont();
             DefaultFontBuilt = false;
 
             string path = Path.Combine(Plugin.AssemblyLocation, "Media", "Expressway.ttf");
