@@ -30,6 +30,64 @@ namespace TPie.Config
 
         private float _scale => ImGuiHelpers.GlobalScale;
 
+        private List<Ring> _pendingImport = new();
+        private List<string> _pendingImportCommands = new();
+        private bool _openImportPopup;
+
+        // Imported rings can contain chat commands that run when the item is picked, so show what's coming in
+        // before adding anything.
+        private void DrawImportPopup()
+        {
+            const string popupId = "Import Rings##TPie_Import";
+            if (_openImportPopup)
+            {
+                ImGui.OpenPopup(popupId);
+                _openImportPopup = false;
+            }
+
+            if (!ImGui.BeginPopupModal(popupId, ImGuiWindowFlags.AlwaysAutoResize))
+                return;
+
+            if (_pendingImport.Count == 0)
+            {
+                ImGui.Text("No rings found on the clipboard.");
+                if (ImGui.Button("OK", new Vector2(120 * _scale, 0)))
+                    ImGui.CloseCurrentPopup();
+                ImGui.EndPopup();
+                return;
+            }
+
+            ImGui.Text($"Import {_pendingImport.Count} ring(s):");
+            foreach (Ring ring in _pendingImport)
+                ImGui.BulletText($"{ring.Name} ({ring.Items.Count} items)");
+
+            if (_pendingImportCommands.Count > 0)
+            {
+                ImGui.Spacing();
+                ImGui.TextColored(new Vector4(1f, 0.6f, 0.2f, 1f), "These rings run chat commands. Check them before importing:");
+                ImGui.BeginChild("##TPie_ImportCommands", new Vector2(420 * _scale, Math.Min(_pendingImportCommands.Count, 8) * 20 * _scale + 10), true);
+                foreach (string line in _pendingImportCommands)
+                    ImGui.TextUnformatted(line);
+                ImGui.EndChild();
+            }
+
+            ImGui.Spacing();
+            if (ImGui.Button("Import", new Vector2(120 * _scale, 0)))
+            {
+                foreach (Ring ring in _pendingImport)
+                    Plugin.Settings.AddRing(ring);
+                _pendingImport = new();
+                ImGui.CloseCurrentPopup();
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("Cancel", new Vector2(120 * _scale, 0)))
+            {
+                _pendingImport = new();
+                ImGui.CloseCurrentPopup();
+            }
+            ImGui.EndPopup();
+        }
+
         public SettingsWindow(string name) : base(name)
         {
             Flags = ImGuiWindowFlags.NoCollapse;
@@ -297,13 +355,10 @@ namespace TPie.Config
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Download.ToIconString()))
                 {
-                    string importString = ImGui.GetClipboardText();
-                    List<Ring> newRings = ImportExportHelper.ImportRings(importString);
-
-                    foreach (Ring ring in newRings)
-                    {
-                        Plugin.Settings.AddRing(ring);
-                    }
+                    string importString = ImGui.GetClipboardText() ?? "";
+                    _pendingImport = ImportExportHelper.ImportRings(importString);
+                    _pendingImportCommands = ImportExportHelper.CommandsIn(_pendingImport);
+                    _openImportPopup = true;
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Adds new Rings by importing them from the clipboard");
@@ -321,6 +376,8 @@ namespace TPie.Config
                 DrawHelper.SetTooltip("Exports all Rings to the clipboard");
             }
             ImGui.EndChild();
+
+            DrawImportPopup();
 
             var flags =
                 ImGuiTableFlags.RowBg |
