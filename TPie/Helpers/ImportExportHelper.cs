@@ -65,7 +65,7 @@ namespace TPie.Helpers
             TypeNameHandling = TypeNameHandling.None
         };
 
-        /// <summary>Chat commands the given rings would run, as "ring: /command" lines, for review before import.</summary>
+        /// <summary>Chat commands and game macros the given rings would run, as "ring: /command" lines, for review before import.</summary>
         public static List<string> CommandsIn(IEnumerable<Ring> rings)
         {
             List<string> result = new();
@@ -75,6 +75,8 @@ namespace TPie.Helpers
                 {
                     if (element is CommandElement command && !string.IsNullOrWhiteSpace(command.Command))
                         result.Add($"{ring.Name}: {command.Command}");
+                    else if (element is GameMacroElement macro)
+                        result.Add($"{ring.Name}: runs your {(macro.IsShared ? "shared" : "individual")} macro #{macro.Identifier} ({macro.Name})");
                 }
             }
             return result;
@@ -100,6 +102,11 @@ namespace TPie.Helpers
         public static List<Ring> ImportRings(string importString)
         {
             List<Ring> result = new List<Ring>();
+            if (importString.Length > 2 * MaxDecompressedChars)
+            {
+                Plugin.Logger.Warning("Clipboard text is too large to be a TPie export; nothing imported.");
+                return result;
+            }
 
             string[] importStrings = importString.Trim().Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
             if (importStrings.Length == 0)

@@ -64,7 +64,7 @@ namespace TPie.Config
             if (_pendingImportCommands.Count > 0)
             {
                 ImGui.Spacing();
-                ImGui.TextColored(new Vector4(1f, 0.6f, 0.2f, 1f), "These rings run chat commands. Check them before importing:");
+                ImGui.TextColored(new Vector4(1f, 0.6f, 0.2f, 1f), "These rings run chat commands or macros. Check them before importing:");
                 ImGui.BeginChild("##TPie_ImportCommands", new Vector2(420 * _scale, Math.Min(_pendingImportCommands.Count, 8) * 20 * _scale + 10), true);
                 foreach (string line in _pendingImportCommands)
                     ImGui.TextUnformatted(line);
