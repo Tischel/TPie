@@ -109,6 +109,17 @@ namespace TPie.Models
             return active;
         }
 
+        /// <summary>A modifier that isn't part of this binding is held, e.g. Alt from an Alt-Tab.</summary>
+        public bool ExtraModifierHeld()
+        {
+            ImGuiIOPtr io = ImGui.GetIO();
+            bool isCtrlDown = (KeyboardHelper.GetAsyncKeyState((int)Keys.ControlKey) & 0x8000) != 0 || io.KeyCtrl;
+            bool isAltDown = (KeyboardHelper.GetAsyncKeyState((int)Keys.Menu) & 0x8000) != 0 || io.KeyAlt;
+            bool isShiftDown = (KeyboardHelper.GetAsyncKeyState((int)Keys.ShiftKey) & 0x8000) != 0 || io.KeyShift;
+
+            return (!Ctrl && isCtrlDown) || (!Alt && isAltDown) || (!Shift && isShiftDown);
+        }
+
         public void Deactivate()
         {
             _active = false;

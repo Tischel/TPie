@@ -203,7 +203,7 @@ namespace TPie.Helpers
         [DllImport("user32.dll")]
         private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
-        private bool IsGameFocused()
+        public bool IsGameFocused()
         {
             try
             {

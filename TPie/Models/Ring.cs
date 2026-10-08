@@ -135,6 +135,14 @@ namespace TPie.Models
 
             if (!currentKeyBind.IsActive())
             {
+                // A hold ring that closes because another modifier went down (Alt-Tab) or the game lost focus
+                // wasn't released on purpose, so don't fire the hovered item.
+                if (IsActive && !currentKeyBind.Toggle &&
+                    (currentKeyBind.ExtraModifierHeld() || KeyboardHelper.Instance?.IsGameFocused() == false))
+                {
+                    _canExecuteAction = false;
+                }
+
                 IsActive = false;
                 return false;
             }
@@ -449,6 +457,13 @@ namespace TPie.Models
         public bool IsClosed()
         {
             return _animState == AnimationState.Closed;
+        }
+
+        /// <summary>Closes the ring without running the selected item.</summary>
+        public void Cancel()
+        {
+            _canExecuteAction = false;
+            CurrentKeybind().Deactivate();
         }
 
         public void ForceClose()
