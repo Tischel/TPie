@@ -8,26 +8,40 @@ public static class Chat
 {
     public static unsafe void ExecuteCommand(string command)
     {
-        if (!command.StartsWith('/'))
+        if (string.IsNullOrEmpty(command) || !command.StartsWith('/'))
             return;
 
-        using var cmd = new Utf8String(command);
+        Plugin.Logger.Info($"[TPie] Chat.ExecuteCommand: {command}");
 
-        // Technically not needed since we don't use payloads but provides a better example.
-        cmd.SanitizeString(
-            AllowedEntities.Unknown9     |
-            AllowedEntities.Payloads          |
-            AllowedEntities.OtherCharacters   |
-            AllowedEntities.SpecialCharacters |
-            AllowedEntities.Numbers           |
-            AllowedEntities.LowercaseLetters  |
-            AllowedEntities.UppercaseLetters  );
+        void Run()
+        {
+            var uiModule = UIModule.Instance();
+            if (uiModule == null)
+                return;
 
-        if (cmd.Length > 500)
-            return;
+            using var cmd = new Utf8String(command);
+            if (cmd.Length > 500)
+                return;
 
-        RaptureShellModule.Instance()->ExecuteCommandInner(&cmd, UIModule.Instance());
+            uiModule->ProcessChatBoxEntry(&cmd);
+        }
+
+        if (Plugin.Framework.IsInFrameworkUpdateThread)
+        {
+            Run();
+        }
+        else
+        {
+            Plugin.Framework.RunOnFrameworkThread(Run);
+        }
     }
 
-    public static unsafe bool IsInputTextActive => RaptureAtkModule.Instance()->IsTextInputActive();
+    public static unsafe bool IsInputTextActive
+    {
+        get
+        {
+            var atkModule = RaptureAtkModule.Instance();
+            return atkModule != null && atkModule->IsTextInputActive();
+        }
+    }
 }

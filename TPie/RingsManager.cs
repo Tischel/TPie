@@ -39,7 +39,7 @@ namespace TPie
                     _activeRing.KeyBind.Toggle &&
                     KeyboardHelper.Instance.IsEscapePressed())
                 {
-                    _activeRing.KeyBind.Deactivate();
+                    _activeRing.Cancel();
                 }
                 else
                 {

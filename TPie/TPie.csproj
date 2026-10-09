@@ -1,4 +1,4 @@
-﻿<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
 	<PropertyGroup Label="Target">
 		<PlatformTarget>x64</PlatformTarget>
 		<TargetFramework>net10.0-windows</TargetFramework>
@@ -20,6 +20,7 @@
 		<OutputType>Library</OutputType>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendPlatformToOutputPath>false</AppendPlatformToOutputPath>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<DebugSymbols>true</DebugSymbols>

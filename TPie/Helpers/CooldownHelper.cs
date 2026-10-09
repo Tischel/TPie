@@ -1,17 +1,24 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 
 namespace TPie.Helpers
 {
     internal static unsafe class CooldownHelper
     {
-        public static uint GetSpellActionId(uint actionId) => ActionManager.Instance()->GetAdjustedActionId(actionId);
+        public static uint GetSpellActionId(uint actionId)
+        {
+            var am = ActionManager.Instance();
+            return am != null ? am->GetAdjustedActionId(actionId) : actionId;
+        }
 
         public static ushort GetMaxCharges(uint actionId) => Plugin.ObjectTable.LocalPlayer == null ? (ushort)1 : Math.Max((ushort)1, ActionManager.GetMaxCharges(actionId, Plugin.ObjectTable.LocalPlayer.Level));
 
         public static int GetCharges(uint actionId)
         {
-            float elapsed = ActionManager.Instance()->GetRecastTimeElapsed(ActionType.Action, GetSpellActionId(actionId));
+            var am = ActionManager.Instance();
+            if (am == null) return 1;
+
+            float elapsed = am->GetRecastTimeElapsed(ActionType.Action, GetSpellActionId(actionId));
             ushort maxCharges = GetMaxCharges(actionId);
             if (maxCharges <= 1)
             {
@@ -24,8 +31,11 @@ namespace TPie.Helpers
 
         public static float GetRecastTimeElapsed(ActionType type, uint actionId)
         {
+            var am = ActionManager.Instance();
+            if (am == null) return 0f;
+
             float total = GetRecastTime(type, actionId);
-            float elapsed = ActionManager.Instance()->GetRecastTimeElapsed(type, GetSpellActionId(actionId));
+            float elapsed = am->GetRecastTimeElapsed(type, GetSpellActionId(actionId));
 
             if (type == ActionType.Action)
             {
@@ -42,11 +52,18 @@ namespace TPie.Helpers
 
         public static float GetRecastTime(ActionType type, uint actionId)
         {
-            float recast = ActionManager.Instance()->GetRecastTime(type, GetSpellActionId(actionId));
+            var am = ActionManager.Instance();
+            if (am == null) return 0f;
+
+            float recast = am->GetRecastTime(type, GetSpellActionId(actionId));
 
             if (type == ActionType.Action)
             {
-                recast /= GetMaxCharges(actionId);
+                ushort maxCharges = GetMaxCharges(actionId);
+                if (maxCharges > 0)
+                {
+                    recast /= maxCharges;
+                }
             }
 
             return recast;

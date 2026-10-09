@@ -1,4 +1,4 @@
-﻿using Dalamud.Game;
+using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.Interface;
 using Dalamud.Interface.ManagedFontAtlas;
@@ -36,6 +36,7 @@ namespace TPie
         public static UiBuilder UiBuilder { get; private set; } = null!;
         public static IKeyState KeyState { get; private set; } = null!;
         public static IPluginLog Logger { get; private set; } = null!;
+        public static IChatGui ChatGui { get; private set; } = null!;
         public static ITextureProvider TextureProvider { get; private set; } = null!;
         public static ITextureSubstitutionProvider TextureSubstitutionProvider { get; private set; } = null!;
 
@@ -79,7 +80,8 @@ namespace TPie
             IKeyState keyState,
             IPluginLog logger,
             ITextureProvider textureProvider,
-            ITextureSubstitutionProvider textureSubstitutionProvider
+            ITextureSubstitutionProvider textureSubstitutionProvider,
+            IChatGui chatGui
         )
         {
             ClientState = clientState;
@@ -94,16 +96,17 @@ namespace TPie
             UiBuilder = (UiBuilder)PluginInterface.UiBuilder;
             KeyState = keyState;
             Logger = logger;
+            ChatGui = chatGui;
             TextureProvider = textureProvider;
             TextureSubstitutionProvider = textureSubstitutionProvider;
 
             if (pluginInterface.AssemblyLocation.DirectoryName != null)
             {
-                AssemblyLocation = pluginInterface.AssemblyLocation.DirectoryName + "\\";
+                AssemblyLocation = pluginInterface.AssemblyLocation.DirectoryName;
             }
             else
             {
-                AssemblyLocation = Assembly.GetExecutingAssembly().Location;
+                AssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
             }
 
             Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.15.0.0";
@@ -111,6 +114,7 @@ namespace TPie
             Framework.Update += Update;
             UiBuilder.Draw += Draw;
             UiBuilder.OpenConfigUi += OpenConfigUi;
+            UiBuilder.OpenMainUi += OpenMainUi;
 
             CommandManager.AddHandler(
                 "/tpie",
@@ -130,6 +134,11 @@ namespace TPie
             LoadPluginTextures();
 
             Settings = Settings.Load();
+            if (Settings.LoadFailedCopy != null)
+            {
+                ChatGui.PrintError($"[TPie] Your settings file couldn't be read, so TPie started with defaults. "
+                    + $"The original was kept at {Settings.LoadFailedCopy}.");
+            }
 
             FontsHelper.LoadFont();
 
@@ -150,7 +159,7 @@ namespace TPie
         {
             try
             {
-                string ringBgPath = Path.Combine(Path.GetDirectoryName(AssemblyLocation) ?? "", "Media", "ring_bg.png");
+                string ringBgPath = Path.Combine(AssemblyLocation, "Media", "ring_bg.png");
                 if (File.Exists(ringBgPath))
                 {
                     RingBackground = TextureProvider.GetFromFile(ringBgPath);
@@ -310,6 +319,11 @@ namespace TPie
             _settingsWindow.IsOpen = true;
         }
 
+        private void OpenMainUi()
+        {
+            _settingsWindow.IsOpen = !_settingsWindow.IsOpen;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
@@ -332,6 +346,7 @@ namespace TPie
             Framework.Update -= Update;
             UiBuilder.Draw -= Draw;
             UiBuilder.OpenConfigUi -= OpenConfigUi;
+            UiBuilder.OpenMainUi -= OpenMainUi;
 
             FontsHelper.ClearFont();
             UiBuilder.CreateFontAtlas(FontAtlasAutoRebuildMode.Async, false, null);

@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.UI.Misc;
+using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Dalamud.Bindings.ImGui;
@@ -40,19 +40,25 @@ namespace TPie.Models.Elements
         {
             if (Identifier < 0 || Identifier > 99) return null;
 
+            var macroModule = RaptureMacroModule.Instance();
+            if (macroModule == null) return null;
+
             uint set = (uint)(IsShared ? 1 : 0);
-            return RaptureMacroModule.Instance()->GetMacro(set, (uint)Identifier);
+            return macroModule->GetMacro(set, (uint)Identifier);
         }
 
         public override unsafe void ExecuteAction()
         {
+            var shellModule = RaptureShellModule.Instance();
+            if (shellModule == null) return;
+
             // already executing macro?
-            if (RaptureShellModule.Instance()->MacroLocked || RaptureShellModule.Instance()->MacroCurrentLine >= 0) return;
+            if (shellModule->MacroLocked || shellModule->MacroCurrentLine >= 0) return;
 
             Macro* macro = GetGameMacro();
             if (macro != null)
             {
-                RaptureShellModule.Instance()->ExecuteMacro(macro);
+                shellModule->ExecuteMacro(macro);
             }
         }
 

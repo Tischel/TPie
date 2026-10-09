@@ -1,4 +1,4 @@
-﻿using Lumina.Excel;
+using Lumina.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,13 +125,13 @@ namespace TPie.Helpers
                 case 111: return jobId == JobIDs.SAM;
                 case 112: return jobId == JobIDs.RDM;
                 case 113: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
-                case 114: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR;
+                case 114: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR || jobId == JobIDs.BST;
                 case 115: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
                 case 116: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU || jobId == JobIDs.PCT;
                 case 117: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST || jobId == JobIDs.SGE;
-                case 118: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR;
+                case 118: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR || jobId == JobIDs.BST;
                 case 121: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
-                case 122: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.VPR;
+                case 122: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.VPR || jobId == JobIDs.BST;
                 case 123: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
                 case 125: return jobId == JobIDs.WHM || jobId == JobIDs.SCH || jobId == JobIDs.AST || jobId == JobIDs.SGE;
                 case 129: return jobId == JobIDs.BLU;
@@ -139,7 +139,7 @@ namespace TPie.Helpers
                 case 134: return jobId == JobIDs.PLD || jobId == JobIDs.WAR || jobId == JobIDs.DRK || jobId == JobIDs.GNB;
                 case 139: return jobId == JobIDs.BRD || jobId == JobIDs.MCH || jobId == JobIDs.DNC;
                 case 147: return jobId == JobIDs.BLM || jobId == JobIDs.SMN || jobId == JobIDs.RDM || jobId == JobIDs.BLU || jobId == JobIDs.PCT;
-                case 148: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR;
+                case 148: return jobId == JobIDs.MNK || jobId == JobIDs.DRG || jobId == JobIDs.NIN || jobId == JobIDs.SAM || jobId == JobIDs.RPR || jobId == JobIDs.VPR || jobId == JobIDs.BST;
                 case 149: return jobId == JobIDs.GNB;
                 case 150: return jobId == JobIDs.DNC;
                 case 160: return jobId == JobIDs.SCH;

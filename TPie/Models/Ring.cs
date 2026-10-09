@@ -1,4 +1,4 @@
-﻿using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using System;
@@ -135,13 +135,21 @@ namespace TPie.Models
 
             if (!currentKeyBind.IsActive())
             {
+                // A hold ring that closes because another modifier went down (Alt-Tab) or the game lost focus
+                // wasn't released on purpose, so don't fire the hovered item.
+                if (IsActive && !currentKeyBind.Toggle &&
+                    (currentKeyBind.ExtraModifierHeld() || KeyboardHelper.Instance?.IsGameFocused() == false))
+                {
+                    _canExecuteAction = false;
+                }
+
                 IsActive = false;
                 return false;
             }
 
             _canExecuteAction = !KeyBind.Toggle || !PreventActionOnClose;
 
-            IsActive = _validItems.Count > 0;
+            IsActive = _validItems.Count > 0 || QuickActionElement != null;
             return IsActive;
         }
 
@@ -156,18 +164,22 @@ namespace TPie.Models
             {
                 if (_canExecuteAction)
                 {
-                    if (_animState == AnimationState.Opened &&
+                    Plugin.Logger.Debug($"[TPie] Ring release triggered! _animState={_animState}, _selectedIndex={_selectedIndex}, validCount={_validItems?.Count ?? 0}, quickSel={_quickActionSelected}");
+
+                    if ((_animState == AnimationState.Opened || _animState == AnimationState.Opening) &&
                         _center != null &&
                         _selectedIndex >= 0 &&
                         _validItems != null &&
                         _selectedIndex < _validItems.Count)
                     {
+                        _canExecuteAction = false;
                         _validItems[_selectedIndex].ExecuteAction();
                     }
                     else if ((_animState == AnimationState.Opened || _animState == AnimationState.Opening) &&
                         _center != null &&
                         _quickActionSelected)
                     {
+                        _canExecuteAction = false;
                         QuickActionElement?.ExecuteAction();
                     }
                 }
@@ -263,7 +275,7 @@ namespace TPie.Models
 
             // elements
             float r = Radius - ItemSize.Y;
-            double step = (Math.PI * 2) / count;
+            double step = count > 0 ? (Math.PI * 2) / count : 0;
 
             float distanceToCenter = (mousePos - center).Length();
             if (distanceToCenter > r)
@@ -280,37 +292,40 @@ namespace TPie.Models
             int previousSelection = _selectedIndex;
             _selectedIndex = -1;
 
-            int index = 0;
-
-            for (double a = 0; a < Math.PI * 2; a += step)
+            if (count > 0)
             {
-                if (index >= count) break;
+                int index = 0;
 
-                double angle = a + _angleOffset + rotation;
-                float d = r * _itemsDistanceScales[index];
-                double x = center.X + d * Math.Cos(angle);
-                double y = center.Y + d * Math.Sin(angle);
-
-                itemPositions[index] = new Vector2((float)x, (float)y);
-
-                if (_animState == AnimationState.Opened)
+                for (double a = 0; a < Math.PI * 2; a += step)
                 {
-                    float distance = (itemPositions[index] - mousePos).Length();
-                    if (distance < minDistance)
+                    if (index >= count) break;
+
+                    double angle = a + _angleOffset + rotation;
+                    float d = r * _itemsDistanceScales[index];
+                    double x = center.X + d * Math.Cos(angle);
+                    double y = center.Y + d * Math.Sin(angle);
+
+                    itemPositions[index] = new Vector2((float)x, (float)y);
+
+                    if (_animState == AnimationState.Opened || _animState == AnimationState.Opening)
                     {
-                        bool selected = distance <= ItemSize.Y * 2;
-                        _selectedIndex = selected ? index : _selectedIndex;
-                        minDistance = selected ? distance : minDistance;
+                        float distance = (itemPositions[index] - mousePos).Length();
+                        if (distance < minDistance)
+                        {
+                            bool selected = distance <= ItemSize.Y * 2;
+                            _selectedIndex = selected ? index : _selectedIndex;
+                            minDistance = selected ? distance : minDistance;
+                        }
+
+                        itemScales[index] = distance > 200 ? 1f : Math.Clamp(2f - (distance * 2f / 200), 1f, 2f);
+                    }
+                    else
+                    {
+                        itemScales[index] = 1f;
                     }
 
-                    itemScales[index] = distance > 200 ? 1f : Math.Clamp(2f - (distance * 2f / 200), 1f, 2f);
+                    index++;
                 }
-                else
-                {
-                    itemScales[index] = 1f;
-                }
-
-                index++;
             }
 
             // center and line
@@ -442,6 +457,13 @@ namespace TPie.Models
         public bool IsClosed()
         {
             return _animState == AnimationState.Closed;
+        }
+
+        /// <summary>Closes the ring without running the selected item.</summary>
+        public void Cancel()
+        {
+            _canExecuteAction = false;
+            CurrentKeybind().Deactivate();
         }
 
         public void ForceClose()

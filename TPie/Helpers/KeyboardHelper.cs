@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -40,7 +40,6 @@ namespace TPie.Helpers
 
         public void Update()
         {
-            GetKeyboardState(_keyStates);
         }
 
         public bool IsKeyPressed(int key)
@@ -52,14 +51,14 @@ namespace TPie.Helpers
                 return false;
             }
 
-            return _keyStates[key] > 1;
+            return (GetAsyncKeyState(key) & 0x8000) != 0;
         }
 
         public bool IsEscapePressed()
         {
             if (!IsGameFocused()) return false;
 
-            return _keyStates[(int)Keys.Escape] > 1;
+            return (GetAsyncKeyState((int)Keys.Escape) & 0x8000) != 0;
         }
 
         public int GetKeyPressed()
@@ -69,7 +68,7 @@ namespace TPie.Helpers
             for (int i = 0; i < _supportedKeys.Count; i++)
             {
                 int key = (int)_supportedKeys[i];
-                if (_keyStates[key] > 1)
+                if ((GetAsyncKeyState(key) & 0x8000) != 0)
                 {
                     return key;
                 }
@@ -198,21 +197,27 @@ namespace TPie.Helpers
         };
 
         [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetKeyboardState(byte[] keyStates);
+        public static extern short GetAsyncKeyState(int vKey);
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll")]
         private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
-        private bool IsGameFocused()
+        public bool IsGameFocused()
         {
-            var foregroundWindowHandle = GetForegroundWindow();
-            if (foregroundWindowHandle == IntPtr.Zero) return false;
+            try
+            {
+                return Dalamud.Utility.Util.ApplicationIsActivated();
+            }
+            catch
+            {
+                var foregroundWindowHandle = GetForegroundWindow();
+                if (foregroundWindowHandle == IntPtr.Zero) return false;
 
-            GetWindowThreadProcessId(foregroundWindowHandle, out var activeProcessId);
+                GetWindowThreadProcessId(foregroundWindowHandle, out var activeProcessId);
 
-            return activeProcessId == Environment.ProcessId;
+                return activeProcessId == Environment.ProcessId;
+            }
         }
     }
 }

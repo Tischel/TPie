@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Internal;
+using Dalamud.Interface.Internal;
 using DelvUI.Helpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Dalamud.Bindings.ImGui;
@@ -60,12 +60,14 @@ namespace TPie.Helpers
 
         public static void DrawCooldown(ActionType type, uint id, Vector2 position, Vector2 size, float scale, ImDrawListPtr drawList)
         {
-            // arc
             float elapsed = CooldownHelper.GetRecastTimeElapsed(type, id);
             float total = CooldownHelper.GetRecastTime(type, id);
-            float completion = 1 - (elapsed / total);
+            if (total <= 0f || elapsed <= 0f) return;
+
+            // arc
+            float completion = Math.Clamp(1f - (elapsed / total), 0f, 1f);
             float endAngle = (float)Math.PI * 2f * -completion;
-            float offset = (float)Math.PI / 2;
+            float offset = (float)Math.PI / 2f;
 
             uint color = 0xCC000000;
 
@@ -80,9 +82,10 @@ namespace TPie.Helpers
             ImGui.PopClipRect();
 
             // text
-            if (elapsed > 0)
+            float remaining = total - elapsed;
+            if (remaining > 0f)
             {
-                DrawOutlinedText($"{Math.Truncate(total - elapsed)}", position, true, scale, drawList);
+                DrawOutlinedText($"{Math.Max(0, (int)Math.Truncate(remaining))}", position, true, scale, drawList);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Logging;
@@ -23,17 +23,81 @@ namespace TPie.Config
         private string[] _animationNames;
 
         private Vector2 _windowPos = Vector2.Zero;
-        private Vector2 RingWindowPos => _windowPos + new Vector2(410 * _scale, 0);
+        private Vector2 RingWindowPos => _windowPos + new Vector2(ImGui.GetWindowWidth() + 10 * _scale, 0);
 
         private Ring? _removingRing = null;
         private bool _applyingGlobalBorderSettings = false;
 
         private float _scale => ImGuiHelpers.GlobalScale;
 
+        private List<Ring> _pendingImport = new();
+        private List<string> _pendingImportCommands = new();
+        private bool _openImportPopup;
+
+        // Imported rings can contain chat commands that run when the item is picked, so show what's coming in
+        // before adding anything.
+        private void DrawImportPopup()
+        {
+            const string popupId = "Import Rings##TPie_Import";
+            if (_openImportPopup)
+            {
+                ImGui.OpenPopup(popupId);
+                _openImportPopup = false;
+            }
+
+            if (!ImGui.BeginPopupModal(popupId, ImGuiWindowFlags.AlwaysAutoResize))
+                return;
+
+            if (_pendingImport.Count == 0)
+            {
+                ImGui.Text("No rings found on the clipboard.");
+                if (ImGui.Button("OK", new Vector2(120 * _scale, 0)))
+                    ImGui.CloseCurrentPopup();
+                ImGui.EndPopup();
+                return;
+            }
+
+            ImGui.Text($"Import {_pendingImport.Count} ring(s):");
+            foreach (Ring ring in _pendingImport)
+                ImGui.BulletText($"{ring.Name} ({ring.Items.Count} items)");
+
+            if (_pendingImportCommands.Count > 0)
+            {
+                ImGui.Spacing();
+                ImGui.TextColored(new Vector4(1f, 0.6f, 0.2f, 1f), "These rings run chat commands or macros. Check them before importing:");
+                ImGui.BeginChild("##TPie_ImportCommands", new Vector2(420 * _scale, Math.Min(_pendingImportCommands.Count, 8) * 20 * _scale + 10), true);
+                foreach (string line in _pendingImportCommands)
+                    ImGui.TextUnformatted(line);
+                ImGui.EndChild();
+            }
+
+            ImGui.Spacing();
+            if (ImGui.Button("Import", new Vector2(120 * _scale, 0)))
+            {
+                foreach (Ring ring in _pendingImport)
+                    Plugin.Settings.AddRing(ring);
+                _pendingImport = new();
+                ImGui.CloseCurrentPopup();
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("Cancel", new Vector2(120 * _scale, 0)))
+            {
+                _pendingImport = new();
+                ImGui.CloseCurrentPopup();
+            }
+            ImGui.EndPopup();
+        }
+
         public SettingsWindow(string name) : base(name)
         {
-            Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
+            Flags = ImGuiWindowFlags.NoCollapse;
             Size = new Vector2(400, 470);
+            SizeCondition = ImGuiCond.FirstUseEver;
+            SizeConstraints = new WindowSizeConstraints
+            {
+                MinimumSize = new Vector2(400, 470),
+                MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+            };
 
             _fontSizes = new string[40 - 13];
             for (int i = 14; i <= 40; i++)
@@ -86,8 +150,10 @@ namespace TPie.Config
             ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(255f / 255f, 94f / 255f, 91f / 255f, 1f));
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(255f / 255f, 94f / 255f, 91f / 255f, .85f));
 
-            ImGui.SetCursorPos(new Vector2(280 * _scale, 26 * _scale));
-            if (ImGui.Button("Support on Ko-fi", new Vector2(104 * _scale, 24 * _scale)))
+            float buttonWidth = 104 * _scale;
+            float buttonX = Math.Max(280 * _scale, ImGui.GetWindowWidth() - buttonWidth - 10 * _scale);
+            ImGui.SetCursorPos(new Vector2(buttonX, 26 * _scale));
+            if (ImGui.Button("Support on Ko-fi", new Vector2(buttonWidth, 24 * _scale)))
             {
                 OpenUrl("https://ko-fi.com/Tischel");
             }
@@ -101,35 +167,21 @@ namespace TPie.Config
         {
             try
             {
-                Process.Start(url);
+                Dalamud.Utility.Util.OpenLink(url);
             }
-            catch
+            catch (Exception e)
             {
-                try
-                {
-                    // hack because of this: https://github.com/dotnet/corefx/issues/10361
-                    if (RuntimeInformation.IsOSPlatform(osPlatform: OSPlatform.Windows))
-                    {
-                        url = url.Replace("&", "^&");
-                        Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        Process.Start("xdg-open", url);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Plugin.Logger.Error("Error trying to open url: " + e.Message);
-                }
+                Plugin.Logger.Error("Error trying to open url: " + e.Message);
             }
         }
 
         private void DrawGeneralTab()
         {
+            float contentWidth = ImGui.GetContentRegionAvail().X;
+
             // position
             ImGui.Text("Position");
-            ImGui.BeginChild("##Position", new Vector2(384 * _scale, 70 * _scale), true);
+            ImGui.BeginChild("##Position", new Vector2(contentWidth, 70 * _scale), true);
             {
                 if (ImGui.RadioButton("Center at Cursor", Settings.AppearAtCursor))
                 {
@@ -159,7 +211,7 @@ namespace TPie.Config
             // font
             ImGui.Spacing();
             ImGui.Text("Font");
-            ImGui.BeginChild("##Font", new Vector2(384 * _scale, 40 * _scale), true);
+            ImGui.BeginChild("##Font", new Vector2(contentWidth, 40 * _scale), true);
             {
                 ImGui.Checkbox("Use Custom Font", ref Settings.UseCustomFont);
                 DrawHelper.SetTooltip("Enable to use the Expressway font that comes with TPie.\nDisable to use the system font.");
@@ -184,7 +236,7 @@ namespace TPie.Config
             // keybinds
             ImGui.Spacing();
             ImGui.Text("Keybinds");
-            ImGui.BeginChild("##Keybinds", new Vector2(384 * _scale, 64 * _scale), true);
+            ImGui.BeginChild("##Keybinds", new Vector2(contentWidth, 64 * _scale), true);
             {
                 ImGui.Checkbox("Keybind Passthrough", ref Settings.KeybindPassthrough);
                 DrawHelper.SetTooltip("When enabled, TPie wont prevent the game from receiving a key press asssigned for a ring.");
@@ -193,7 +245,7 @@ namespace TPie.Config
                 ImGui.Checkbox("Enable Quick Settings", ref Settings.EnableQuickSettings);
                 DrawHelper.SetTooltip("When enabled, double right-clicking when a ring is opened will open the settings for that ring.");
 
-                ImGui.Checkbox("Enable Escape key to close rings", ref Settings.EnableQuickSettings);
+                ImGui.Checkbox("Enable Escape key to close rings", ref Settings.EnableEscapeKeybind);
                 DrawHelper.SetTooltip("When enabled, pressing the Escape key while a ring with a toggable keybind is opened will immediately close it.");
             }
             ImGui.EndChild();
@@ -201,7 +253,7 @@ namespace TPie.Config
             // style
             ImGui.Spacing();
             ImGui.Text("Style");
-            ImGui.BeginChild("##Style", new Vector2(384 * _scale, 64 * _scale), true);
+            ImGui.BeginChild("##Style", new Vector2(contentWidth, 64 * _scale), true);
             {
                 ImGui.Checkbox("Draw Rings Background", ref Settings.DrawRingBackground);
 
@@ -218,7 +270,7 @@ namespace TPie.Config
             // animation
             ImGui.Spacing();
             ImGui.Text("Animation");
-            ImGui.BeginChild("##Animation", new Vector2(384 * _scale, 40 * _scale), true);
+            ImGui.BeginChild("##Animation", new Vector2(contentWidth, 40 * _scale), true);
             {
                 ImGui.PushItemWidth(100 * _scale);
                 int animIndex = (int)Settings.AnimationType;
@@ -283,7 +335,7 @@ namespace TPie.Config
         private void DrawRingsTab()
         {
             // options
-            ImGui.BeginChild("##Options", new Vector2(384 * _scale, 40 * _scale), true);
+            ImGui.BeginChild("##Options", new Vector2(ImGui.GetContentRegionAvail().X, 40 * _scale), true);
             {
                 ImGui.SameLine();
                 ImGui.Text("Create New");
@@ -303,13 +355,10 @@ namespace TPie.Config
                 ImGui.PushFont(UiBuilder.IconFont);
                 if (ImGui.Button(FontAwesomeIcon.Download.ToIconString()))
                 {
-                    string importString = ImGui.GetClipboardText();
-                    List<Ring> newRings = ImportExportHelper.ImportRings(importString);
-
-                    foreach (Ring ring in newRings)
-                    {
-                        Plugin.Settings.AddRing(ring);
-                    }
+                    string importString = ImGui.GetClipboardText() ?? "";
+                    _pendingImport = ImportExportHelper.ImportRings(importString);
+                    _pendingImportCommands = ImportExportHelper.CommandsIn(_pendingImport);
+                    _openImportPopup = true;
                 }
                 ImGui.PopFont();
                 DrawHelper.SetTooltip("Adds new Rings by importing them from the clipboard");
@@ -328,6 +377,8 @@ namespace TPie.Config
             }
             ImGui.EndChild();
 
+            DrawImportPopup();
+
             var flags =
                 ImGuiTableFlags.RowBg |
                 ImGuiTableFlags.Borders |
@@ -337,7 +388,7 @@ namespace TPie.Config
                 ImGuiTableFlags.SizingFixedSame;
 
             // rings
-            if (ImGui.BeginTable("##Rings_Table", 5, flags, new Vector2(384 * _scale, 366 * _scale)))
+            if (ImGui.BeginTable("##Rings_Table", 5, flags, new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y)))
             {
                 ImGui.TableSetupColumn("Color", ImGuiTableColumnFlags.WidthStretch, 8, 0);
                 ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthStretch, 25, 1);

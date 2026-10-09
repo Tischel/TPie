@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel;
@@ -54,10 +54,18 @@ namespace TPie.Helpers
         private Dictionary<uint, EventItem> _usableEventItems;
 
         private Dictionary<string, UsableItem> UsableItems = new Dictionary<string, UsableItem>();
+        private DateTime _lastCalculation = DateTime.MinValue;
+        private static readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(500);
 
-        public unsafe void CalculateUsableItems()
+        public unsafe void CalculateUsableItems(bool force = false)
         {
+            if (!force && (DateTime.UtcNow - _lastCalculation) < _throttle)
+                return;
+            _lastCalculation = DateTime.UtcNow;
+
             InventoryManager* manager = InventoryManager.Instance();
+            if (manager == null) return;
+
             InventoryType[] inventoryTypes = new InventoryType[]
             {
                 InventoryType.Inventory1,
@@ -132,7 +140,11 @@ namespace TPie.Helpers
 
         public unsafe void Use(uint itemId)
         {
-            AgentInventoryContext.Instance()->UseItem(itemId, (InventoryType)4);
+            AgentInventoryContext* agent = AgentInventoryContext.Instance();
+            if (agent != null)
+            {
+                agent->UseItem(itemId, (InventoryType)4);
+            }
         }
     }
 

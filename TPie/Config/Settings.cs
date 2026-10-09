@@ -1,4 +1,4 @@
-﻿using Dalamud.Logging;
+using Dalamud.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -78,6 +78,9 @@ namespace TPie.Config
 
         #region load / save
         private static string JsonPath = Path.Combine(Plugin.PluginInterface.GetPluginConfigDirectory(), "Settings.json");
+        /// <summary>Set when Settings.json couldn't be read; the path of the copy kept aside.</summary>
+        public static string? LoadFailedCopy { get; private set; }
+
         public static Settings Load()
         {
             string path = JsonPath;
@@ -94,12 +97,28 @@ namespace TPie.Config
             catch (Exception e)
             {
                 Plugin.Logger.Error("Error reading settings file: " + e.Message);
+
+                // Keep the unreadable file: otherwise the next save writes defaults over every ring.
+                try
+                {
+                    string kept = path + $".unreadable-{DateTime.Now:yyyyMMdd-HHmmss}";
+                    File.Copy(path, kept, true);
+                    Plugin.Logger.Error($"Kept a copy of the unreadable settings at {kept}");
+                    LoadFailedCopy = kept;
+                }
+                catch (Exception copyError)
+                {
+                    Plugin.Logger.Error("Could not keep a copy of the unreadable settings: " + copyError.Message);
+                }
             }
 
             if (settings == null)
             {
                 settings = new Settings();
-                Save(settings);
+                if (!File.Exists(path))
+                {
+                    Save(settings);
+                }
             }
 
             return settings;
@@ -115,6 +134,21 @@ namespace TPie.Config
                     TypeNameHandling = TypeNameHandling.Objects
                 };
                 string jsonString = JsonConvert.SerializeObject(settings, Formatting.Indented, serializerSettings);
+
+                if (File.Exists(JsonPath))
+                {
+                    // Keep the last three saves: .bak (newest), .bak2, .bak3.
+                    try
+                    {
+                        if (File.Exists(JsonPath + ".bak2")) File.Copy(JsonPath + ".bak2", JsonPath + ".bak3", true);
+                        if (File.Exists(JsonPath + ".bak")) File.Copy(JsonPath + ".bak", JsonPath + ".bak2", true);
+                        File.Copy(JsonPath, JsonPath + ".bak", true);
+                    }
+                    catch (Exception e)
+                    {
+                        Plugin.Logger.Warning("Could not back up settings before saving: " + e.Message);
+                    }
+                }
 
                 File.WriteAllText(JsonPath, jsonString);
             }

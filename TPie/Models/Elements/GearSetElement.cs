@@ -1,4 +1,4 @@
-﻿using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImGui;
 using Newtonsoft.Json;
 using System.Numerics;
 using TPie.Helpers;
@@ -40,6 +40,8 @@ namespace TPie.Models.Elements
 
         public override void ExecuteAction()
         {
+            Plugin.Logger.Debug($"[TPie] GearSetElement.ExecuteAction: UseID={UseID}, GearSetID={GearSetID}, GearSetName='{GearSetName}', JobID={JobID}");
+
             if (UseID)
             {
                 Chat.ExecuteCommand($"/gs change {GearSetID}");

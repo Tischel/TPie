@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
@@ -18,8 +18,15 @@ namespace TPie.Config
 
         public KeyBindWindow(string name) : base(name)
         {
-            Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-            Size = new Vector2(300, 330);
+            Flags = ImGuiWindowFlags.NoCollapse;
+            Size = new Vector2(320, 350);
+            SizeCondition = ImGuiCond.FirstUseEver;
+
+            SizeConstraints = new WindowSizeConstraints
+            {
+                MinimumSize = new Vector2(280, 280),
+                MaximumSize = new Vector2(1000, 1000)
+            };
 
             PositionCondition = ImGuiCond.Appearing;
 
@@ -50,7 +57,7 @@ namespace TPie.Config
             KeyBind keyBind = Ring.KeyBind;
 
             // main
-            ImGui.BeginChild("##KeyBind_Main", new Vector2(280 * _scale, 94 * _scale), true);
+            ImGui.BeginChild("##KeyBind_Main", new Vector2(ImGui.GetContentRegionAvail().X, 94 * _scale), true);
             {
                 if (_needsFocus)
                 {
@@ -58,7 +65,7 @@ namespace TPie.Config
                     _needsFocus = false;
                 }
 
-                if (keyBind.Draw(Ring.Name, 250))
+                if (keyBind.Draw(Ring.Name, ImGui.GetContentRegionAvail().X))
                 {
                     Plugin.Settings.ValidateKeyBind(Ring);
                 }
@@ -82,7 +89,7 @@ namespace TPie.Config
             // jobs
             ImGui.NewLine();
             ImGui.Text("Use for specific jobs:");
-            ImGui.BeginChild("##KeyBind_Jobs", new Vector2(280 * _scale, 144 * _scale), true);
+            ImGui.BeginChild("##KeyBind_Jobs", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 10 * _scale), true);
             {
                 ImGui.Combo("Role", ref _selectedRole, _roleNames, _roleNames.Length);
                 DrawJobs((JobRoles)_selectedRole);

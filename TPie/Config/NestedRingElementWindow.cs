@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface;
+using System;
+using Dalamud.Interface;
 using Dalamud.Interface.Internal;
 using DelvUI.Helpers;
 using Dalamud.Bindings.ImGui;
@@ -44,10 +45,9 @@ namespace TPie.Config
         {
             if (NestedRingElement == null) return;
 
-            ImGui.PushItemWidth(210 * _scale);
-
             // name
             FocusIfNeeded();
+            ImGui.SetNextItemWidth(-100 * _scale);
             if (ImGui.InputText("Ring Name ##NestedRing", ref _inputText, 100))
             {
                 NestedRingElement.RingName = _inputText;
@@ -67,7 +67,7 @@ namespace TPie.Config
 
             if (!NestedRingElement.ClickToActivate)
             {
-                ImGui.PushItemWidth(182 * _scale);
+                ImGui.SetNextItemWidth(182 * _scale);
                 ImGui.DragFloat("Activation Time ##NestedRing", ref NestedRingElement.ActivationTime, 0.1f, 0.2f, 5f);
                 DrawHelper.SetTooltip("Determines how many seconds the element needs to be hovered on to activate the nested ring.");
             }
@@ -78,7 +78,7 @@ namespace TPie.Config
             ImGui.NewLine();
 
             // icon id
-            ImGui.PushItemWidth(154 * _scale);
+            ImGui.SetNextItemWidth(-160 * _scale);
             string str = _iconInputText;
             if (ImGui.InputText("Icon ID ##Command", ref str, 100, ImGuiInputTextFlags.CharsDecimal))
             {
@@ -96,7 +96,7 @@ namespace TPie.Config
 
             ImGui.SameLine();
             ImGui.PushFont(UiBuilder.IconFont);
-            if (ImGui.Button("\uf2f9"))
+            if (ImGui.Button(FontAwesomeIcon.Undo.ToIconString()))
             {
                 NestedRingElement.IconID = 66001;
                 _iconInputText = "66001";
@@ -125,7 +125,7 @@ namespace TPie.Config
                 ISharedImmediateTexture? texture = TexturesHelper.GetTextureFromIconId(NestedRingElement.IconID);
                 if (texture != null)
                 {
-                    ImGui.SetCursorPosX(110 * _scale);
+                    ImGui.SetCursorPosX(Math.Max(0, (ImGui.GetContentRegionAvail().X - 80 * _scale) / 2));
                     ImGui.Image(texture.GetWrapOrEmpty().Handle, new Vector2(80 * _scale));
                 }
             }

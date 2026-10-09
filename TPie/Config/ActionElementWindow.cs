@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures;
 using DelvUI.Helpers;
 using Dalamud.Bindings.ImGui;
 using Lumina.Excel;
@@ -48,7 +48,7 @@ namespace TPie.Config
         {
             if (ActionElement == null) return;
 
-            ImGui.PushItemWidth(210 * _scale);
+            ImGui.SetNextItemWidth(-100 * _scale);
             if (ImGui.InputText("ID or Name ##Action", ref _inputText, 100))
             {
                 SearchActions(_inputText);
@@ -56,7 +56,7 @@ namespace TPie.Config
 
             FocusIfNeeded();
 
-            ImGui.BeginChild("##Actions_List", new Vector2(284 * _scale, 200 * _scale), true);
+            ImGui.BeginChild("##Actions_List", new Vector2(ImGui.GetContentRegionAvail().X, 200 * _scale), true);
             {
                 foreach (LuminaAction data in _searchResult)
                 {
