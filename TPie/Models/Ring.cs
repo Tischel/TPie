@@ -164,7 +164,7 @@ namespace TPie.Models
             {
                 if (_canExecuteAction)
                 {
-                    Plugin.Logger.Info($"[TPie] Ring release triggered! _animState={_animState}, _selectedIndex={_selectedIndex}, validCount={_validItems?.Count ?? 0}, quickSel={_quickActionSelected}");
+                    Plugin.Logger.Debug($"[TPie] Ring release triggered! _animState={_animState}, _selectedIndex={_selectedIndex}, validCount={_validItems?.Count ?? 0}, quickSel={_quickActionSelected}");
 
                     if ((_animState == AnimationState.Opened || _animState == AnimationState.Opening) &&
                         _center != null &&

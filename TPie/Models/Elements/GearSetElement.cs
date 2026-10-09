@@ -40,7 +40,7 @@ namespace TPie.Models.Elements
 
         public override void ExecuteAction()
         {
-            Plugin.Logger.Info($"[TPie] GearSetElement.ExecuteAction: UseID={UseID}, GearSetID={GearSetID}, GearSetName='{GearSetName}', JobID={JobID}");
+            Plugin.Logger.Debug($"[TPie] GearSetElement.ExecuteAction: UseID={UseID}, GearSetID={GearSetID}, GearSetName='{GearSetName}', JobID={JobID}");
 
             if (UseID)
             {
